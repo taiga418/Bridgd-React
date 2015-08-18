@@ -1,14 +1,15 @@
 import React from 'react';
-var App = React.createClass({
+var MainApp = React.createClass({
 
   render: function(){
     return(
       <div>
-        <p>Landing</p>
+        <p>Main Page</p>
       </div>
     )
+   
   }
 
 })
 
-module.exports = App;
+module.exports = MainApp;

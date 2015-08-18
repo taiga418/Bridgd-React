@@ -1,16 +1,29 @@
 import React from 'react';
 import Router from 'react-router';
-import App from './components/index.js';
+import Landing from './components/index.js';
+import Main from './components/main.js';
 let {Route, Link, State, RouteHandler, DefaultRoute} = Router;
 
+class App extends React.Component{
+
+  render (){
+    return(
+      <div>
+        <RouteHandler />
+      </div>
+    )
+  }
+
+}
+
 var routes = (
-  <Route name="app" path="/" handler={App}>
-    <DefaultRoute handler={App} />
-  </Route>
+  <RouteHandler handler={App}>
+    <Route name="app" path="/app" handler={Landing} />
+    <Route name="main" path="/main" handler={Main} />
+  </RouteHandler>
 );
 
 Router.run(routes, function (Handler) {
   React.render(<Handler/>,  document.getElementById("app"));
 });
 
-//React.render(new App({}),  document.getElementById("app"));
