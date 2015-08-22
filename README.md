@@ -1,4 +1,4 @@
-Isomorphic React + flux with ES6, grunt, browserify, <span style="text-decoration:line-through;">but doesn't use flux yet :(</span> (Yes it does)
+Isomorphic React + flux with ES6, grunt, browserify
 Soon-to-be used for a project...
 
 1. Global install babel
