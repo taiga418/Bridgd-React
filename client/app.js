@@ -18,7 +18,8 @@ class App extends React.Component{
 
 var routes = (
   <RouteHandler handler={App}>
-    <Route name="app" path="/app" handler={Landing} />
+    <DefaultRoute handler={Landing} />
+    <Route name="landing" path="/" handler={Landing} />
     <Route name="main" path="/main" handler={Main} />
   </RouteHandler>
 );
@@ -27,3 +28,4 @@ Router.run(routes, function (Handler) {
   React.render(<Handler/>,  document.getElementById("app"));
 });
 
+module.exports = App;
