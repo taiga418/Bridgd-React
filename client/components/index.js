@@ -22,16 +22,9 @@ var App = React.createClass({
   },
 
   inputHandler: function(e){
-    
-    //e.stopPropagation()
-    //console.log(e)
-    //not calling an action?
-     //this.setState({text:Store.getText()});
-     if(e){
-       Actions.setText(e.target.value)
-     }
-    
-     //this.setState({text: Store.getText()})
+    if(e){
+      Actions.setText(e.target.value)
+    }
   },
   render: function(){
     return(
