@@ -1,6 +1,7 @@
 var express = require('express');
 var path = require('path')
 var React = require('react');
+var request = require('request');
 
 var LandingPage = require('../client/components/index.js');
 var MainPage = require('../client/components/main.js');
@@ -20,7 +21,14 @@ var server = app.listen(app.get('port'), function() {
 
 app.get('/', function (req, res) {
   var reactHtml = React.renderToString(<LandingPage />);
-  res.render('index.html', {reactOutPut: reactHtml});
+  request.get("https://www.youtube.com/iframe_api", function(err, resp, body){
+    if(err){
+      return console.log(err)
+    }
+    res.render('index.html', {reactOutPut: reactHtml, iFrameApi: body});
+  })
+
+  
 })
 
 // app.get('/home', function (req, res) {

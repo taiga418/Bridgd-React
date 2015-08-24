@@ -1,6 +1,7 @@
 import React from 'react';
 import Actions from '../actions/actions.js'
 import Store from '../stores/store.js'
+import Player from './player.js'
 var App = React.createClass({
 
   getInitialState: function(){
@@ -32,6 +33,7 @@ var App = React.createClass({
         <p>Landing</p>
         <input onChange={this.inputHandler} />
         <h1>{this.state.text.message}</h1>
+        <Player></Player>
       </div>
     )
   }
