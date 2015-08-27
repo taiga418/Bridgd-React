@@ -1,7 +1,8 @@
 import React from 'react';
 import PlayerStore from '../stores/player-store.js';
-var player;
-var Player = React.createClass({
+
+var PlayerClass = React.createClass({
+
   getInitialState: function(){
     return{
       player: PlayerStore.getPlayerState()
@@ -9,17 +10,31 @@ var Player = React.createClass({
   },
 
   componentDidMount: function(){
-    console.log(this.state.player);
-    player = new YT.Player('player', {
-      height: '390',
-      width: '640',
-      videoId: 'M7lc1UVf-VE',
+    //attach video onto div once the component has been mounted. 
+    var player = new YT.Player('player', {
+      height: this.state.player.height,
+      width: this.state.player.width,
+      videoId: this.state.player.videoId,
       events: {
-        'onReady': this._onPlayerReady,
-        'onStateChange': this._onPlayerStateChange
+        'onReady': onPlayerReady,
+        'onStateChange': onPlayerStateChange
       }
-    }).bind(this);
+    })
+
     PlayerStore.addChangeListener(this._onChange);
+
+    function onPlayerReady(event) {
+      event.target.playVideo();
+    }
+
+    function onPlayerStateChange (event) {
+      console.log(event)
+    }
+
+    function  stopVideo() {
+      console.log(player)
+      player.stopVideo();
+    }
   },
 
   componentWillUnmount: function() {
@@ -30,31 +45,23 @@ var Player = React.createClass({
     this.setState({playerState: PlayerStore.getPlayerState()})
   },
 
-  _onPlayerReady: function(event) {
-    event.target.playVideo();
-  },
-
-  _onPlayerStateChange: function (event) {
-    if (event.data == window.YT.PlayerState.PLAYING && !this.state.done) {
-      setTimeout(this._stopVideo(player), 6000);
-      //this.setState({done:true});
-    }
-  },
-
-  _stopVideo: function(player) {
-    console.log(player)
-    player.stopVideo();
+  search: function(e){
+    console.log(e.target.value)
   },
 
 
   render: function(){
-   
     return(
-      <div id="player"></div>
+      <div>
+        <div>
+          <div id="player"></div>
+        </div>
+        <input onChange={this.search} />
+      </div>
     )
    
   }
 
 })
 
-module.exports = Player;
+module.exports = PlayerClass;

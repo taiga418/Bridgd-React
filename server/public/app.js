@@ -101,6 +101,7 @@ var _playerJs = require('./player.js');
 
 var _playerJs2 = _interopRequireDefault(_playerJs);
 
+//Main Landing Page of the App, houses all components. View Controller
 var App = _react2['default'].createClass({
   displayName: 'App',
 
@@ -191,9 +192,8 @@ var _storesPlayerStoreJs = require('../stores/player-store.js');
 
 var _storesPlayerStoreJs2 = _interopRequireDefault(_storesPlayerStoreJs);
 
-var player;
-var Player = _react2['default'].createClass({
-  displayName: 'Player',
+var PlayerClass = _react2['default'].createClass({
+  displayName: 'PlayerClass',
 
   getInitialState: function getInitialState() {
     return {
@@ -202,17 +202,31 @@ var Player = _react2['default'].createClass({
   },
 
   componentDidMount: function componentDidMount() {
-    console.log(this.state.player);
-    player = new YT.Player('player', {
-      height: '390',
-      width: '640',
-      videoId: 'M7lc1UVf-VE',
+    //attach video onto div once the component has been mounted.
+    var player = new YT.Player('player', {
+      height: this.state.player.height,
+      width: this.state.player.width,
+      videoId: this.state.player.videoId,
       events: {
-        'onReady': this._onPlayerReady,
-        'onStateChange': this._onPlayerStateChange
+        'onReady': onPlayerReady,
+        'onStateChange': onPlayerStateChange
       }
-    }).bind(this);
+    });
+
     _storesPlayerStoreJs2['default'].addChangeListener(this._onChange);
+
+    function onPlayerReady(event) {
+      event.target.playVideo();
+    }
+
+    function onPlayerStateChange(event) {
+      console.log(event);
+    }
+
+    function stopVideo() {
+      console.log(player);
+      player.stopVideo();
+    }
   },
 
   componentWillUnmount: function componentWillUnmount() {
@@ -223,30 +237,26 @@ var Player = _react2['default'].createClass({
     this.setState({ playerState: _storesPlayerStoreJs2['default'].getPlayerState() });
   },
 
-  _onPlayerReady: function _onPlayerReady(event) {
-    event.target.playVideo();
-  },
-
-  _onPlayerStateChange: function _onPlayerStateChange(event) {
-    if (event.data == window.YT.PlayerState.PLAYING && !this.state.done) {
-      setTimeout(this._stopVideo(player), 6000);
-      //this.setState({done:true});
-    }
-  },
-
-  _stopVideo: function _stopVideo(player) {
-    console.log(player);
-    player.stopVideo();
+  search: function search(e) {
+    console.log(e.target.value);
   },
 
   render: function render() {
-
-    return _react2['default'].createElement('div', { id: 'player' });
+    return _react2['default'].createElement(
+      'div',
+      null,
+      _react2['default'].createElement(
+        'div',
+        null,
+        _react2['default'].createElement('div', { id: 'player' })
+      ),
+      _react2['default'].createElement('input', { onChange: this.search })
+    );
   }
 
 });
 
-module.exports = Player;
+module.exports = PlayerClass;
 
 },{"../stores/player-store.js":8,"react":210}],6:[function(require,module,exports){
 'use strict';
@@ -256,7 +266,9 @@ var keyMirror = require('keymirror');
 module.exports = {
 
   ActionTypes: keyMirror({
-    SET_TEXT: null
+    SET_TEXT: null,
+    PLAY_VIDEO: null,
+    STOP_VIDEO: null
   })
 
 };
@@ -277,39 +289,14 @@ var EventEmitter = require('events').EventEmitter;
 var assign = require('object-assign');
 var CHANGE_EVENT = 'change';
 
-// var player = new window.YT.Player('player', {
-//   height: '390',
-//   width: '640',
-//   videoId: 'M7lc1UVf-VE',
-//   events: {
-//     'onReady': onPlayerReady,
-//     'onStateChange': onPlayerStateChange
-//   }
-// })
-
-// function onPlayerReady(event) {
-//   event.target.playVideo();
-// }
-
-// var done;
-// function onPlayerStateChange (event) {
-//   if (event.data == window.YT.PlayerState.PLAYING && !this.state.done) {
-//     setTimeout(stopVideo(), 6000);
-//     done = true;
-//   }
-// }
-
-// function stopVideo() {
-//   player.stopVideo();
-// }
-
 var PlayerStore = assign({}, EventEmitter.prototype, {
 
   getPlayerState: function getPlayerState() {
     return {
       height: '390',
       width: '640',
-      videoId: 'M7lc1UVf-VE'
+      videoId: 'M7lc1UVf-VE',
+      done: false
     };
   },
 

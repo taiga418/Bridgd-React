@@ -2,6 +2,8 @@ import React from 'react';
 import Actions from '../actions/actions.js'
 import Store from '../stores/store.js'
 import Player from './player.js'
+
+//Main Landing Page of the App, houses all components. View Controller 
 var App = React.createClass({
 
   getInitialState: function(){
