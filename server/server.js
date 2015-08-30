@@ -20,12 +20,13 @@ var server = app.listen(app.get('port'), function() {
 
 
 app.get('/', function (req, res) {
-  var reactHtml = React.renderToString(<LandingPage />);
+  //var reactHtml = React.renderToString(<LandingPage />);
   request.get("https://www.youtube.com/iframe_api", function(err, resp, body){
     if(err){
       return console.log(err)
     }
-    res.render('index.html', {reactOutPut: reactHtml, iFrameApi: body});
+    //res.render('index.html', {reactOutPut: reactHtml, iFrameApi: body});
+    res.render('index.html', {iFrameApi: body});
   })
 
   
