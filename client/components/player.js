@@ -1,66 +1,63 @@
 import React from 'react';
 import PlayerStore from '../stores/player-store.js';
-import $ from 'jquery';
+import Actions from '../actions/actions.js';
 var PlayerClass = React.createClass({
 
   getInitialState: function(){
     return{
-      player: PlayerStore.getPlayerState()
+      playerInfo: PlayerStore.getPlayerState(),
+      player: null
     }
   },
 
   componentDidMount: function(){
     PlayerStore.addChangeListener(this._onChange);
-
+    //load player api
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
     var firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-    // var self = this;
-    // //  $.ajax({
-    // //   url: "https://www.youtube.com/iframe_api",
-    // //   dataType: "script"
-    // // }).done(function(data){
-    // //   console.log(data);
-    // //   self.setState({api: data})
-    // // })
-    
-    // $.getScript("https://www.youtube.com/iframe_api", function(a,b,c){
-    //   console.log(a,b,c)
-    // })
-    
   },
 
-  loadPlayer: function(){
+  initPlayer: function(){
+    // var player
     var self = this;
     function onPlayerReady(event) {
-      event.target.playVideo();
+      Actions.playVideo(event.target);
     }
 
     function onPlayerStateChange (event) {
-      console.log(event)
+      //console.log(event)
     }
 
     function stopVideo() {
-      console.log(player)
-      player.stopVideo();
+      //Actions.stopVideo(player)
     }
 
     function onYouTubeIframeAPIReady() {
-      var player = new YT.Player('player', {
-        height: self.state.player.height,
-        width: self.state.player.width,
-        videoId: self.state.player.videoId,
+       var player = new YT.Player('player', {
+        height: self.state.playerInfo.height,
+        width: self.state.playerInfo.width,
+        videoId: self.state.playerInfo.videoId,
         events: {
-          'onReady': onPlayerReady
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange
+        },
+        playerVars: {
+          controls: '0',
+          disabled: '1'
         }
       })
+      self.setState({player: player});
     }
 
     return onYouTubeIframeAPIReady;
 
    
+  },
+
+  loadVideo: function(e){
+    Actions.loadVideo(this.state.player, "nyYG70aM9Fw")
   },
 
   componentWillUnmount: function() {
@@ -83,7 +80,8 @@ var PlayerClass = React.createClass({
          <div id="player"></div>
         </div>
         <input onChange={this.search} />
-        {window.onYouTubeIframeAPIReady = this.loadPlayer()}
+        {window.onYouTubeIframeAPIReady = this.initPlayer()}
+        <button onClick={this.loadVideo}>Change</button>
       </div>
     ) 
   }

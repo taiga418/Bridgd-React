@@ -4,17 +4,18 @@ var EventEmitter = require('events').EventEmitter;
 var assign = require('object-assign');
 var CHANGE_EVENT = 'change';
 
-
+var playerState = {};
 
 var PlayerStore = assign({}, EventEmitter.prototype, {
 
   getPlayerState: function(){
-    return{
+    playerState = {
       height: '390',
       width: '640',
       videoId: 'M7lc1UVf-VE',
       done: false
-    }
+    };
+    return playerState;
   },
 
   emitChange: function() {
@@ -33,7 +34,17 @@ var PlayerStore = assign({}, EventEmitter.prototype, {
 
 
 PlayerStore.dispatchToken = Dispatcher.register(function(action) {
-
+  switch(action.type){
+    case ActionTypes.PLAY_VIDEO:
+      action.player.playVideo();
+      PlayerStore.emitChange();
+      break;
+    case ActionTypes.LOAD_VIDEO:
+      action.player.loadVideoById(action.videoId, action.delay);
+      playerState.videoId = action.videoId;
+      PlayerStore.emitChange();
+      break;
+  }
 })
 
 module.exports = PlayerStore;

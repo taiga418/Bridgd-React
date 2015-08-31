@@ -4,7 +4,7 @@ var MainApp = React.createClass({
   render: function(){
     return(
       <div>
-        <p>Main Page</p>
+        <p>Login/landing Page</p>
       </div>
     )
    
