@@ -351,15 +351,26 @@ var SearchBarClass = _react2['default'].createClass({
   showResults: function showResults(e) {
     var self = this;
     if (this.state.results) {
+      console.log(this.state.results);
       return _react2['default'].createElement(
         'div',
         null,
         this.state.results.map((function (item) {
           return _react2['default'].createElement(
-            'p',
+            'div',
             { onClick: this.loadVideo.bind(null, item.id.videoId) },
-            'id : ',
-            item.id.videoId
+            _react2['default'].createElement(
+              'h4',
+              null,
+              item.snippet.title
+            ),
+            _react2['default'].createElement(
+              'p',
+              null,
+              'id : ',
+              item.id.videoId
+            ),
+            _react2['default'].createElement('img', { src: item.snippet.thumbnails['default'].url })
           );
         }).bind(this))
       );
