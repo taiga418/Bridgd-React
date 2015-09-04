@@ -35,6 +35,7 @@ var PlayerClass = React.createClass({
     }
 
     function onYouTubeIframeAPIReady() {
+      
        var player = new YT.Player('player', {
         height: self.state.playerInfo.height,
         width: self.state.playerInfo.width,
@@ -52,13 +53,9 @@ var PlayerClass = React.createClass({
     }
 
     return onYouTubeIframeAPIReady;
-
    
   },
 
-  loadVideo: function(e){
-    Actions.loadVideo(this.state.player, "nyYG70aM9Fw")
-  },
 
   componentWillUnmount: function() {
     PlayerStore.removeChangeListener(this._onChange);
@@ -68,20 +65,13 @@ var PlayerClass = React.createClass({
     this.setState({playerState: PlayerStore.getPlayerState()})
   },
 
-  search: function(e){
-    console.log(e.target.value)
-  },
-
-
   render: function(){
    return(
       <div>
         <div>
          <div id="player"></div>
         </div>
-        <input onChange={this.search} />
         {window.onYouTubeIframeAPIReady = this.initPlayer()}
-        <button onClick={this.loadVideo}>Change</button>
       </div>
     ) 
   }

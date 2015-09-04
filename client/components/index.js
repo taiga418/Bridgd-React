@@ -2,6 +2,7 @@ import React from 'react';
 import Actions from '../actions/actions.js'
 import Store from '../stores/store.js'
 import Player from './player.js'
+import SearchBar from './search-bar.js'
 
 //Main Landing Page of the App, houses all components. View Controller 
 var App = React.createClass({
@@ -32,10 +33,9 @@ var App = React.createClass({
   render: function(){
     return(
       <div>
-        <p>Landing</p>
-        <input onChange={this.inputHandler} />
-        <h1>{this.state.text.message}</h1>
-        <Player></Player>
+        <p>Bridgd</p>
+        <Player />
+        <SearchBar />
       </div>
     )
   }

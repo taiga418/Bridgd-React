@@ -5,6 +5,7 @@ var assign = require('object-assign');
 var CHANGE_EVENT = 'change';
 
 var playerState = {};
+var player = {};
 
 var PlayerStore = assign({}, EventEmitter.prototype, {
 
@@ -36,11 +37,12 @@ var PlayerStore = assign({}, EventEmitter.prototype, {
 PlayerStore.dispatchToken = Dispatcher.register(function(action) {
   switch(action.type){
     case ActionTypes.PLAY_VIDEO:
-      action.player.playVideo();
+      player = action.player
+      player.playVideo();
       PlayerStore.emitChange();
       break;
     case ActionTypes.LOAD_VIDEO:
-      action.player.loadVideoById(action.videoId, action.delay);
+      player.loadVideoById(action.videoId, action.delay);
       playerState.videoId = action.videoId;
       PlayerStore.emitChange();
       break;
