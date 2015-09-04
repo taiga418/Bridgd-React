@@ -49,7 +49,7 @@ var SearchBarClass = React.createClass({
         <div>
           {this.state.results.map(function(item){
             return (
-              <div onClick={this.loadVideo.bind(null, item.id.videoId)}>
+              <div onClick={this.queueVideo.bind(null, item)}>
                 <h4>{item.snippet.title}</h4>
                 <p>id : {item.id.videoId}</p> 
                 <img src={item.snippet.thumbnails.default.url}/>
@@ -72,8 +72,12 @@ var SearchBarClass = React.createClass({
 
 
   loadVideo: function(id){
-    console.log(id)
     Actions.loadVideo(id)
+  },
+
+  queueVideo: function(vid){
+    console.log('queue', vid)
+    Actions.enqueueVideo(vid);
   },
 
   render: function(){

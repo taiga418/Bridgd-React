@@ -26,6 +26,13 @@ module.exports = {
       videoId: videoId,
       delay: delay
     });
+  },
+
+  enqueueVideo: function enqueueVideo(video) {
+    Dispatcher.dispatch({
+      type: ActionTypes.ENQUEUE_VIDEO,
+      video: video
+    });
   }
 
 };
@@ -50,10 +57,6 @@ var _reactRouter2 = _interopRequireDefault(_reactRouter);
 var _componentsIndexJs = require('./components/index.js');
 
 var _componentsIndexJs2 = _interopRequireDefault(_componentsIndexJs);
-
-var _componentsMainJs = require('./components/main.js');
-
-var _componentsMainJs2 = _interopRequireDefault(_componentsMainJs);
 
 var Route = _reactRouter2['default'].Route;
 var Link = _reactRouter2['default'].Link;
@@ -85,8 +88,7 @@ var routes = _react2['default'].createElement(
   RouteHandler,
   { handler: App },
   _react2['default'].createElement(DefaultRoute, { handler: _componentsIndexJs2['default'] }),
-  _react2['default'].createElement(Route, { name: 'landing', path: '/', handler: _componentsIndexJs2['default'] }),
-  _react2['default'].createElement(Route, { name: 'main', path: '/main', handler: _componentsMainJs2['default'] })
+  _react2['default'].createElement(Route, { name: 'landing', path: '/', handler: _componentsIndexJs2['default'] })
 );
 
 _reactRouter2['default'].run(routes, function (Handler) {
@@ -95,7 +97,7 @@ _reactRouter2['default'].run(routes, function (Handler) {
 
 module.exports = App;
 
-},{"./components/index.js":3,"./components/main.js":4,"react":213,"react-router":44}],3:[function(require,module,exports){
+},{"./components/index.js":3,"react":213,"react-router":44}],3:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -119,6 +121,10 @@ var _playerJs2 = _interopRequireDefault(_playerJs);
 var _searchBarJs = require('./search-bar.js');
 
 var _searchBarJs2 = _interopRequireDefault(_searchBarJs);
+
+var _queueJs = require('./queue.js');
+
+var _queueJs2 = _interopRequireDefault(_queueJs);
 
 //Main Landing Page of the App, houses all components. View Controller
 var App = _react2['default'].createClass({
@@ -157,7 +163,8 @@ var App = _react2['default'].createClass({
         'Bridgd'
       ),
       _react2['default'].createElement(_playerJs2['default'], null),
-      _react2['default'].createElement(_searchBarJs2['default'], null)
+      _react2['default'].createElement(_searchBarJs2['default'], null),
+      _react2['default'].createElement(_queueJs2['default'], null)
     );
   }
 
@@ -165,35 +172,7 @@ var App = _react2['default'].createClass({
 
 module.exports = App;
 
-},{"../actions/actions.js":1,"../stores/store.js":11,"./player.js":5,"./search-bar.js":6,"react":213}],4:[function(require,module,exports){
-'use strict';
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-var MainApp = _react2['default'].createClass({
-  displayName: 'MainApp',
-
-  render: function render() {
-    return _react2['default'].createElement(
-      'div',
-      null,
-      _react2['default'].createElement(
-        'p',
-        null,
-        'Login/landing Page'
-      )
-    );
-  }
-
-});
-
-module.exports = MainApp;
-
-},{"react":213}],5:[function(require,module,exports){
+},{"../actions/actions.js":1,"../stores/store.js":11,"./player.js":4,"./queue.js":5,"./search-bar.js":6,"react":213}],4:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -230,7 +209,6 @@ var PlayerClass = _react2['default'].createClass({
   },
 
   initPlayer: function initPlayer() {
-    // var player
     var self = this;
     function onPlayerReady(event) {
       _actionsActionsJs2['default'].playVideo(event.target);
@@ -290,7 +268,82 @@ var PlayerClass = _react2['default'].createClass({
 
 module.exports = PlayerClass;
 
-},{"../actions/actions.js":1,"../stores/player-store.js":9,"react":213}],6:[function(require,module,exports){
+},{"../actions/actions.js":1,"../stores/player-store.js":9,"react":213}],5:[function(require,module,exports){
+'use strict';
+
+exports.__esModule = true;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _storesQueueStoreJs = require('../stores/queue-store.js');
+
+var _storesQueueStoreJs2 = _interopRequireDefault(_storesQueueStoreJs);
+
+var _actionsActionsJs = require('../actions/actions.js');
+
+var _actionsActionsJs2 = _interopRequireDefault(_actionsActionsJs);
+
+var QueueClass = _react2['default'].createClass({
+  displayName: 'QueueClass',
+
+  getInitialState: function getInitialState() {
+    return {
+      videoQueue: _storesQueueStoreJs2['default'].getQueueState()
+    };
+  },
+
+  _onChange: function _onChange() {
+    this.setState({ videoQueue: _storesQueueStoreJs2['default'].getQueueState() });
+  },
+
+  componentDidMount: function componentDidMount() {
+    _storesQueueStoreJs2['default'].addChangeListener(this._onChange);
+  },
+
+  componentWillUnmount: function componentWillUnmount() {
+    _storesQueueStoreJs2['default'].removeChangeListener(this._onChange);
+  },
+
+  getQueue: function getQueue() {
+    return this.state.videoQueue.videos.map(function (vid) {
+      return _react2['default'].createElement(
+        'div',
+        null,
+        vid.snippet.title
+      );
+    });
+  },
+
+  render: function render() {
+    if (!this.state.videoQueue) {
+      return _react2['default'].createElement(
+        'div',
+        null,
+        'Loading...'
+      );
+    }
+    console.log(this.state);
+    return _react2['default'].createElement(
+      'div',
+      null,
+      _react2['default'].createElement(
+        'p',
+        null,
+        'Queue'
+      ),
+      this.getQueue()
+    );
+  }
+});
+
+exports['default'] = QueueClass;
+module.exports = exports['default'];
+
+},{"../actions/actions.js":1,"../stores/queue-store.js":10,"react":213}],6:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -358,7 +411,7 @@ var SearchBarClass = _react2['default'].createClass({
         this.state.results.map((function (item) {
           return _react2['default'].createElement(
             'div',
-            { onClick: this.loadVideo.bind(null, item.id.videoId) },
+            { onClick: this.queueVideo.bind(null, item) },
             _react2['default'].createElement(
               'h4',
               null,
@@ -390,8 +443,12 @@ var SearchBarClass = _react2['default'].createClass({
   },
 
   loadVideo: function loadVideo(id) {
-    console.log(id);
     _actionsActionsJs2['default'].loadVideo(id);
+  },
+
+  queueVideo: function queueVideo(vid) {
+    console.log('queue', vid);
+    _actionsActionsJs2['default'].enqueueVideo(vid);
   },
 
   render: function render() {
@@ -417,7 +474,8 @@ module.exports = {
     SET_TEXT: null,
     PLAY_VIDEO: null,
     STOP_VIDEO: null,
-    LOAD_VIDEO: null
+    LOAD_VIDEO: null,
+    ENQUEUE_VIDEO: null
   })
 
 };
@@ -485,9 +543,55 @@ PlayerStore.dispatchToken = Dispatcher.register(function (action) {
 module.exports = PlayerStore;
 
 },{"../constants/constants":7,"../dispatcher":8,"events":15,"object-assign":19}],10:[function(require,module,exports){
-"use strict";
+'use strict';
 
-},{}],11:[function(require,module,exports){
+exports.__esModule = true;
+var Dispatcher = require('../dispatcher');
+var ActionTypes = require('../constants/constants').ActionTypes;
+var EventEmitter = require('events').EventEmitter;
+var assign = require('object-assign');
+var CHANGE_EVENT = 'change';
+
+var queueState = {};
+var videos = [];
+
+var QueueStore = assign({}, EventEmitter.prototype, {
+
+  getQueueState: function getQueueState() {
+    queueState = {
+      videos: videos,
+      current: null
+    };
+    return queueState;
+  },
+
+  emitChange: function emitChange() {
+    this.emit(CHANGE_EVENT);
+  },
+
+  addChangeListener: function addChangeListener(callback) {
+    this.on(CHANGE_EVENT, callback);
+  },
+
+  removeChangeListener: function removeChangeListener(callback) {
+    this.removeListener(CHANGE_EVENT, callback);
+  }
+
+});
+
+QueueStore.dispatchToken = Dispatcher.register(function (action) {
+  switch (action.type) {
+    case ActionTypes.ENQUEUE_VIDEO:
+      queueState.videos.push(action.video);
+      QueueStore.emitChange();
+      break;
+  }
+});
+
+exports['default'] = QueueStore;
+module.exports = exports['default'];
+
+},{"../constants/constants":7,"../dispatcher":8,"events":15,"object-assign":19}],11:[function(require,module,exports){
 'use strict';
 
 var Dispatcher = require('../dispatcher');

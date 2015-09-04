@@ -3,6 +3,7 @@ import Actions from '../actions/actions.js'
 import Store from '../stores/store.js'
 import Player from './player.js'
 import SearchBar from './search-bar.js'
+import Queue from './queue.js';
 
 //Main Landing Page of the App, houses all components. View Controller 
 var App = React.createClass({
@@ -36,6 +37,7 @@ var App = React.createClass({
         <p>Bridgd</p>
         <Player />
         <SearchBar />
+        <Queue />
       </div>
     )
   }

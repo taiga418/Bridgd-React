@@ -20,7 +20,6 @@ var PlayerClass = React.createClass({
   },
 
   initPlayer: function(){
-    // var player
     var self = this;
     function onPlayerReady(event) {
       Actions.playVideo(event.target);

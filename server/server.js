@@ -4,7 +4,7 @@ var React = require('react');
 var request = require('request');
 
 var LandingPage = require('../client/components/index.js');
-var MainPage = require('../client/components/main.js');
+//var MainPage = require('../client/components/main.js');
 
 var app = express();
 app.set('views', path.join(__dirname, 'templates'));

@@ -23,6 +23,13 @@ module.exports = {
       videoId: videoId,
       delay: delay
     })
+  },
+
+  enqueueVideo: function(video){
+    Dispatcher.dispatch({
+      type: ActionTypes.ENQUEUE_VIDEO,
+      video: video
+    })
   }
 
 };
