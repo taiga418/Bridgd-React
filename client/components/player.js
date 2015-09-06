@@ -1,5 +1,7 @@
 import React from 'react';
+import _ from 'underscore'
 import PlayerStore from '../stores/player-store.js';
+import QueueStore from '../stores/queue-store.js';
 import Actions from '../actions/actions.js';
 var PlayerClass = React.createClass({
 
@@ -26,7 +28,15 @@ var PlayerClass = React.createClass({
     }
 
     function onPlayerStateChange (event) {
-      //console.log(event)
+      if(event.data == YT.PlayerState.ENDED){
+        var state = QueueStore.getQueueState();
+        var videos = state.videos;
+        var currentVidObj = _.find(videos, function(vid){
+          return vid.id.videoId == state.currentId
+        })
+        var currentIndex = videos.indexOf(currentVidObj) 
+        Actions.loadVideo(videos[currentIndex + 1].id.videoId);
+      }
     }
 
     function stopVideo() {

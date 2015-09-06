@@ -4,7 +4,7 @@ var EventEmitter = require('events').EventEmitter;
 var assign = require('object-assign');
 var CHANGE_EVENT = 'change';
 
-var queueState = {videos: [], currentId:null };
+var queueState = {videos: [], currentId:'0KmtIHyCpf4', currentIndex: null};
 // var videos = []
 // var currentId = null;
 

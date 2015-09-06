@@ -19,7 +19,8 @@
     "object-assign": "^3.0.0",
     "react": "^0.13.3",
     "react-router": "^0.13.3",
-    "request": "^2.61.0"
+    "request": "^2.61.0",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
