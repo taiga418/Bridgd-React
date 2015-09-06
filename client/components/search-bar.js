@@ -81,7 +81,7 @@ var SearchBarClass = React.createClass({
 
   render: function(){
     return(
-      <div>
+      <div className="results">
         <input onChange={this.search} />
         {this.showResults()}
       </div>

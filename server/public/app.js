@@ -163,8 +163,8 @@ var App = _react2['default'].createClass({
         'Bridgd'
       ),
       _react2['default'].createElement(_playerJs2['default'], null),
-      _react2['default'].createElement(_searchBarJs2['default'], null),
-      _react2['default'].createElement(_queueJs2['default'], null)
+      _react2['default'].createElement(_queueJs2['default'], null),
+      _react2['default'].createElement(_searchBarJs2['default'], null)
     );
   }
 
@@ -254,7 +254,7 @@ var PlayerClass = _react2['default'].createClass({
   render: function render() {
     return _react2['default'].createElement(
       'div',
-      null,
+      { className: 'player' },
       _react2['default'].createElement(
         'div',
         null,
@@ -333,7 +333,7 @@ var QueueClass = _react2['default'].createClass({
     }
     return _react2['default'].createElement(
       'div',
-      null,
+      { className: 'queue' },
       _react2['default'].createElement(
         'p',
         null,
@@ -457,7 +457,7 @@ var SearchBarClass = _react2['default'].createClass({
   render: function render() {
     return _react2['default'].createElement(
       'div',
-      null,
+      { className: 'results' },
       _react2['default'].createElement('input', { onChange: this.search }),
       this.showResults()
     );

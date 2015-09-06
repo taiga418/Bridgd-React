@@ -66,7 +66,7 @@ var PlayerClass = React.createClass({
 
   render: function(){
    return(
-      <div>
+      <div className="player">
         <div>
          <div id="player"></div>
         </div>

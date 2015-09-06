@@ -36,8 +36,8 @@ var App = React.createClass({
       <div>
         <p>Bridgd</p>
         <Player />
-        <SearchBar />
         <Queue />
+         <SearchBar />
       </div>
     )
   }
