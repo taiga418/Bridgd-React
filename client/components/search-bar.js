@@ -44,12 +44,11 @@ var SearchBarClass = React.createClass({
   showResults: function(e){
     var self = this;
     if(this.state.results){
-      console.log(this.state.results)
       return(
         <div>
           {this.state.results.map(function(item){
             return (
-              <div onClick={this.queueVideo.bind(null, item)}>
+              <div key={item.id.videoId} onClick={this.queueVideo.bind(null, item)}>
                 <h4>{item.snippet.title}</h4>
                 <p>id : {item.id.videoId}</p> 
                 <img src={item.snippet.thumbnails.default.url}/>
@@ -65,7 +64,7 @@ var SearchBarClass = React.createClass({
       )
     }else{
       return(
-        <div>Nothing</div>
+        <div>Search</div>
       )
     }
   },

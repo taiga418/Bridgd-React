@@ -309,7 +309,15 @@ var QueueClass = _react2['default'].createClass({
   },
 
   loadVideo: function loadVideo(vid) {
-    _actionsActionsJs2['default'].loadVideo(vid.id.videoId);
+    if (this.state.videoQueue.currentId != vid.id.videoId) {
+      _actionsActionsJs2['default'].loadVideo(vid.id.videoId);
+    }
+  },
+
+  getClass: function getClass(vid) {
+    if (this.state.videoQueue && this.state.videoQueue.currentId == vid.id.videoId) {
+      return 'highlight-current';
+    }
   },
 
   getQueue: function getQueue() {
@@ -317,7 +325,7 @@ var QueueClass = _react2['default'].createClass({
     return this.state.videoQueue.videos.map(function (vid) {
       return _react2['default'].createElement(
         'div',
-        { onClick: self.loadVideo.bind(null, vid) },
+        { key: vid.id.videoId, className: self.getClass(vid), onClick: self.loadVideo.bind(null, vid) },
         vid.snippet.title
       );
     });
@@ -408,14 +416,13 @@ var SearchBarClass = _react2['default'].createClass({
   showResults: function showResults(e) {
     var self = this;
     if (this.state.results) {
-      console.log(this.state.results);
       return _react2['default'].createElement(
         'div',
         null,
         this.state.results.map((function (item) {
           return _react2['default'].createElement(
             'div',
-            { onClick: this.queueVideo.bind(null, item) },
+            { key: item.id.videoId, onClick: this.queueVideo.bind(null, item) },
             _react2['default'].createElement(
               'h4',
               null,
@@ -441,7 +448,7 @@ var SearchBarClass = _react2['default'].createClass({
       return _react2['default'].createElement(
         'div',
         null,
-        'Nothing'
+        'Search'
       );
     }
   },
@@ -555,16 +562,13 @@ var EventEmitter = require('events').EventEmitter;
 var assign = require('object-assign');
 var CHANGE_EVENT = 'change';
 
-var queueState = {};
-var videos = [];
+var queueState = { videos: [], currentId: null };
+// var videos = []
+// var currentId = null;
 
 var QueueStore = assign({}, EventEmitter.prototype, {
 
   getQueueState: function getQueueState() {
-    queueState = {
-      videos: videos,
-      current: null
-    };
     return queueState;
   },
 
@@ -586,6 +590,10 @@ QueueStore.dispatchToken = Dispatcher.register(function (action) {
   switch (action.type) {
     case ActionTypes.ENQUEUE_VIDEO:
       queueState.videos.push(action.video);
+      QueueStore.emitChange();
+      break;
+    case ActionTypes.LOAD_VIDEO:
+      queueState.currentId = action.videoId;
       QueueStore.emitChange();
       break;
   }

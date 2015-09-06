@@ -4,16 +4,13 @@ var EventEmitter = require('events').EventEmitter;
 var assign = require('object-assign');
 var CHANGE_EVENT = 'change';
 
-var queueState = {};
-var videos = []
+var queueState = {videos: [], currentId:null };
+// var videos = []
+// var currentId = null;
 
 var QueueStore = assign({}, EventEmitter.prototype, {
 
   getQueueState: function(){
-    queueState = {
-     videos:videos,
-     current: null
-    };
     return queueState;
   },
 
@@ -35,6 +32,10 @@ QueueStore.dispatchToken = Dispatcher.register(function(action) {
   switch(action.type){
     case ActionTypes.ENQUEUE_VIDEO:
       queueState.videos.push(action.video)
+      QueueStore.emitChange();
+      break;
+    case ActionTypes.LOAD_VIDEO:
+      queueState.currentId = action.videoId
       QueueStore.emitChange();
       break;
   }

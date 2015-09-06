@@ -44,21 +44,39 @@ table {
 html, body {
   height: 100%;
   width: 100%;
+  padding-left: 20px;
 }
 
+/* Player*/
 .player {
   width: 50%;
   display: inline-block;
+  margin-left, margin-right: 50px;
 }
 
+/*Queue*/
 .queue, .results {
   display: inline-block;
   width: 50%;
   height: 50%;
   overflow: scroll;
+  margin-left, margin-right: 50px;
 }
+
+.queue{
+  float:right;
+}
+
+.highlight-current {
+  background-color:red;
+}
+
 
 ::-webkit-input-placeholder{ color: #df1f1f;}
 :-moz-placeholder{ color: #df1f1f;}
 ::-moz-placeholder{ color: #df1f1f;}
 :-ms-input-placeholder{ color: #df1f1f;}
+
+
+
+
