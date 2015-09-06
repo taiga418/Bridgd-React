@@ -21,11 +21,16 @@ var QueueClass = React.createClass({
     QueueStore.removeChangeListener(this._onChange);
   },
 
+  loadVideo: function(vid){
+    Actions.loadVideo(vid.id.videoId)
+  },
+
 
   getQueue: function(){
+    var self = this;
     return(
       this.state.videoQueue.videos.map(function(vid){
-        return(<div>{vid.snippet.title}</div>)
+        return(<div onClick={self.loadVideo.bind(null, vid)}>{vid.snippet.title}</div>)
       })
     )
   },
@@ -34,7 +39,6 @@ var QueueClass = React.createClass({
     if(!this.state.videoQueue){
       return(<div>Loading...</div>)
     }
-    console.log(this.state)
     return(
       <div>
         <p>Queue</p>

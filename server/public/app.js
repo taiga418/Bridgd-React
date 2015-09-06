@@ -308,11 +308,16 @@ var QueueClass = _react2['default'].createClass({
     _storesQueueStoreJs2['default'].removeChangeListener(this._onChange);
   },
 
+  loadVideo: function loadVideo(vid) {
+    _actionsActionsJs2['default'].loadVideo(vid.id.videoId);
+  },
+
   getQueue: function getQueue() {
+    var self = this;
     return this.state.videoQueue.videos.map(function (vid) {
       return _react2['default'].createElement(
         'div',
-        null,
+        { onClick: self.loadVideo.bind(null, vid) },
         vid.snippet.title
       );
     });
@@ -326,7 +331,6 @@ var QueueClass = _react2['default'].createClass({
         'Loading...'
       );
     }
-    console.log(this.state);
     return _react2['default'].createElement(
       'div',
       null,
@@ -442,12 +446,11 @@ var SearchBarClass = _react2['default'].createClass({
     }
   },
 
-  loadVideo: function loadVideo(id) {
-    _actionsActionsJs2['default'].loadVideo(id);
-  },
+  // loadVideo: function(id){
+  //   Actions.loadVideo(id)
+  // },
 
   queueVideo: function queueVideo(vid) {
-    console.log('queue', vid);
     _actionsActionsJs2['default'].enqueueVideo(vid);
   },
 

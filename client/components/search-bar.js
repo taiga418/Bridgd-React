@@ -71,12 +71,11 @@ var SearchBarClass = React.createClass({
   },
 
 
-  loadVideo: function(id){
-    Actions.loadVideo(id)
-  },
+  // loadVideo: function(id){
+  //   Actions.loadVideo(id)
+  // },
 
   queueVideo: function(vid){
-    console.log('queue', vid)
     Actions.enqueueVideo(vid);
   },
 
