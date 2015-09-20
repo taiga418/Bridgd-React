@@ -3,6 +3,8 @@ import _ from 'underscore'
 import PlayerStore from '../stores/player-store.js';
 import QueueStore from '../stores/queue-store.js';
 import Actions from '../actions/actions.js';
+import {YoutubePlayer, globalPlayer} from './youtube-player.js';
+
 var PlayerClass = React.createClass({
 
   getInitialState: function(){
@@ -14,57 +16,29 @@ var PlayerClass = React.createClass({
 
   componentDidMount: function(){
     PlayerStore.addChangeListener(this._onChange);
-    //load player api
-    var tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    var firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
   },
 
-  initPlayer: function(){
-    var self = this;
-    function onPlayerReady(event) {
-      Actions.playVideo(event.target);
-    }
 
-    function onPlayerStateChange (event) {
-      if(event.data == YT.PlayerState.ENDED){
-        var state = QueueStore.getQueueState();
-        var videos = state.videos;
-        var currentVidObj = _.find(videos, function(vid){
-          return vid.id.videoId == state.currentId
-        })
-        var currentIndex = videos.indexOf(currentVidObj) 
-        Actions.loadVideo(videos[currentIndex + 1].id.videoId);
-      }
-    }
+  onPlayerReady: function(event) {
+    this.setState({player: event.target});
+    Actions.playVideo(event.target);
+  },
 
-    function stopVideo() {
-      //Actions.stopVideo(player)
-    }
-
-    function onYouTubeIframeAPIReady() {
-      
-       var player = new YT.Player('player', {
-        height: self.state.playerInfo.height,
-        width: self.state.playerInfo.width,
-        videoId: self.state.playerInfo.videoId,
-        events: {
-          'onReady': onPlayerReady,
-          'onStateChange': onPlayerStateChange
-        },
-        playerVars: {
-          controls: '0',
-          disabled: '1'
-        }
+  onPlayerStateChange: function(event) {
+    if(event.data == YT.PlayerState.ENDED){
+      var state = QueueStore.getQueueState();
+      var videos = state.videos;
+      var currentVidObj = _.find(videos, function(vid){
+        return vid.id.videoId == state.currentId
       })
-      self.setState({player: player});
+      var currentIndex = videos.indexOf(currentVidObj) 
+      Actions.loadVideo(videos[currentIndex + 1].id.videoId);
     }
-
-    return onYouTubeIframeAPIReady;
-   
   },
 
+  stopVideo: function() {
+    //Actions.stopVideo(player)
+  },
 
   componentWillUnmount: function() {
     PlayerStore.removeChangeListener(this._onChange);
@@ -75,12 +49,15 @@ var PlayerClass = React.createClass({
   },
 
   render: function(){
-   return(
+    const { videoId, width, height } = this.state.playerInfo
+    return(
       <div className="player">
         <div>
-         <div id="player"></div>
+          <YoutubePlayer width={width} height={height} 
+          videoID={videoId} 
+          onPlayerReady={this.onPlayerReady.bind(this)} 
+          onPlayerStateChange={this.onPlayerStateChange}/>
         </div>
-        {window.onYouTubeIframeAPIReady = this.initPlayer()}
       </div>
     ) 
   }

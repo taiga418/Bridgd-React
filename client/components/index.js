@@ -14,30 +14,30 @@ var App = React.createClass({
     }
   },
 
-  componentDidMount: function() {
-    Store.addChangeListener(this._onChange);
+  // componentDidMount: function() {
+  //   Store.addChangeListener(this._onChange);
+  // },
+
+  // componentWillUnmount: function() {
+  //   Store.removeChangeListener(this._onChange);
+  // },
+
+  // _onChange: function(){
+  //   this.setState({message: Store.getText()})
+  // },
+
+  skip: function(){
+
   },
 
-  componentWillUnmount: function() {
-    Store.removeChangeListener(this._onChange);
-  },
-
-  _onChange: function(){
-    this.setState({message: Store.getText()})
-  },
-
-  inputHandler: function(e){
-    if(e){
-      Actions.setText(e.target.value)
-    }
-  },
   render: function(){
     return(
       <div>
+        <span>NEXT</span>
         <p>Bridgd</p>
         <Player />
         <Queue />
-         <SearchBar />
+        <SearchBar />
       </div>
     )
   }
