@@ -31,7 +31,10 @@ var PlayerClass = React.createClass({
       var currentVidObj = _.find(videos, function(vid){
         return vid.id.videoId == state.currentId
       })
-      var currentIndex = videos.indexOf(currentVidObj) 
+      var currentIndex = videos.indexOf(currentVidObj);
+      if(currentIndex == videos.length - 1){
+        currentIndex = -1;
+      } 
       Actions.loadVideo(videos[currentIndex + 1].id.videoId);
     }
   },
