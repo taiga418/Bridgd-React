@@ -2,16 +2,22 @@ var express = require('express');
 var path = require('path')
 var React = require('react');
 var request = require('request');
-
-var LandingPage = require('../client/components/index.js');
-//var MainPage = require('../client/components/main.js');
+var bodyparser = require('body-parser');
 
 var app = express();
+var db = require('mongoskin').db('mongodb://heroku_app31904821:ouldm56b1i98br7lfm5f009olh@ds053370.mongolab.com:53370/heroku_app31904821'); 
+
 app.set('views', path.join(__dirname, 'templates'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(bodyparser.urlencoded({
+    extended: true
+}));
+app.use(bodyparser.json());
+
 app.set('port', process.env.PORT || 3000);
 
 var server = app.listen(app.get('port'), function() {
@@ -20,19 +26,21 @@ var server = app.listen(app.get('port'), function() {
 
 
 app.get('/', function (req, res) {
-  //var reactHtml = React.renderToString(<LandingPage />);
-  request.get("https://www.youtube.com/iframe_api", function(err, resp, body){
-    if(err){
-      return console.log(err)
-    }
-    //res.render('index.html', {reactOutPut: reactHtml, iFrameApi: body});
-    res.render('index.html', {iFrameApi: body});
+  db.collection('rooms').findOne({name:'taiga'}, function(err, result) {
+    res.render('index.html', {queue:result});
   })
-
-  
 })
 
-// app.get('/home', function (req, res) {
-//   var reactHtml = React.renderToString(<MainPage />);
-//   res.render('index.html', {reactOutPut: reactHtml});
-// })
+app.post('/enqueue', function(req, res){
+  var video = req.body
+  var newQ;
+  db.collection('rooms').findOne({name:'taiga'}, function(err, room) {
+    if(err) res.status(500).send('Error finding queue')
+    newQ = room.queue;
+    newQ.push(video);
+    db.collection('rooms').update({name:'taiga'}, {$set:{queue:newQ}}, function(err, response){
+      if(err) res.status(500).send('Error saving to queue')
+      res.status(200).send('success');
+    })
+  })
+})

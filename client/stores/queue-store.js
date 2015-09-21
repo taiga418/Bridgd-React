@@ -5,7 +5,8 @@ var assign = require('object-assign');
 var CHANGE_EVENT = 'change';
 
 var queueState = {videos: [], currentId:'0KmtIHyCpf4', currentIndex: null};
-// var videos = []
+queueState.videos = window.room.queue || [];
+console.log('werq', queueState.videos)
 // var currentId = null;
 
 var QueueStore = assign({}, EventEmitter.prototype, {
@@ -31,7 +32,11 @@ var QueueStore = assign({}, EventEmitter.prototype, {
 QueueStore.dispatchToken = Dispatcher.register(function(action) {
   switch(action.type){
     case ActionTypes.ENQUEUE_VIDEO:
-      queueState.videos.push(action.video)
+      if(action.err){
+        console.log(action.err)
+      }else{
+        queueState.videos.push(action.video)
+      }
       QueueStore.emitChange();
       break;
     case ActionTypes.LOAD_VIDEO:

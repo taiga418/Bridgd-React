@@ -1,5 +1,7 @@
 import React from 'react';
 import _ from 'underscore'
+
+
 import Actions from '../actions/actions.js'
 
 import QueueStore from '../stores/queue-store.js';
@@ -11,6 +13,10 @@ import Queue from './queue.js';
 
 //Main Landing Page of the App, houses all components. View Controller 
 var App = React.createClass({
+
+  componentDidMount: function(){
+    //console.log(window.queue)
+  },
 
   skip: function(){
     var state = QueueStore.getQueueState();

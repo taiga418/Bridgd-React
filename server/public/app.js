@@ -1,10 +1,29 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _jquery = require('jquery');
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
 var Dispatcher = require('../dispatcher');
 var ActionTypes = require('../constants/constants').ActionTypes;
 
 module.exports = {
+  // getQueue: function(){
+  //   $.get( "api/queue", function( data ) {
+  //     Dispatcher.dispatch({
+  //       type: ActionTypes.GET_QUEUE,
+  //       data: data
+  //     });
+  //   }, function(err){
+  //     Dispatcher.dispatch({
+  //       type: ActionTypes.GET_QUEUE,
+  //       err: err
+  //     });
+  //   });
+  // },
 
   playVideo: function playVideo(player) {
     Dispatcher.dispatch({
@@ -22,15 +41,27 @@ module.exports = {
   },
 
   enqueueVideo: function enqueueVideo(video) {
-    Dispatcher.dispatch({
-      type: ActionTypes.ENQUEUE_VIDEO,
-      video: video
+    _jquery2['default'].ajax({
+      method: 'POST',
+      url: '/enqueue',
+      data: video,
+      success: function success(data) {
+        Dispatcher.dispatch({
+          type: ActionTypes.ENQUEUE_VIDEO,
+          video: video
+        });
+      },
+      error: function error(err) {
+        Dispatcher.dispatch({
+          type: ActionTypes.ENQUEUE_VIDEO,
+          err: err
+        });
+      }
     });
   }
-
 };
 
-},{"../constants/constants":8,"../dispatcher":9}],2:[function(require,module,exports){
+},{"../constants/constants":8,"../dispatcher":9,"jquery":17}],2:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -130,6 +161,10 @@ var _queueJs2 = _interopRequireDefault(_queueJs);
 //Main Landing Page of the App, houses all components. View Controller
 var App = _react2['default'].createClass({
   displayName: 'App',
+
+  componentDidMount: function componentDidMount() {
+    //console.log(window.queue)
+  },
 
   skip: function skip() {
     var state = _storesQueueStoreJs2['default'].getQueueState();
@@ -327,7 +362,7 @@ var QueueClass = _react2['default'].createClass({
     return this.state.videoQueue.videos.map(function (vid) {
       return _react2['default'].createElement(
         'div',
-        { key: vid.id.videoId, className: self.getClass(vid), onClick: self.loadVideo.bind(null, vid) },
+        { className: self.getClass(vid), onClick: self.loadVideo.bind(null, vid) },
         vid.snippet.title
       );
     });
@@ -680,7 +715,8 @@ var assign = require('object-assign');
 var CHANGE_EVENT = 'change';
 
 var queueState = { videos: [], currentId: '0KmtIHyCpf4', currentIndex: null };
-// var videos = []
+queueState.videos = window.room.queue || [];
+console.log('werq', queueState.videos);
 // var currentId = null;
 
 var QueueStore = assign({}, EventEmitter.prototype, {
@@ -706,7 +742,11 @@ var QueueStore = assign({}, EventEmitter.prototype, {
 QueueStore.dispatchToken = Dispatcher.register(function (action) {
   switch (action.type) {
     case ActionTypes.ENQUEUE_VIDEO:
-      queueState.videos.push(action.video);
+      if (action.err) {
+        console.log(action.err);
+      } else {
+        queueState.videos.push(action.video);
+      }
       QueueStore.emitChange();
       break;
     case ActionTypes.LOAD_VIDEO:
