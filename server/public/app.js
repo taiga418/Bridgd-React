@@ -405,6 +405,10 @@ var _jquery = require('jquery');
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
+var _underscore = require('underscore');
+
+var _underscore2 = _interopRequireDefault(_underscore);
+
 var _storesPlayerStoreJs = require('../stores/player-store.js');
 
 var _storesPlayerStoreJs2 = _interopRequireDefault(_storesPlayerStoreJs);
@@ -495,7 +499,15 @@ var SearchBarClass = _react2['default'].createClass({
   // },
 
   queueVideo: function queueVideo(vid) {
-    _actionsActionsJs2['default'].enqueueVideo(vid);
+    var videos = _storesQueueStoreJs2['default'].getQueueState().videos;
+    var dupe = _underscore2['default'].filter(videos, function (obj) {
+      return obj.id.videoId == vid.id.videoId;
+    });
+
+    if (dupe.length == 0) {
+      console.log('Added');
+      _actionsActionsJs2['default'].enqueueVideo(vid);
+    }
   },
 
   render: function render() {
@@ -510,7 +522,7 @@ var SearchBarClass = _react2['default'].createClass({
 
 module.exports = SearchBarClass;
 
-},{"../actions/actions.js":1,"../stores/player-store.js":10,"../stores/queue-store.js":11,"jquery":17,"react":213}],7:[function(require,module,exports){
+},{"../actions/actions.js":1,"../stores/player-store.js":10,"../stores/queue-store.js":11,"jquery":17,"react":213,"underscore":214}],7:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;

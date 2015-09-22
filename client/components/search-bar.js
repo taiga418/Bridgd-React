@@ -1,5 +1,6 @@
 import React from 'react';
 import $ from 'jquery';
+import _ from 'underscore';
 import PlayerStore from '../stores/player-store.js';
 import QueueStore from '../stores/queue-store.js';
 import Actions from '../actions/actions.js';
@@ -75,7 +76,15 @@ var SearchBarClass = React.createClass({
   // },
 
   queueVideo: function(vid){
-    Actions.enqueueVideo(vid);
+    var videos = QueueStore.getQueueState().videos;
+    var dupe =_.filter(videos, function(obj) {
+      return obj.id.videoId == vid.id.videoId
+    });
+   
+    if(dupe.length ==  0){
+      console.log('Added')
+      Actions.enqueueVideo(vid);
+    }
   },
 
   render: function(){
