@@ -44,8 +44,8 @@ var QueueClass = React.createClass({
     return(
       this.state.videoQueue.videos.map(function(vid){
         return(
-          <div className={self.getClass(vid)}>
-            <span onClick={self.loadVideo.bind(null, vid)}>{vid.snippet.title}</span>
+          <div>
+            <span className={self.getClass(vid)} onClick={self.loadVideo.bind(null, vid)}>{vid.snippet.title}</span>
             <button onClick={self.deleteVideo.bind(null, vid)}>Delete</button>
           </div>
         )

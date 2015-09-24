@@ -4,10 +4,9 @@ var EventEmitter = require('events').EventEmitter;
 var assign = require('object-assign');
 var CHANGE_EVENT = 'change';
 
-var queueState = {videos: [], currentId:'0KmtIHyCpf4', currentIndex: null};
+var queueState = {videos: [], currentId: null, currentIndex: null};
 queueState.videos = window.room.queue || [];
-console.log('werq', queueState.videos)
-// var currentId = null;
+//queueState.currentId = window.room.queue ? window.room.queue[0].id.videoId : 'e9R2uLN1uOE'
 
 var QueueStore = assign({}, EventEmitter.prototype, {
 

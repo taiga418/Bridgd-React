@@ -26,6 +26,10 @@ var server = app.listen(app.get('port'), function() {
 });
 
 
+//////////////////// SERVER ROUTES /////////////////
+
+
+
 app.get('/', function (req, res) {
   db.collection('rooms').findOne({name:'taiga'}, function(err, result) {
     res.render('index.html', {queue:result});
