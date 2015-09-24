@@ -40,6 +40,26 @@ module.exports = {
     });
   },
 
+  deleteVideo: function deleteVideo(video) {
+    _jquery2['default'].ajax({
+      method: 'POST',
+      url: '/delete/' + video.id.videoId,
+      success: function success(data) {
+        console.log('actions', data);
+        Dispatcher.dispatch({
+          type: ActionTypes.DELETE_VIDEO,
+          queue: data.queue
+        });
+      },
+      error: function error(err) {
+        Dispatcher.dispatch({
+          type: ActionTypes.DELETE_VIDEO,
+          err: err
+        });
+      }
+    });
+  },
+
   enqueueVideo: function enqueueVideo(video) {
     _jquery2['default'].ajax({
       method: 'POST',
@@ -48,7 +68,7 @@ module.exports = {
       success: function success(data) {
         Dispatcher.dispatch({
           type: ActionTypes.ENQUEUE_VIDEO,
-          video: video
+          queue: data.queue
         });
       },
       error: function error(err) {
@@ -351,6 +371,11 @@ var QueueClass = _react2['default'].createClass({
     }
   },
 
+  deleteVideo: function deleteVideo(vid) {
+    console.log(vid);
+    _actionsActionsJs2['default'].deleteVideo(vid);
+  },
+
   getClass: function getClass(vid) {
     if (this.state.videoQueue && this.state.videoQueue.currentId == vid.id.videoId) {
       return 'highlight-current';
@@ -362,8 +387,17 @@ var QueueClass = _react2['default'].createClass({
     return this.state.videoQueue.videos.map(function (vid) {
       return _react2['default'].createElement(
         'div',
-        { className: self.getClass(vid), onClick: self.loadVideo.bind(null, vid) },
-        vid.snippet.title
+        { className: self.getClass(vid) },
+        _react2['default'].createElement(
+          'span',
+          { onClick: self.loadVideo.bind(null, vid) },
+          vid.snippet.title
+        ),
+        _react2['default'].createElement(
+          'button',
+          { onClick: self.deleteVideo.bind(null, vid) },
+          'Delete'
+        )
       );
     });
   },
@@ -649,6 +683,7 @@ module.exports = {
     PLAY_VIDEO: null,
     STOP_VIDEO: null,
     LOAD_VIDEO: null,
+    DELETE_VIDEO: null,
     ENQUEUE_VIDEO: null
   })
 
@@ -757,7 +792,7 @@ QueueStore.dispatchToken = Dispatcher.register(function (action) {
       if (action.err) {
         console.log(action.err);
       } else {
-        queueState.videos.push(action.video);
+        queueState.videos = action.queue;
       }
       QueueStore.emitChange();
       break;
@@ -765,6 +800,15 @@ QueueStore.dispatchToken = Dispatcher.register(function (action) {
       queueState.currentId = action.videoId;
       QueueStore.emitChange();
       break;
+    case ActionTypes.DELETE_VIDEO:
+      if (action.err) {
+        console.log(action.err);
+      } else {
+        queueState.videos = action.queue;
+      }
+      QueueStore.emitChange();
+      break;
+
   }
 });
 

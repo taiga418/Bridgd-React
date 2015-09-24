@@ -27,6 +27,11 @@ var QueueClass = React.createClass({
     }
   },
 
+  deleteVideo: function(vid){
+    console.log(vid)
+    Actions.deleteVideo(vid)
+  },
+
   getClass: function(vid){
     if(this.state.videoQueue && this.state.videoQueue.currentId == vid.id.videoId){
       return 'highlight-current'
@@ -38,7 +43,12 @@ var QueueClass = React.createClass({
     var self = this;
     return(
       this.state.videoQueue.videos.map(function(vid){
-        return(<div className={self.getClass(vid)} onClick={self.loadVideo.bind(null, vid)}>{vid.snippet.title}</div>)
+        return(
+          <div className={self.getClass(vid)}>
+            <span onClick={self.loadVideo.bind(null, vid)}>{vid.snippet.title}</span>
+            <button onClick={self.deleteVideo.bind(null, vid)}>Delete</button>
+          </div>
+        )
       })
     )
   },

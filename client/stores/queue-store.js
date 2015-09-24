@@ -35,7 +35,7 @@ QueueStore.dispatchToken = Dispatcher.register(function(action) {
       if(action.err){
         console.log(action.err)
       }else{
-        queueState.videos.push(action.video)
+        queueState.videos = action.queue
       }
       QueueStore.emitChange();
       break;
@@ -43,6 +43,15 @@ QueueStore.dispatchToken = Dispatcher.register(function(action) {
       queueState.currentId = action.videoId
       QueueStore.emitChange();
       break;
+    case ActionTypes.DELETE_VIDEO:
+      if(action.err){
+        console.log(action.err)
+      }else{
+        queueState.videos = action.queue
+      }
+      QueueStore.emitChange();
+      break;
+
   }
 })
 

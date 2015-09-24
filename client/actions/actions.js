@@ -33,6 +33,26 @@ module.exports = {
     })
   },
 
+  deleteVideo: function(video){
+    $.ajax({
+      method: 'POST',
+      url: '/delete/'+ video.id.videoId, 
+      success: function(data){
+        console.log('actions', data)
+        Dispatcher.dispatch({
+          type: ActionTypes.DELETE_VIDEO,
+          queue: data.queue 
+        })
+      },
+      error: function(err){
+        Dispatcher.dispatch({
+          type: ActionTypes.DELETE_VIDEO,
+          err: err
+        })
+      }
+    })
+  },
+
   enqueueVideo: function(video){
     $.ajax({
       method: 'POST',
@@ -41,7 +61,7 @@ module.exports = {
       success: function(data){
         Dispatcher.dispatch({
           type: ActionTypes.ENQUEUE_VIDEO,
-          video: video
+          queue: data.queue 
         })
       },
       error: function(err){
