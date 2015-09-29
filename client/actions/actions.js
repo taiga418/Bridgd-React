@@ -71,5 +71,12 @@ module.exports = {
         })
       }
     })
+  },
+
+  socketUpdate: function(queue){
+    Dispatcher.dispatch({
+      type: ActionTypes.SOCKET_UPDATE,
+      queue: queue 
+    })
   }
 };

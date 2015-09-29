@@ -25,7 +25,30 @@ var server = app.listen(app.get('port'), function() {
   console.log('Express server listening on port ' + server.address().port);
 });
 
+///////////SOCKET /////////////////
+var io = require('socket.io').listen(server);
 
+io.sockets.on('connection', function (socket) {
+
+  socket.emit('selfId', socket.id);
+
+  socket.on('joined', function(){
+    console.log('socket id:', socket.id, ' connected');
+  })
+
+  socket.on('disconnect', function () {
+    console.log('socket id:', socket.id, ' disconnected');
+  });
+
+  app.on('queue update', function(queue){
+    socket.emit('queueUpdate', queue)
+  })
+
+
+});
+
+
+///////////////////////
 //////////////////// SERVER ROUTES /////////////////
 
 
@@ -45,6 +68,7 @@ app.post('/enqueue', function(req, res){
     newQ.push(video);
     db.collection('rooms').update({name:'taiga'}, {$set:{queue:newQ}}, function(err, response){
       if(err) return res.status(500).send('Error saving to queue')
+      app.emit('queue update', newQ)
       res.status(200).send({queue: newQ});
     })
   })
@@ -65,6 +89,7 @@ app.post('/delete/:id', function(req, res){
         return res.status(500).send('Error saving to queue')
       }
       console.log(response)
+      app.emit('queue update', newQ)
       res.status(200).send({queue: newQ});
     })
   })

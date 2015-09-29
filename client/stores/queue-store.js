@@ -14,6 +14,11 @@ var QueueStore = assign({}, EventEmitter.prototype, {
     return queueState;
   },
 
+  setQueueState: function(queue){
+    queueState.videos = queue;
+    this.emit(CHANGE_EVENT);
+  },
+
   emitChange: function() {
     this.emit(CHANGE_EVENT);
   },
@@ -50,7 +55,10 @@ QueueStore.dispatchToken = Dispatcher.register(function(action) {
       }
       QueueStore.emitChange();
       break;
-
+    case ActionTypes.SOCKET_UPDATE:
+      queueState.videos = action.queue
+      QueueStore.emitChange();
+      break;
   }
 })
 

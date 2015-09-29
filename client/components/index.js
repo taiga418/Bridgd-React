@@ -15,7 +15,7 @@ import Queue from './queue.js';
 var App = React.createClass({
 
   componentDidMount: function(){
-    //console.log(window.queue)
+   
   },
 
   skip: function(){

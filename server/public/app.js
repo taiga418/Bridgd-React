@@ -78,6 +78,13 @@ module.exports = {
         });
       }
     });
+  },
+
+  socketUpdate: function socketUpdate(queue) {
+    Dispatcher.dispatch({
+      type: ActionTypes.SOCKET_UPDATE,
+      queue: queue
+    });
   }
 };
 
@@ -182,9 +189,7 @@ var _queueJs2 = _interopRequireDefault(_queueJs);
 var App = _react2['default'].createClass({
   displayName: 'App',
 
-  componentDidMount: function componentDidMount() {
-    //console.log(window.queue)
-  },
+  componentDidMount: function componentDidMount() {},
 
   skip: function skip() {
     var state = _storesQueueStoreJs2['default'].getQueueState();
@@ -359,6 +364,13 @@ var QueueClass = _react2['default'].createClass({
 
   componentDidMount: function componentDidMount() {
     _storesQueueStoreJs2['default'].addChangeListener(this._onChange);
+    this.socket = io();
+    this.socket.emit('joined');
+
+    this.socket.on('queueUpdate', function (queue) {
+      console.log('update');
+      _actionsActionsJs2['default'].socketUpdate(queue);
+    });
   },
 
   componentWillUnmount: function componentWillUnmount() {
@@ -684,7 +696,8 @@ module.exports = {
     STOP_VIDEO: null,
     LOAD_VIDEO: null,
     DELETE_VIDEO: null,
-    ENQUEUE_VIDEO: null
+    ENQUEUE_VIDEO: null,
+    SOCKET_UPDATE: null
   })
 
 };
@@ -771,6 +784,11 @@ var QueueStore = assign({}, EventEmitter.prototype, {
     return queueState;
   },
 
+  setQueueState: function setQueueState(queue) {
+    queueState.videos = queue;
+    this.emit(CHANGE_EVENT);
+  },
+
   emitChange: function emitChange() {
     this.emit(CHANGE_EVENT);
   },
@@ -807,7 +825,10 @@ QueueStore.dispatchToken = Dispatcher.register(function (action) {
       }
       QueueStore.emitChange();
       break;
-
+    case ActionTypes.SOCKET_UPDATE:
+      queueState.videos = action.queue;
+      QueueStore.emitChange();
+      break;
   }
 });
 

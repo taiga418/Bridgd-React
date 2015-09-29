@@ -15,6 +15,13 @@ var QueueClass = React.createClass({
 
   componentDidMount: function(){
     QueueStore.addChangeListener(this._onChange);
+    this.socket = io();
+    this.socket.emit('joined');
+
+    this.socket.on('queueUpdate', function(queue){
+      console.log('update')
+      Actions.socketUpdate(queue);
+    })
   },
 
   componentWillUnmount: function(){

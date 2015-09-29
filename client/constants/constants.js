@@ -8,7 +8,8 @@ module.exports = {
     STOP_VIDEO: null,
     LOAD_VIDEO:null,
     DELETE_VIDEO:null,
-    ENQUEUE_VIDEO: null
+    ENQUEUE_VIDEO: null,
+    SOCKET_UPDATE: null
   })
 
 };
