@@ -44,6 +44,10 @@ io.sockets.on('connection', function (socket) {
     socket.emit('queueUpdate', queue)
   })
 
+  app.on('load video', function(video){
+    socket.emit('loadVideo', video)
+  })
+
 
 });
 
@@ -59,12 +63,34 @@ app.get('/', function (req, res) {
   })
 })
 
+app.get('/queue', function(req, res){
+  db.collection('rooms').findOne({name:'taiga'}, function(err, result) {
+    res.send({queue:result});
+  })
+})
+
+app.post('/load', function(req, res){
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  
+  var video = req.body
+  app.emit('load video', video)
+})
+
 app.post('/enqueue', function(req, res){
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+ 
   var video = req.body
   var newQ;
   db.collection('rooms').findOne({name:'taiga'}, function(err, room) {
     if(err) return res.status(500).send('Error finding queue')
     newQ = room.queue;
+    var dupes =_.filter(newQ, function(obj) {
+      return obj.id.videoId == video.id.videoId
+    });
+    if(dupes.length > 0) return res.status(500).send('Dupe')
+
     newQ.push(video);
     db.collection('rooms').update({name:'taiga'}, {$set:{queue:newQ}}, function(err, response){
       if(err) return res.status(500).send('Error saving to queue')

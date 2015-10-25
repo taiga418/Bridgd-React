@@ -15,7 +15,18 @@ import Queue from './queue.js';
 var App = React.createClass({
 
   componentDidMount: function(){
-   
+    this.socket = io();
+    this.socket.emit('joined');
+
+    this.socket.on('queueUpdate', function(queue){
+      console.log('update')
+      Actions.socketUpdate(queue);
+    })
+
+    this.socket.on('loadVideo', function(vid){
+      console.log('update')
+      Actions.loadVideo(vid.id.videoId)
+    })
   },
 
   skip: function(){
