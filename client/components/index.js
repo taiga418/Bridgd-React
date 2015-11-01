@@ -25,7 +25,7 @@ var App = React.createClass({
 
     this.socket.on('loadVideo', function(vid){
       console.log('update')
-      Actions.loadVideo(vid.id.videoId)
+      Actions.loadVideo(vid)
     })
   },
 

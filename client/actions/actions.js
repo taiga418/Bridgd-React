@@ -25,10 +25,16 @@ module.exports = {
     });
   },
 
-  loadVideo: function(videoId, delay){
+  loadVideo: function(video, delay){
+    $.ajax({
+      method: 'POST',
+      url: '/update/',
+      data: video
+    })
+    
     Dispatcher.dispatch({
       type: ActionTypes.LOAD_VIDEO,
-      videoId: videoId,
+      videoId: video.id.videoId,
       delay: delay
     })
   },

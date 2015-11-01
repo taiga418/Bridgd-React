@@ -48,6 +48,10 @@ io.sockets.on('connection', function (socket) {
     socket.emit('loadVideo', video)
   })
 
+  app.on('new video', function(video){
+    socket.emit('newVideo', video)
+  })
+
 
 });
 
@@ -69,6 +73,7 @@ app.get('/queue', function(req, res){
   })
 })
 
+//mobile hits to update player with new video
 app.post('/load', function(req, res){
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -119,4 +124,9 @@ app.post('/delete/:id', function(req, res){
       res.status(200).send({queue: newQ});
     })
   })
+})
+
+//tell the mobile app that the player is playing a new video
+app.post('/update', function(req, res){
+   app.emit('new video', req.body)
 })

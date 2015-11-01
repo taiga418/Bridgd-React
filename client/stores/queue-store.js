@@ -55,7 +55,11 @@ QueueStore.dispatchToken = Dispatcher.register(function(action) {
       QueueStore.emitChange();
       break;
     case ActionTypes.SOCKET_UPDATE:
-      queueState.videos = action.queue
+      if(action.err){
+        console.log(action.err)
+      }else{
+        queueState.videos = action.queue
+      }
       QueueStore.emitChange();
       break;
   }

@@ -32,10 +32,15 @@ module.exports = {
     });
   },
 
-  loadVideo: function loadVideo(videoId, delay) {
+  loadVideo: function loadVideo(video, delay) {
+    _jquery2['default'].ajax({
+      method: 'POST',
+      url: '/update/',
+      data: video
+    });
     Dispatcher.dispatch({
       type: ActionTypes.LOAD_VIDEO,
-      videoId: videoId,
+      videoId: video.id.videoId,
       delay: delay
     });
   },
@@ -200,7 +205,7 @@ var App = _react2['default'].createClass({
 
     this.socket.on('loadVideo', function (vid) {
       console.log('update');
-      _actionsActionsJs2['default'].loadVideo(vid.id.videoId);
+      _actionsActionsJs2['default'].loadVideo(vid);
     });
   },
 
@@ -385,7 +390,7 @@ var QueueClass = _react2['default'].createClass({
 
   loadVideo: function loadVideo(vid) {
     if (this.state.videoQueue.currentId != vid.id.videoId) {
-      _actionsActionsJs2['default'].loadVideo(vid.id.videoId);
+      _actionsActionsJs2['default'].loadVideo(vid);
     }
   },
 
@@ -783,7 +788,6 @@ var CHANGE_EVENT = 'change';
 
 var queueState = { videos: [], currentId: null };
 queueState.videos = window.room.queue || [];
-//queueState.currentId = window.room.queue ? window.room.queue[0].id.videoId : 'e9R2uLN1uOE'
 
 var QueueStore = assign({}, EventEmitter.prototype, {
 
@@ -833,7 +837,11 @@ QueueStore.dispatchToken = Dispatcher.register(function (action) {
       QueueStore.emitChange();
       break;
     case ActionTypes.SOCKET_UPDATE:
-      queueState.videos = action.queue;
+      if (action.err) {
+        console.log(action.err);
+      } else {
+        queueState.videos = action.queue;
+      }
       QueueStore.emitChange();
       break;
   }
