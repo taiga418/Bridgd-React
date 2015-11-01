@@ -35,7 +35,7 @@ var PlayerClass = React.createClass({
       if(currentIndex == videos.length - 1){
         currentIndex = -1;
       } 
-      Actions.loadVideo(videos[currentIndex + 1].id.videoId);
+      Actions.loadVideo(videos[currentIndex + 1]);
     }
   },
 

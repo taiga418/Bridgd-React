@@ -38,6 +38,7 @@ module.exports = {
       url: '/update/',
       data: video
     });
+
     Dispatcher.dispatch({
       type: ActionTypes.LOAD_VIDEO,
       videoId: video.id.videoId,
@@ -308,7 +309,7 @@ var PlayerClass = _react2['default'].createClass({
       if (currentIndex == videos.length - 1) {
         currentIndex = -1;
       }
-      _actionsActionsJs2['default'].loadVideo(videos[currentIndex + 1].id.videoId);
+      _actionsActionsJs2['default'].loadVideo(videos[currentIndex + 1]);
     }
   },
 

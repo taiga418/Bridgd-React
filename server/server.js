@@ -128,5 +128,13 @@ app.post('/delete/:id', function(req, res){
 
 //tell the mobile app that the player is playing a new video
 app.post('/update', function(req, res){
-   app.emit('new video', req.body)
+  var video = req.body
+  db.collection('rooms').update({name:'taiga'}, {$set:{current:video}}, function(err, response){
+      if(err) {
+        console.log(err)
+        return res.status(500).send('Error saving to queue')
+      }
+      console.log(response)
+      app.emit('new video', video)
+    })
 })
