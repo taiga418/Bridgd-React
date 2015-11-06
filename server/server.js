@@ -136,5 +136,6 @@ app.post('/update', function(req, res){
       }
       console.log(response)
       app.emit('new video', video)
+      res.status(200).send({video: video})
     })
 })

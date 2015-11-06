@@ -42,6 +42,9 @@ PlayerStore.dispatchToken = Dispatcher.register(function(action) {
       PlayerStore.emitChange();
       break;
     case ActionTypes.LOAD_VIDEO:
+      if(action.err){
+        return console.log('err', err)
+      }
       player.loadVideoById(action.videoId, action.delay);
       playerState.videoId = action.videoId;
       PlayerStore.emitChange();

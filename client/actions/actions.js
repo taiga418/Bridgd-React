@@ -30,13 +30,23 @@ module.exports = {
       method: 'POST',
       url: '/update/',
       data: video
+      success: function(data){
+        Dispatcher.dispatch({
+          type: ActionTypes.LOAD_VIDEO,
+          videoId: data.video.id.videoId,
+          delay: delay
+        })
+      },
+      error: function(err){
+        Dispatcher.dispatch({
+          type: ActionTypes.LOAD_VIDEO,
+          error: err
+        })
+        console.log('error', err)
+      }
     })
     
-    Dispatcher.dispatch({
-      type: ActionTypes.LOAD_VIDEO,
-      videoId: video.id.videoId,
-      delay: delay
-    })
+   
   },
 
   deleteVideo: function(video){
