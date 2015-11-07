@@ -1,6 +1,6 @@
 import React from 'react';
 import QueueStore from '../stores/queue-store.js';
-import Actions from '../actions/actions.js';
+import {loadVideo, deleteVideo } from '../actions/actions.js';
 
 var QueueClass = React.createClass({
   getInitialState: function(){
@@ -23,13 +23,13 @@ var QueueClass = React.createClass({
 
   loadVideo: function(vid){
     if(this.state.videoQueue.currentId != vid.id.videoId){
-      Actions.loadVideo(vid)
+      loadVideo(vid)
     }
   },
 
   deleteVideo: function(vid){
     console.log(vid)
-    Actions.deleteVideo(vid)
+    deleteVideo(vid)
   },
 
   getClass: function(vid){
