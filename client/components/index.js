@@ -1,8 +1,6 @@
 import React from 'react';
-import _ from 'underscore'
 
-
-import Actions from '../actions/actions.js'
+import {socketUpdate, loadVideo} from '../actions/actions.js'
 
 import QueueStore from '../stores/queue-store.js';
 import PlayerStore from '../stores/player-store.js';
@@ -20,19 +18,19 @@ var App = React.createClass({
 
     this.socket.on('queueUpdate', function(queue){
       console.log('update')
-      Actions.socketUpdate(queue);
+      socketUpdate(queue);
     })
 
     this.socket.on('loadVideo', function(vid){
       console.log('update')
-      Actions.loadVideo(vid)
+      loadVideo(vid)
     })
   },
 
   skip: function(){
     var state = QueueStore.getQueueState();
     var videos = state.videos;
-    var currentVidObj = _.find(videos, function(vid){
+    var currentVidObj = videos.find(vid => {
       return vid.id.videoId == state.currentId
     })
     var currentIndex = videos.indexOf(currentVidObj) 
@@ -40,7 +38,7 @@ var App = React.createClass({
       currentIndex = -1;
     }
     console.log(currentIndex, videos[currentIndex + 1], videos)
-    Actions.loadVideo(videos[currentIndex + 1].id.videoId);
+    loadVideo(videos[currentIndex + 1]);
   },
 
   render: function(){

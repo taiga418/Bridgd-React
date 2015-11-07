@@ -1,6 +1,13 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
+exports.__esModule = true;
+exports.playVideo = playVideo;
+exports.loadVideo = loadVideo;
+exports.deleteVideo = deleteVideo;
+exports.enqueueVideo = enqueueVideo;
+exports.socketUpdate = socketUpdate;
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 var _jquery = require('jquery');
@@ -10,89 +17,85 @@ var _jquery2 = _interopRequireDefault(_jquery);
 var Dispatcher = require('../dispatcher');
 var ActionTypes = require('../constants/constants').ActionTypes;
 
-module.exports = {
-  // getQueue: function(){
-  //   $.get( "api/queue", function( data ) {
-  //     Dispatcher.dispatch({
-  //       type: ActionTypes.GET_QUEUE,
-  //       data: data
-  //     });
-  //   }, function(err){
-  //     Dispatcher.dispatch({
-  //       type: ActionTypes.GET_QUEUE,
-  //       err: err
-  //     });
-  //   });
-  // },
+//module.exports = {
 
-  playVideo: function playVideo(player) {
-    Dispatcher.dispatch({
-      type: ActionTypes.PLAY_VIDEO,
-      player: player
-    });
-  },
+function playVideo(player) {
+  Dispatcher.dispatch({
+    type: ActionTypes.PLAY_VIDEO,
+    player: player
+  });
+}
 
-  loadVideo: function loadVideo(video, delay) {
-    _jquery2['default'].ajax({
-      method: 'POST',
-      url: '/update/',
-      data: video
-    });
+function loadVideo(video, delay) {
+  _jquery2['default'].ajax({
+    method: 'POST',
+    url: '/update/',
+    data: video,
+    success: function success(data) {
+      Dispatcher.dispatch({
+        type: ActionTypes.LOAD_VIDEO,
+        videoId: data.video.id.videoId,
+        delay: delay
+      });
+    },
+    error: function error(err) {
+      Dispatcher.dispatch({
+        type: ActionTypes.LOAD_VIDEO,
+        error: err
+      });
+      console.log('error', err);
+    }
+  });
+}
 
-    Dispatcher.dispatch({
-      type: ActionTypes.LOAD_VIDEO,
-      videoId: video.id.videoId,
-      delay: delay
-    });
-  },
+function deleteVideo(video) {
+  _jquery2['default'].ajax({
+    method: 'POST',
+    url: '/delete/' + video.id.videoId,
+    success: function success(data) {
+      console.log('actions', data);
+      Dispatcher.dispatch({
+        type: ActionTypes.DELETE_VIDEO,
+        queue: data.queue
+      });
+    },
+    error: function error(err) {
+      Dispatcher.dispatch({
+        type: ActionTypes.DELETE_VIDEO,
+        err: err
+      });
+    }
+  });
+}
 
-  deleteVideo: function deleteVideo(video) {
-    _jquery2['default'].ajax({
-      method: 'POST',
-      url: '/delete/' + video.id.videoId,
-      success: function success(data) {
-        console.log('actions', data);
-        Dispatcher.dispatch({
-          type: ActionTypes.DELETE_VIDEO,
-          queue: data.queue
-        });
-      },
-      error: function error(err) {
-        Dispatcher.dispatch({
-          type: ActionTypes.DELETE_VIDEO,
-          err: err
-        });
-      }
-    });
-  },
+function enqueueVideo(video) {
+  _jquery2['default'].ajax({
+    method: 'POST',
+    url: '/enqueue',
+    data: video,
+    success: function success(data) {
+      Dispatcher.dispatch({
+        type: ActionTypes.ENQUEUE_VIDEO,
+        queue: data.queue
+      });
+    },
+    error: function error(err) {
+      Dispatcher.dispatch({
+        type: ActionTypes.ENQUEUE_VIDEO,
+        err: err
+      });
+    }
+  });
+}
 
-  enqueueVideo: function enqueueVideo(video) {
-    _jquery2['default'].ajax({
-      method: 'POST',
-      url: '/enqueue',
-      data: video,
-      success: function success(data) {
-        Dispatcher.dispatch({
-          type: ActionTypes.ENQUEUE_VIDEO,
-          queue: data.queue
-        });
-      },
-      error: function error(err) {
-        Dispatcher.dispatch({
-          type: ActionTypes.ENQUEUE_VIDEO,
-          err: err
-        });
-      }
-    });
-  },
+function socketUpdate(queue) {
+  Dispatcher.dispatch({
+    type: ActionTypes.SOCKET_UPDATE,
+    queue: queue
+  });
+}
 
-  socketUpdate: function socketUpdate(queue) {
-    Dispatcher.dispatch({
-      type: ActionTypes.SOCKET_UPDATE,
-      queue: queue
-    });
-  }
-};
+//};
 
 },{"../constants/constants":8,"../dispatcher":9,"jquery":17}],2:[function(require,module,exports){
 'use strict';
@@ -163,13 +166,7 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _underscore = require('underscore');
-
-var _underscore2 = _interopRequireDefault(_underscore);
-
 var _actionsActionsJs = require('../actions/actions.js');
-
-var _actionsActionsJs2 = _interopRequireDefault(_actionsActionsJs);
 
 var _storesQueueStoreJs = require('../stores/queue-store.js');
 
@@ -201,19 +198,19 @@ var App = _react2['default'].createClass({
 
     this.socket.on('queueUpdate', function (queue) {
       console.log('update');
-      _actionsActionsJs2['default'].socketUpdate(queue);
+      _actionsActionsJs.socketUpdate(queue);
     });
 
     this.socket.on('loadVideo', function (vid) {
       console.log('update');
-      _actionsActionsJs2['default'].loadVideo(vid);
+      _actionsActionsJs.loadVideo(vid);
     });
   },
 
   skip: function skip() {
     var state = _storesQueueStoreJs2['default'].getQueueState();
     var videos = state.videos;
-    var currentVidObj = _underscore2['default'].find(videos, function (vid) {
+    var currentVidObj = videos.find(function (vid) {
       return vid.id.videoId == state.currentId;
     });
     var currentIndex = videos.indexOf(currentVidObj);
@@ -221,7 +218,7 @@ var App = _react2['default'].createClass({
       currentIndex = -1;
     }
     console.log(currentIndex, videos[currentIndex + 1], videos);
-    _actionsActionsJs2['default'].loadVideo(videos[currentIndex + 1].id.videoId);
+    _actionsActionsJs.loadVideo(videos[currentIndex + 1]);
   },
 
   render: function render() {
@@ -252,7 +249,7 @@ var App = _react2['default'].createClass({
 
 module.exports = App;
 
-},{"../actions/actions.js":1,"../stores/player-store.js":10,"../stores/queue-store.js":11,"./player.js":4,"./queue.js":5,"./search-bar.js":6,"react":213,"underscore":214}],4:[function(require,module,exports){
+},{"../actions/actions.js":1,"../stores/player-store.js":10,"../stores/queue-store.js":11,"./player.js":4,"./queue.js":5,"./search-bar.js":6,"react":213}],4:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -275,8 +272,6 @@ var _storesQueueStoreJs2 = _interopRequireDefault(_storesQueueStoreJs);
 
 var _actionsActionsJs = require('../actions/actions.js');
 
-var _actionsActionsJs2 = _interopRequireDefault(_actionsActionsJs);
-
 var _youtubePlayerJs = require('./youtube-player.js');
 
 var PlayerClass = _react2['default'].createClass({
@@ -295,21 +290,21 @@ var PlayerClass = _react2['default'].createClass({
 
   onPlayerReady: function onPlayerReady(event) {
     this.setState({ player: event.target });
-    _actionsActionsJs2['default'].playVideo(event.target);
+    _actionsActionsJs.playVideo(event.target);
   },
 
   onPlayerStateChange: function onPlayerStateChange(event) {
     if (event.data == YT.PlayerState.ENDED) {
       var state = _storesQueueStoreJs2['default'].getQueueState();
       var videos = state.videos;
-      var currentVidObj = _underscore2['default'].find(videos, function (vid) {
+      var currentVidObj = videos.find(function (vid) {
         return vid.id.videoId == state.currentId;
       });
       var currentIndex = videos.indexOf(currentVidObj);
       if (currentIndex == videos.length - 1) {
         currentIndex = -1;
       }
-      _actionsActionsJs2['default'].loadVideo(videos[currentIndex + 1]);
+      _actionsActionsJs.loadVideo(videos[currentIndex + 1]);
     }
   },
 
@@ -366,8 +361,6 @@ var _storesQueueStoreJs2 = _interopRequireDefault(_storesQueueStoreJs);
 
 var _actionsActionsJs = require('../actions/actions.js');
 
-var _actionsActionsJs2 = _interopRequireDefault(_actionsActionsJs);
-
 var QueueClass = _react2['default'].createClass({
   displayName: 'QueueClass',
 
@@ -391,13 +384,13 @@ var QueueClass = _react2['default'].createClass({
 
   loadVideo: function loadVideo(vid) {
     if (this.state.videoQueue.currentId != vid.id.videoId) {
-      _actionsActionsJs2['default'].loadVideo(vid);
+      _actionsActionsJs.loadVideo(vid);
     }
   },
 
   deleteVideo: function deleteVideo(vid) {
     console.log(vid);
-    _actionsActionsJs2['default'].deleteVideo(vid);
+    _actionsActionsJs.deleteVideo(vid);
   },
 
   getClass: function getClass(vid) {
@@ -768,6 +761,9 @@ PlayerStore.dispatchToken = Dispatcher.register(function (action) {
       PlayerStore.emitChange();
       break;
     case ActionTypes.LOAD_VIDEO:
+      if (action.err) {
+        return console.log('err', err);
+      }
       player.loadVideoById(action.videoId, action.delay);
       playerState.videoId = action.videoId;
       PlayerStore.emitChange();
