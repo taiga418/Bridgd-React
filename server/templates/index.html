@@ -4,9 +4,12 @@
   </head>
   <body>
     <div id="app">
-      <%-reactOutPut%>
+  
     </div>
-    <script><%-iFrameApi%></script>
+    <script>
+      var room = <%-JSON.stringify(queue)%>
+    </script>
+    <script src="/socket.io/socket.io.js"></script>
     <script src='./app.js'></script>
   </body>
 </html>

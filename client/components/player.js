@@ -1,40 +1,46 @@
 import React from 'react';
+import _ from 'underscore'
 import PlayerStore from '../stores/player-store.js';
+import QueueStore from '../stores/queue-store.js';
+import Actions from '../actions/actions.js';
+import {YoutubePlayer, globalPlayer} from './youtube-player.js';
 
 var PlayerClass = React.createClass({
 
   getInitialState: function(){
     return{
-      player: PlayerStore.getPlayerState()
+      playerInfo: PlayerStore.getPlayerState(),
+      player: null
     }
   },
 
   componentDidMount: function(){
-    //attach video onto div once the component has been mounted. 
-    var player = new YT.Player('player', {
-      height: this.state.player.height,
-      width: this.state.player.width,
-      videoId: this.state.player.videoId,
-      events: {
-        'onReady': onPlayerReady,
-        'onStateChange': onPlayerStateChange
-      }
-    })
-
     PlayerStore.addChangeListener(this._onChange);
+  },
 
-    function onPlayerReady(event) {
-      event.target.playVideo();
-    }
 
-    function onPlayerStateChange (event) {
-      console.log(event)
-    }
+  onPlayerReady: function(event) {
+    this.setState({player: event.target});
+    Actions.playVideo(event.target);
+  },
 
-    function  stopVideo() {
-      console.log(player)
-      player.stopVideo();
+  onPlayerStateChange: function(event) {
+    if(event.data == YT.PlayerState.ENDED){
+      var state = QueueStore.getQueueState();
+      var videos = state.videos;
+      var currentVidObj = _.find(videos, function(vid){
+        return vid.id.videoId == state.currentId
+      })
+      var currentIndex = videos.indexOf(currentVidObj);
+      if(currentIndex == videos.length - 1){
+        currentIndex = -1;
+      } 
+      Actions.loadVideo(videos[currentIndex + 1]);
     }
+  },
+
+  stopVideo: function() {
+    //Actions.stopVideo(player)
   },
 
   componentWillUnmount: function() {
@@ -45,21 +51,18 @@ var PlayerClass = React.createClass({
     this.setState({playerState: PlayerStore.getPlayerState()})
   },
 
-  search: function(e){
-    console.log(e.target.value)
-  },
-
-
   render: function(){
+    const { videoId, width, height } = this.state.playerInfo
     return(
-      <div>
+      <div className="player">
         <div>
-          <div id="player"></div>
+          <YoutubePlayer width={width} height={height} 
+          videoID={videoId} 
+          onPlayerReady={this.onPlayerReady.bind(this)} 
+          onPlayerStateChange={this.onPlayerStateChange}/>
         </div>
-        <input onChange={this.search} />
       </div>
-    )
-   
+    ) 
   }
 
 })
