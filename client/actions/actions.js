@@ -21,7 +21,7 @@ var ActionTypes = require('../constants/constants').ActionTypes;
       success: function(data){
         Dispatcher.dispatch({
           type: ActionTypes.LOAD_VIDEO,
-          videoId: data.video.id.videoId,
+          video: data.video,
           delay: delay
         })
       },

@@ -28,12 +28,11 @@ var QueueClass = React.createClass({
   },
 
   deleteVideo: function(vid){
-    console.log(vid)
     deleteVideo(vid)
   },
 
   getClass: function(vid){
-    if(this.state.videoQueue && this.state.videoQueue.currentId == vid.id.videoId){
+    if(this.state.videoQueue && this.state.videoQueue.current.id.videoId == vid.id.videoId){
       return 'highlight-current'
     }
   },
@@ -54,7 +53,6 @@ var QueueClass = React.createClass({
   },
 
   render: function(){
-    console.log('current', this.state.videoQueue)
     if(!this.state.videoQueue){
       return(<div>Loading...</div>)
     }

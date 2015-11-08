@@ -10,10 +10,11 @@ var player = {};
 var PlayerStore = assign({}, EventEmitter.prototype, {
 
   getPlayerState: function(){
+    const first =  (window.room.queue[0] && window.room.queue )? window.room.queue[0].id.videoId : 'e9R2uLN1uOE'
     playerState = {
       height: '390',
       width: '640',
-      videoId: 'e9R2uLN1uOE',
+      videoId: first,
       done: false
     };
     return playerState;
@@ -45,8 +46,8 @@ PlayerStore.dispatchToken = Dispatcher.register(function(action) {
       if(action.err){
         return console.log('err', err)
       }
-      player.loadVideoById(action.videoId, action.delay);
-      playerState.videoId = action.videoId;
+      player.loadVideoById(action.video.id.videoId, action.delay);
+      playerState.videoId = action.video.videoId;
       PlayerStore.emitChange();
       break;
   }

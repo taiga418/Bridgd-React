@@ -28,16 +28,16 @@ var App = React.createClass({
   },
 
   skip: function(){
-    var state = QueueStore.getQueueState();
-    var videos = state.videos;
-    var currentVidObj = videos.find(vid => {
-      return vid.id.videoId == state.currentId
+    let state = QueueStore.getQueueState();
+    let {videos} = state;
+    let currentVidObj = videos.find(vid => {
+      return vid.id.videoId == state.current.id.videoId
     })
-    var currentIndex = videos.indexOf(currentVidObj) 
+    let currentIndex = videos.indexOf(currentVidObj)
+    
     if(currentIndex == videos.length - 1){
       currentIndex = -1;
     }
-    console.log(currentIndex, videos[currentIndex + 1], videos)
     loadVideo(videos[currentIndex + 1]);
   },
 
