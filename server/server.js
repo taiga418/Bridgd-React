@@ -77,7 +77,7 @@ app.get('/', function (req, res) {
 
 app.get('/queue', function(req, res){
   db.collection('rooms').findOne({name:'taiga'}, function(err, result) {
-    res.send({queue:result});
+    res.send(result);
   })
 })
 
