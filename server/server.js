@@ -70,6 +70,7 @@ app.get('/', function (req, res) {
         console.log(err)
         return res.status(500).send('Error saving to queue')
       }
+      app.emit('new video', first)
       res.render('index.html', {queue:result});
     })
   })
