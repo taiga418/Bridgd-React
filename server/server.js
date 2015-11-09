@@ -63,13 +63,22 @@ io.sockets.on('connection', function (socket) {
 
 app.get('/', function (req, res) {
   db.collection('rooms').findOne({name:'taiga'}, function(err, result) {
-    res.render('index.html', {queue:result});
+    var first = result.queue.length > 0 ? result.queue[0] : null
+    console.log(first);
+    db.collection('rooms').update({name:'taiga'}, {$set:{current:first}}, function(err, response){
+      if(err) {
+        console.log(err)
+        return res.status(500).send('Error saving to queue')
+      }
+      app.emit('new video', first)
+      res.render('index.html', {queue:result});
+    })
   })
 })
 
 app.get('/queue', function(req, res){
   db.collection('rooms').findOne({name:'taiga'}, function(err, result) {
-    res.send({queue:result});
+    res.send(result);
   })
 })
 
@@ -137,5 +146,5 @@ app.post('/update', function(req, res){
       console.log(response)
       app.emit('new video', video)
       res.status(200).send({video: video})
-    })
+  })
 })
