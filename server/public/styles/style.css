@@ -88,6 +88,12 @@ header h1 {
   width: 100%;
 }
 
+.player-wrapper {
+  height: 50%;
+  width: 100%;
+  overflow: hidden;
+}
+
 .right-content {
   display: inline-block;
   width: 50%;
@@ -102,15 +108,17 @@ header h1 {
 
 /* PLAYER */
 
-/*QUEUE*/
-/*.queue, .results {
-  display: inline-block;
-  width: 50%;
+
+/*RESULTS*/
+
+.results {
+  overflow:auto;
   height: 50%;
-  overflow: scroll;
-  margin-left, margin-right: 50px;
 }
-*/
+/*RESULTS*/
+
+/*QUEUE*/
+
 .queue{
   background: #22242a; 
   color: #727785; 
@@ -128,6 +136,9 @@ header h1 {
 }
 
 /*QUEUE*/
+
+
+
 
 ::-webkit-input-placeholder{ color: #df1f1f;}
 :-moz-placeholder{ color: #df1f1f;}

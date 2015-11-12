@@ -60,7 +60,6 @@ var QueueClass = React.createClass({
     }
     return(
       <div className="queue">
-        <p>Queue</p>
         {this.getQueue()}
       </div>
     )
