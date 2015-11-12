@@ -5,9 +5,10 @@ import {socketUpdate, loadVideo} from '../actions/actions.js'
 import QueueStore from '../stores/queue-store.js';
 import PlayerStore from '../stores/player-store.js';
 
+import NavBar from './navbar.js'
 import Player from './player.js'
 import SearchBar from './search-bar.js'
-import Queue from './queue.js';
+import Queue from './queue.js'
 
 //Main Landing Page of the App, houses all components. View Controller 
 var App = React.createClass({
@@ -44,11 +45,14 @@ var App = React.createClass({
   render: function(){
     return(
       <div>
-        <span onClick={this.skip}><button>NEXT</button></span>
-        <p>Bridgd</p>
-        <Player />
-        <Queue />
-        <SearchBar />
+        <NavBar onSkip={this.skip}/>
+        <div className="left-content">
+          <Player />
+          <SearchBar />
+        </div>
+        <div className="right-content">
+          <Queue />
+        </div>
       </div>
     )
   }
