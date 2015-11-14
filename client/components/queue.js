@@ -32,9 +32,11 @@ var QueueClass = React.createClass({
   },
 
   getClass: function(vid){
+    let ret = 'item'
     if(this.state.videoQueue && this.state.videoQueue.current.id.videoId == vid.id.videoId){
-      return 'highlight-current'
+      ret+=' highlight-current'
     }
+    return ret;
   },
 
 
@@ -58,7 +60,6 @@ var QueueClass = React.createClass({
     }
     return(
       <div className="queue">
-        <p>Queue</p>
         {this.getQueue()}
       </div>
     )

@@ -53,13 +53,12 @@ var PlayerClass = React.createClass({
   render: function(){
     const { videoId, width, height } = this.state.playerInfo
     return(
-      <div className="player">
-        <div>
-          <YoutubePlayer width={width} height={height} 
-          videoID={videoId} 
-          onPlayerReady={this.onPlayerReady.bind(this)} 
-          onPlayerStateChange={this.onPlayerStateChange}/>
-        </div>
+      <div className="player-wrapper">
+        <YoutubePlayer width={width} height={height} 
+        className="player"
+        videoID={videoId} 
+        onPlayerReady={this.onPlayerReady.bind(this)} 
+        onPlayerStateChange={this.onPlayerStateChange}/>
       </div>
     ) 
   }

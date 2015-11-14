@@ -12,14 +12,6 @@ var SearchBarClass = React.createClass({
     }
   },
 
-  componentDidMount: function(){
-
-  },
-
-  componentWillUnmount: function(){
-
-  },
-
   search: function(e){
     var self = this;
     var query = e.target.value;
@@ -69,11 +61,6 @@ var SearchBarClass = React.createClass({
       )
     }
   },
-
-
-  // loadVideo: function(id){
-  //   Actions.loadVideo(id)
-  // },
 
   queueVideo: function(vid){
     var videos = QueueStore.getQueueState().videos;
