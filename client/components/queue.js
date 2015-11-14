@@ -1,4 +1,10 @@
 import React from 'react';
+import List from 'material-ui/lib/lists/list';
+import ListDivider from 'material-ui/lib/lists/list-divider';
+import ListItem from 'material-ui/lib/lists/list-item';
+
+
+
 import QueueStore from '../stores/queue-store.js';
 import {loadVideo, deleteVideo } from '../actions/actions.js';
 
@@ -32,7 +38,7 @@ var QueueClass = React.createClass({
   },
 
   getClass: function(vid){
-    let ret = 'item'
+    let ret = 'item';
     if(this.state.videoQueue && this.state.videoQueue.current.id.videoId == vid.id.videoId){
       ret+=' highlight-current'
     }
@@ -44,12 +50,18 @@ var QueueClass = React.createClass({
     var self = this;
     return(
       this.state.videoQueue.videos.map((vid, i) => {
-        return(
-          <div key={vid.id.videoId}>
-            <span className={self.getClass(vid)} onClick={self.loadVideo.bind(null, vid)}>{vid.snippet.title}</span>
-            <button onClick={self.deleteVideo.bind(null, vid)}>Delete</button>
-          </div>
-        )
+        // return(
+        //   <div key={vid.id.videoId}>
+        //     <span className={self.getClass(vid)} onClick={self.loadVideo.bind(null, vid)}>{vid.snippet.title}</span>
+        //     <button onClick={self.deleteVideo.bind(null, vid)}>Delete</button>
+        //   </div>
+        // )
+      return(
+        <ListItem 
+          className={self.getClass(vid)}
+          primaryText={vid.snippet.title}
+          onClick={self.loadVideo.bind(null, vid)}/>
+      )
       })
     )
   },
@@ -59,9 +71,10 @@ var QueueClass = React.createClass({
       return(<div>Loading...</div>)
     }
     return(
-      <div className="queue">
+      <List subheader="Queue" className="queue">
+        <ListDivider />
         {this.getQueue()}
-      </div>
+      </List>
     )
   }
 })
