@@ -57,7 +57,7 @@ var PlayerClass = React.createClass({
         <YoutubePlayer width={width} height={height} 
         className="player"
         videoID={videoId} 
-        onPlayerReady={this.onPlayerReady.bind(this)} 
+        onPlayerReady={this.onPlayerReady} 
         onPlayerStateChange={this.onPlayerStateChange}/>
       </div>
     ) 
