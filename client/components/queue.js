@@ -60,7 +60,7 @@ var QueueClass = React.createClass({
           key={vid.id.videoId}
           className={self.getClass(vid)}
           primaryText={vid.snippet.title}
-          leftIcon={<i className="material-icons"  onClick={self.loadVideo.bind(null, vid)}>face</i>}
+          leftIcon={<i className="material-icons"  onClick={self.loadVideo.bind(null, vid)}>play_arrows</i>}
           rightIcon={<i className="material-icons" onClick={self.deleteVideo.bind(null, vid)}>delete</i>}/>
       )
       })

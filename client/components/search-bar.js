@@ -47,20 +47,12 @@ var SearchBarClass = React.createClass({
             return(
               <ListItem
                 key={item.id.videoId}
-                leftAvatar={<img src={item.snippet.thumbnails.default.url} />}
-                //rightIconButton={rightIconMenu}
+                leftIcon={<img src={item.snippet.thumbnails.default.url} />}
                 primaryText={item.snippet.title}
+                secondaryText={item.snippet.channelTitle}
                 secondaryTextLines={2} 
                 onClick={this.queueVideo.bind(null, item)}/>
             )
-            // return (
-            //   <div key={item.id.videoId} onClick={this.queueVideo.bind(null, item)}>
-            //     <h4>{item.snippet.title}</h4>
-            //     <p>id : {item.id.videoId}</p> 
-            //     <img src={item.snippet.thumbnails.default.url}/>
-            //   </div>   
-            // ) 
-            
           }.bind(this))}
         </div>
       )
@@ -83,10 +75,16 @@ var SearchBarClass = React.createClass({
     }
   },
 
+  clearResult: function(){
+    this.setState({results: null})
+  },
+
   render: function(){
+    const {results} = this.state;
     return(
       <div className="results">
         <TextField hintText="Search for Videos"  onChange={this.search}/>
+        {results && <i className="material-icons" onClick={this.clearResult}>keyboard_arrow_up</i>}
         <List>
           {this.showResults()}
         </List>
