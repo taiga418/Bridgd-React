@@ -2,8 +2,7 @@ import React from 'react';
 import List from 'material-ui/lib/lists/list';
 import ListDivider from 'material-ui/lib/lists/list-divider';
 import ListItem from 'material-ui/lib/lists/list-item';
-
-
+const FontIcon = require('material-ui/lib/font-icon');
 
 import QueueStore from '../stores/queue-store.js';
 import {loadVideo, deleteVideo } from '../actions/actions.js';
@@ -58,9 +57,11 @@ var QueueClass = React.createClass({
         // )
       return(
         <ListItem 
+          key={vid.id.videoId}
           className={self.getClass(vid)}
           primaryText={vid.snippet.title}
-          onClick={self.loadVideo.bind(null, vid)}/>
+          leftIcon={<i className="material-icons"  onClick={self.loadVideo.bind(null, vid)}>face</i>}
+          rightIcon={<i className="material-icons" onClick={self.deleteVideo.bind(null, vid)}>delete</i>}/>
       )
       })
     )

@@ -1,21 +1,22 @@
+
 import React from 'react';
-import RaisedButton  from 'material-ui/lib/raised-button'
+import RaisedButton from 'material-ui/lib/raised-button';
+import Toolbar from 'material-ui/lib/toolbar/toolbar';
 
 var NavBar = React.createClass({
 
   render: function(){
     const {onSkip} = this.props;
     return(
-
-      <header>
-        <h1><strong className="brand">Bridgd</strong></h1>
+      <Toolbar>
         <RaisedButton className="tabs" label="Skip" onClick={onSkip}/>
-      </header>
+      </Toolbar>
     )
   }
 
 })
 
 export default NavBar
+
 
 

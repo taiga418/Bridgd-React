@@ -1,9 +1,13 @@
 import React from 'react';
 import $ from 'jquery';
-import _ from 'underscore';
+import TextField from 'material-ui/lib/text-field';
+import List from 'material-ui/lib/lists/list';
+import ListDivider from 'material-ui/lib/lists/list-divider';
+import ListItem from 'material-ui/lib/lists/list-item';
+
 import PlayerStore from '../stores/player-store.js';
 import QueueStore from '../stores/queue-store.js';
-import Actions from '../actions/actions.js';
+import {enqueueVideo} from '../actions/actions.js';
 
 var SearchBarClass = React.createClass({
   getInitialState: function(){
@@ -40,13 +44,22 @@ var SearchBarClass = React.createClass({
       return(
         <div>
           {this.state.results.map(function(item){
-            return (
-              <div key={item.id.videoId} onClick={this.queueVideo.bind(null, item)}>
-                <h4>{item.snippet.title}</h4>
-                <p>id : {item.id.videoId}</p> 
-                <img src={item.snippet.thumbnails.default.url}/>
-              </div>   
-            ) 
+            return(
+              <ListItem
+                key={item.id.videoId}
+                leftAvatar={<img src={item.snippet.thumbnails.default.url} />}
+                //rightIconButton={rightIconMenu}
+                primaryText={item.snippet.title}
+                secondaryTextLines={2} 
+                onClick={this.queueVideo.bind(null, item)}/>
+            )
+            // return (
+            //   <div key={item.id.videoId} onClick={this.queueVideo.bind(null, item)}>
+            //     <h4>{item.snippet.title}</h4>
+            //     <p>id : {item.id.videoId}</p> 
+            //     <img src={item.snippet.thumbnails.default.url}/>
+            //   </div>   
+            // ) 
             
           }.bind(this))}
         </div>
@@ -55,30 +68,28 @@ var SearchBarClass = React.createClass({
       return(
         <div>No results</div>
       )
-    }else{
-      return(
-        <div>Search</div>
-      )
     }
   },
 
   queueVideo: function(vid){
     var videos = QueueStore.getQueueState().videos;
-    var dupe =_.filter(videos, function(obj) {
+    var dupe =videos.filter(obj => {
       return obj.id.videoId == vid.id.videoId
     });
    
     if(dupe.length ==  0){
       console.log('Added')
-      Actions.enqueueVideo(vid);
+      enqueueVideo(vid);
     }
   },
 
   render: function(){
     return(
       <div className="results">
-        <input onChange={this.search} />
-        {this.showResults()}
+        <TextField hintText="Search for Videos"  onChange={this.search}/>
+        <List>
+          {this.showResults()}
+        </List>
       </div>
     )
   } 
