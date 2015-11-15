@@ -10,6 +10,7 @@ var NavBar = React.createClass({
     return(
       <AppBar
        title="Bridgd"
+       style={{backgroundColor: '#2098d1'}}
         iconElementRight={<RaisedButton className="tabs" label="Skip" onClick={onSkip}/>} />
     )
   }
