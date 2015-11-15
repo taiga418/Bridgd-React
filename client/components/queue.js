@@ -1,4 +1,9 @@
 import React from 'react';
+import List from 'material-ui/lib/lists/list';
+import ListDivider from 'material-ui/lib/lists/list-divider';
+import ListItem from 'material-ui/lib/lists/list-item';
+const FontIcon = require('material-ui/lib/font-icon');
+
 import QueueStore from '../stores/queue-store.js';
 import {loadVideo, deleteVideo } from '../actions/actions.js';
 
@@ -32,7 +37,7 @@ var QueueClass = React.createClass({
   },
 
   getClass: function(vid){
-    let ret = 'item'
+    let ret = 'item';
     if(this.state.videoQueue && this.state.videoQueue.current.id.videoId == vid.id.videoId){
       ret+=' highlight-current'
     }
@@ -43,13 +48,21 @@ var QueueClass = React.createClass({
   getQueue: function(){
     var self = this;
     return(
-      this.state.videoQueue.videos.map(function(vid){
-        return(
-          <div>
-            <span className={self.getClass(vid)} onClick={self.loadVideo.bind(null, vid)}>{vid.snippet.title}</span>
-            <button onClick={self.deleteVideo.bind(null, vid)}>Delete</button>
-          </div>
-        )
+      this.state.videoQueue.videos.map((vid, i) => {
+        // return(
+        //   <div key={vid.id.videoId}>
+        //     <span className={self.getClass(vid)} onClick={self.loadVideo.bind(null, vid)}>{vid.snippet.title}</span>
+        //     <button onClick={self.deleteVideo.bind(null, vid)}>Delete</button>
+        //   </div>
+        // )
+      return(
+        <ListItem 
+          key={vid.id.videoId}
+          className={self.getClass(vid)}
+          primaryText={vid.snippet.title}
+          leftIcon={<i className="material-icons"  onClick={self.loadVideo.bind(null, vid)}>play_arrows</i>}
+          rightIcon={<i className="material-icons" onClick={self.deleteVideo.bind(null, vid)}>delete</i>}/>
+      )
       })
     )
   },
@@ -59,9 +72,10 @@ var QueueClass = React.createClass({
       return(<div>Loading...</div>)
     }
     return(
-      <div className="queue">
+      <List subheader="Queue" className="queue">
+        <ListDivider />
         {this.getQueue()}
-      </div>
+      </List>
     )
   }
 })

@@ -1,4 +1,5 @@
 import React from 'react';
+import injectTapEventPlugin from 'react-tap-event-plugin'
 
 import {socketUpdate, loadVideo} from '../actions/actions.js'
 
@@ -9,6 +10,8 @@ import NavBar from './navbar.js'
 import Player from './player.js'
 import SearchBar from './search-bar.js'
 import Queue from './queue.js'
+
+injectTapEventPlugin();
 
 //Main Landing Page of the App, houses all components. View Controller 
 var App = React.createClass({
