@@ -53,7 +53,7 @@ var PlayerClass = React.createClass({
   render: function(){
     const { videoId, width, height } = this.state.playerInfo
     return(
-      <div  className ="player-container">
+      <div>
         <div className="player-wrapper">
           <YoutubePlayer width={560} height={349} 
           className="player"

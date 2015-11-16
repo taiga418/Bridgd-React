@@ -73,9 +73,6 @@ html, body {
 
 
 /* PLAYER */
-.player-container{
-  height: 60%;
-}
 
 .player-wrapper {
   position: relative;
@@ -96,7 +93,11 @@ html, body {
 
 
 /*RESULTS*/
-
+.search-field{
+  padding-left: 10px;
+  padding-right: 10px;
+  display: inline-block;
+}
 .results {
   height: 30%;
 }
@@ -104,6 +105,7 @@ html, body {
 .results-container {
   overflow:auto;
   height: 100%;
+  width: 100%;
 }
 /*RESULTS*/
 

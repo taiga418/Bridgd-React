@@ -1,9 +1,11 @@
 import React from 'react';
 import $ from 'jquery';
+
 import TextField from 'material-ui/lib/text-field';
 import List from 'material-ui/lib/lists/list';
 import ListDivider from 'material-ui/lib/lists/list-divider';
 import ListItem from 'material-ui/lib/lists/list-item';
+import Snackbar from 'material-ui/lib/snackbar';
 
 import PlayerStore from '../stores/player-store.js';
 import QueueStore from '../stores/queue-store.js';
@@ -72,7 +74,13 @@ var SearchBarClass = React.createClass({
     if(dupe.length ==  0){
       console.log('Added')
       enqueueVideo(vid);
+    }else{
+     this.refs.dupe.show();
     }
+  },
+
+  closeSnackBar: function(){
+    this.refs.dupe.dismiss();
   },
 
   clearResult: function(){
@@ -83,13 +91,19 @@ var SearchBarClass = React.createClass({
     const {results} = this.state;
     return(
       <div className="results">
-        <TextField hintText="Search for Videos"  onChange={this.search}/>
+        <TextField hintText="Search for Videos" className="search-field" onChange={this.search}/>
         {results && <i className="material-icons" onClick={this.clearResult}>keyboard_arrow_up</i>}
         <div className="results-container">
           <List>
             {this.showResults()}
           </List>
         </div>
+        <Snackbar
+          ref="dupe"
+          message="Video is already in the queue!"
+          action="close"
+          onActionTouchTap={this.closeSnackBar}
+          autoHideDuration={3000} />
       </div>
     )
   } 
