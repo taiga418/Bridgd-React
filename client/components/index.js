@@ -1,15 +1,17 @@
 import React from 'react';
-import _ from 'underscore'
+import injectTapEventPlugin from 'react-tap-event-plugin'
 
-
-import Actions from '../actions/actions.js'
+import {socketUpdate, loadVideo} from '../actions/actions.js'
 
 import QueueStore from '../stores/queue-store.js';
 import PlayerStore from '../stores/player-store.js';
 
+import NavBar from './navbar.js'
 import Player from './player.js'
 import SearchBar from './search-bar.js'
-import Queue from './queue.js';
+import Queue from './queue.js'
+
+injectTapEventPlugin();
 
 //Main Landing Page of the App, houses all components. View Controller 
 var App = React.createClass({
@@ -20,37 +22,49 @@ var App = React.createClass({
 
     this.socket.on('queueUpdate', function(queue){
       console.log('update')
-      Actions.socketUpdate(queue);
+      socketUpdate(queue);
     })
 
     this.socket.on('loadVideo', function(vid){
       console.log('update')
-      Actions.loadVideo(vid)
+      loadVideo(vid)
     })
   },
 
-  skip: function(){
-    var state = QueueStore.getQueueState();
-    var videos = state.videos;
-    var currentVidObj = _.find(videos, function(vid){
-      return vid.id.videoId == state.currentId
-    })
-    var currentIndex = videos.indexOf(currentVidObj) 
-    if(currentIndex == videos.length - 1){
-      currentIndex = -1;
+  loadNext: function(){
+    let state = QueueStore.getQueueState();
+    let {videos, current, currentIndex} = state;
+    let index;
+    //check index of current video, 
+    let currentVidIndex = videos
+      .map((vid) => {
+        return vid.id.videoId;
+      }).indexOf(current.id.videoId)
+    //if it's -1, then set current video to the video at current index
+    if(currentVidIndex == -1){
+      index = currentIndex
+    //if it's not -1, then add 1. if that extends past the length of the queue, set to 0
+    }else{
+      index = currentIndex + 1
+      if(index > videos.length){
+        index = 0;
+      }
     }
-    console.log(currentIndex, videos[currentIndex + 1], videos)
-    Actions.loadVideo(videos[currentIndex + 1].id.videoId);
+    loadVideo(videos[index]);
   },
 
   render: function(){
+    let{loadNext} = this;
     return(
-      <div>
-        <span onClick={this.skip}><button>NEXT</button></span>
-        <p>Bridgd</p>
-        <Player />
-        <Queue />
-        <SearchBar />
+      <div className="container">
+        <NavBar className="nav" onSkip={this.loadNext}/>
+        <div className="left-content">
+          <Player next={loadNext}/>
+          <SearchBar />
+        </div>
+        <div className="right-content">
+          <Queue/>
+        </div>
       </div>
     )
   }

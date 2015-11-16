@@ -3,37 +3,25 @@ import $ from 'jquery';
 var Dispatcher = require('../dispatcher');
 var ActionTypes = require('../constants/constants').ActionTypes;
 
-module.exports = {
-  // getQueue: function(){
-  //   $.get( "api/queue", function( data ) {
-  //     Dispatcher.dispatch({
-  //       type: ActionTypes.GET_QUEUE,
-  //       data: data
-  //     });
-  //   }, function(err){
-  //     Dispatcher.dispatch({
-  //       type: ActionTypes.GET_QUEUE,
-  //       err: err
-  //     });
-  //   });
-  // },
+//module.exports = {
 
-  playVideo: function(player){
+
+  export function playVideo(player){
     Dispatcher.dispatch({
       type: ActionTypes.PLAY_VIDEO,
       player: player
     });
-  },
+  }
 
-  loadVideo: function(video, delay){
+  export function loadVideo(video, delay){
     $.ajax({
       method: 'POST',
       url: '/update/',
-      data: video
+      data: video,
       success: function(data){
         Dispatcher.dispatch({
           type: ActionTypes.LOAD_VIDEO,
-          videoId: data.video.id.videoId,
+          video: data.video,
           delay: delay
         })
       },
@@ -45,11 +33,9 @@ module.exports = {
         console.log('error', err)
       }
     })
-    
-   
-  },
+  }
 
-  deleteVideo: function(video){
+  export function deleteVideo(video){
     $.ajax({
       method: 'POST',
       url: '/delete/'+ video.id.videoId, 
@@ -67,9 +53,9 @@ module.exports = {
         })
       }
     })
-  },
+  }
 
-  enqueueVideo: function(video){
+  export function enqueueVideo(video){
     $.ajax({
       method: 'POST',
       url: '/enqueue', 
@@ -87,12 +73,12 @@ module.exports = {
         })
       }
     })
-  },
+  }
 
-  socketUpdate: function(queue){
+  export function socketUpdate(queue){
     Dispatcher.dispatch({
       type: ActionTypes.SOCKET_UPDATE,
       queue: queue 
     })
   }
-};
+//};

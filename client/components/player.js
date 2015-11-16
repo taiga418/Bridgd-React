@@ -1,8 +1,7 @@
 import React from 'react';
-import _ from 'underscore'
 import PlayerStore from '../stores/player-store.js';
 import QueueStore from '../stores/queue-store.js';
-import Actions from '../actions/actions.js';
+import {playVideo, loadVideo} from '../actions/actions.js';
 import {YoutubePlayer, globalPlayer} from './youtube-player.js';
 
 var PlayerClass = React.createClass({
@@ -21,21 +20,12 @@ var PlayerClass = React.createClass({
 
   onPlayerReady: function(event) {
     this.setState({player: event.target});
-    Actions.playVideo(event.target);
+    playVideo(event.target);
   },
 
   onPlayerStateChange: function(event) {
     if(event.data == YT.PlayerState.ENDED){
-      var state = QueueStore.getQueueState();
-      var videos = state.videos;
-      var currentVidObj = _.find(videos, function(vid){
-        return vid.id.videoId == state.currentId
-      })
-      var currentIndex = videos.indexOf(currentVidObj);
-      if(currentIndex == videos.length - 1){
-        currentIndex = -1;
-      } 
-      Actions.loadVideo(videos[currentIndex + 1]);
+      this.props.next();
     }
   },
 
@@ -54,11 +44,12 @@ var PlayerClass = React.createClass({
   render: function(){
     const { videoId, width, height } = this.state.playerInfo
     return(
-      <div className="player">
-        <div>
-          <YoutubePlayer width={width} height={height} 
+      <div>
+        <div className="player-wrapper">
+          <YoutubePlayer width={560} height={349} 
+          className="player"
           videoID={videoId} 
-          onPlayerReady={this.onPlayerReady.bind(this)} 
+          onPlayerReady={this.onPlayerReady} 
           onPlayerStateChange={this.onPlayerStateChange}/>
         </div>
       </div>

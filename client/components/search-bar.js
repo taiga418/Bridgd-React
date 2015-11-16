@@ -1,9 +1,15 @@
 import React from 'react';
 import $ from 'jquery';
-import _ from 'underscore';
+
+import TextField from 'material-ui/lib/text-field';
+import List from 'material-ui/lib/lists/list';
+import ListDivider from 'material-ui/lib/lists/list-divider';
+import ListItem from 'material-ui/lib/lists/list-item';
+import Snackbar from 'material-ui/lib/snackbar';
+
 import PlayerStore from '../stores/player-store.js';
 import QueueStore from '../stores/queue-store.js';
-import Actions from '../actions/actions.js';
+import {enqueueVideo} from '../actions/actions.js';
 
 var SearchBarClass = React.createClass({
   getInitialState: function(){
@@ -12,14 +18,7 @@ var SearchBarClass = React.createClass({
     }
   },
 
-  componentDidMount: function(){
-
-  },
-
-  componentWillUnmount: function(){
-
-  },
-
+  //put logic into store or index.js
   search: function(e){
     var self = this;
     var query = e.target.value;
@@ -48,14 +47,15 @@ var SearchBarClass = React.createClass({
       return(
         <div>
           {this.state.results.map(function(item){
-            return (
-              <div key={item.id.videoId} onClick={this.queueVideo.bind(null, item)}>
-                <h4>{item.snippet.title}</h4>
-                <p>id : {item.id.videoId}</p> 
-                <img src={item.snippet.thumbnails.default.url}/>
-              </div>   
-            ) 
-            
+            return(
+              <ListItem
+                key={item.id.videoId}
+                leftIcon={<img src={item.snippet.thumbnails.default.url} />}
+                primaryText={item.snippet.title}
+                secondaryText={item.snippet.channelTitle}
+                secondaryTextLines={2} 
+                onClick={this.queueVideo.bind(null, item)}/>
+            )
           }.bind(this))}
         </div>
       )
@@ -63,35 +63,49 @@ var SearchBarClass = React.createClass({
       return(
         <div>No results</div>
       )
-    }else{
-      return(
-        <div>Search</div>
-      )
     }
   },
 
-
-  // loadVideo: function(id){
-  //   Actions.loadVideo(id)
-  // },
-
+  //put logic into store or index.js
   queueVideo: function(vid){
     var videos = QueueStore.getQueueState().videos;
-    var dupe =_.filter(videos, function(obj) {
+    var dupe = videos.filter(obj => {
       return obj.id.videoId == vid.id.videoId
     });
    
     if(dupe.length ==  0){
       console.log('Added')
-      Actions.enqueueVideo(vid);
+      enqueueVideo(vid);
+    }else{
+     this.refs.dupe.show();
     }
   },
 
+  closeSnackBar: function(){
+    this.refs.dupe.dismiss();
+  },
+
+  clearResult: function(){
+    this.setState({results: null})
+  },
+
   render: function(){
+    const {results} = this.state;
     return(
       <div className="results">
-        <input onChange={this.search} />
-        {this.showResults()}
+        <TextField hintText="Search for Videos" className="search-field" onChange={this.search}/>
+        {results && <i className="material-icons" onClick={this.clearResult}>keyboard_arrow_up</i>}
+        <div className="results-container">
+          <List>
+            {this.showResults()}
+          </List>
+        </div>
+        <Snackbar
+          ref="dupe"
+          message="Video is already in the queue!"
+          action="close"
+          onActionTouchTap={this.closeSnackBar}
+          autoHideDuration={3000} />
       </div>
     )
   } 
