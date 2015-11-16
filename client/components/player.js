@@ -25,16 +25,7 @@ var PlayerClass = React.createClass({
 
   onPlayerStateChange: function(event) {
     if(event.data == YT.PlayerState.ENDED){
-      var state = QueueStore.getQueueState();
-      var videos = state.videos;
-      var currentVidObj = videos.find(vid => {
-        return vid.id.videoId == state.currentId
-      })
-      var currentIndex = videos.indexOf(currentVidObj);
-      if(currentIndex == videos.length - 1){
-        currentIndex = -1;
-      } 
-      loadVideo(videos[currentIndex + 1]);
+      this.props.next();
     }
   },
 

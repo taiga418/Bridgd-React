@@ -31,30 +31,39 @@ var App = React.createClass({
     })
   },
 
-  skip: function(){
+  loadNext: function(){
     let state = QueueStore.getQueueState();
-    let {videos} = state;
-    let currentVidObj = videos.find(vid => {
-      return vid.id.videoId == state.current.id.videoId
-    })
-    let currentIndex = videos.indexOf(currentVidObj)
-    
-    if(currentIndex == videos.length - 1){
-      currentIndex = -1;
+    let {videos, current, currentIndex} = state;
+    let index;
+    //check index of current video, 
+    let currentVidIndex = videos
+      .map((vid) => {
+        return vid.id.videoId;
+      }).indexOf(current.id.videoId)
+    //if it's -1, then set current video to the video at current index
+    if(currentVidIndex == -1){
+      index = currentIndex
+    //if it's not -1, then add 1. if that extends past the length of the queue, set to 0
+    }else{
+      index = currentIndex + 1
+      if(index > videos.length){
+        index = 0;
+      }
     }
-    loadVideo(videos[currentIndex + 1]);
+    loadVideo(videos[index]);
   },
 
   render: function(){
+    let{loadNext} = this;
     return(
       <div className="container">
-        <NavBar className="nav" onSkip={this.skip}/>
+        <NavBar className="nav" onSkip={this.loadNext}/>
         <div className="left-content">
-          <Player />
+          <Player next={loadNext}/>
           <SearchBar />
         </div>
         <div className="right-content">
-          <Queue />
+          <Queue/>
         </div>
       </div>
     )

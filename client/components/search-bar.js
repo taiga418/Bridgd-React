@@ -18,6 +18,7 @@ var SearchBarClass = React.createClass({
     }
   },
 
+  //put logic into store or index.js
   search: function(e){
     var self = this;
     var query = e.target.value;
@@ -65,9 +66,10 @@ var SearchBarClass = React.createClass({
     }
   },
 
+  //put logic into store or index.js
   queueVideo: function(vid){
     var videos = QueueStore.getQueueState().videos;
-    var dupe =videos.filter(obj => {
+    var dupe = videos.filter(obj => {
       return obj.id.videoId == vid.id.videoId
     });
    

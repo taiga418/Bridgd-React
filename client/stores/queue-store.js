@@ -4,7 +4,7 @@ var EventEmitter = require('events').EventEmitter;
 var assign = require('object-assign');
 var CHANGE_EVENT = 'change';
 
-var queueState = {videos: [], current: null};
+var queueState = {videos: [], current: null, currentIndex: 0};
 queueState.videos = window.room.queue || [];
 queueState.current = window.room.queue.length > 0 ? window.room.queue[0] : null;
 
@@ -45,8 +45,12 @@ QueueStore.dispatchToken = Dispatcher.register(function(action) {
       break;
     case ActionTypes.LOAD_VIDEO:
       queueState.current = action.video
-
-      //queueState.currentId = action.videoId
+      queueState.currentIndex = queueState.videos
+        .map((vid) => {
+          return vid.id.videoId;
+        })
+        .indexOf(action.video.id.videoId)
+      console.log('current index', queueState.currentIndex)
       QueueStore.emitChange();
       break;
     case ActionTypes.DELETE_VIDEO:

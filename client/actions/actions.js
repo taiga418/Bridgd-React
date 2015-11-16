@@ -33,11 +33,9 @@ var ActionTypes = require('../constants/constants').ActionTypes;
         console.log('error', err)
       }
     })
-    
-   
   }
 
-   export function deleteVideo(video){
+  export function deleteVideo(video){
     $.ajax({
       method: 'POST',
       url: '/delete/'+ video.id.videoId, 
