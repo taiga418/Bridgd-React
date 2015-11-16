@@ -85,9 +85,11 @@ var SearchBarClass = React.createClass({
       <div className="results">
         <TextField hintText="Search for Videos"  onChange={this.search}/>
         {results && <i className="material-icons" onClick={this.clearResult}>keyboard_arrow_up</i>}
-        <List>
-          {this.showResults()}
-        </List>
+        <div className="results-container">
+          <List>
+            {this.showResults()}
+          </List>
+        </div>
       </div>
     )
   } 

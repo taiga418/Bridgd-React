@@ -49,12 +49,6 @@ var QueueClass = React.createClass({
     var self = this;
     return(
       this.state.videoQueue.videos.map((vid, i) => {
-        // return(
-        //   <div key={vid.id.videoId}>
-        //     <span className={self.getClass(vid)} onClick={self.loadVideo.bind(null, vid)}>{vid.snippet.title}</span>
-        //     <button onClick={self.deleteVideo.bind(null, vid)}>Delete</button>
-        //   </div>
-        // )
       return(
         <ListItem 
           key={vid.id.videoId}
@@ -72,10 +66,12 @@ var QueueClass = React.createClass({
       return(<div>Loading...</div>)
     }
     return(
-      <List subheader="Queue" className="queue">
-        <ListDivider />
-        {this.getQueue()}
-      </List>
+      <div className="queue">
+        <List subheader="Queue">
+          <ListDivider />
+          {this.getQueue()}
+        </List>
+      </div>
     )
   }
 })

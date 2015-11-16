@@ -47,8 +47,8 @@ var App = React.createClass({
 
   render: function(){
     return(
-      <div>
-        <NavBar onSkip={this.skip}/>
+      <div className="container">
+        <NavBar className="nav" onSkip={this.skip}/>
         <div className="left-content">
           <Player />
           <SearchBar />
