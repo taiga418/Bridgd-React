@@ -27,7 +27,7 @@ var QueueClass = React.createClass({
   },
 
   loadVideo: function(vid){
-    if(this.state.videoQueue.currentId != vid.id.videoId){
+    if(this.state.videoQueue.current.id.videoId != vid.id.videoId){
       loadVideo(vid)
     }
   },
