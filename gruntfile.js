@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-browserify');
-   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.initConfig({
     browserify: {
       buildApp: {
@@ -29,7 +29,8 @@ module.exports = function(grunt) {
     watch: {
       scripts: {
         files: 'client/**/*.js',
-        tasks: ['buildApp', 'buildLobby'],
+        //tasks: ['buildApp', 'buildLobby'],
+        tasks: ['browserify:buildLobby'],
       },
     },
   })

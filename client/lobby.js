@@ -1,12 +1,16 @@
 import React from 'react';
-import ReactDOM from 'react-dom'
+import ReactDOM from 'react-dom';
+import TextField from 'material-ui/lib/text-field';
+import RaisedButton from 'material-ui/lib/raised-button';
 
 class Lobby extends React.Component{
 
   render (){
     return(
       <div>
-       HI
+       <TextField hintText="Room name" className="search-field" onChange={this.search}/>
+       <TextField hintText="Password" className="search-field" onChange={this.search}/>
+       <RaisedButton label="Go!"></RaisedButton>
       </div>
     )
   }
@@ -14,6 +18,6 @@ class Lobby extends React.Component{
 }
 
 
-ReactDOM.render(<Lobby/>,  document.getElementById("lobby"));
+ReactDOM.render(<Lobby/>, document.getElementById("lobby"));
 
 module.exports = Lobby;
