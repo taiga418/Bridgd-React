@@ -2,7 +2,7 @@ var express = require('express');
 var path = require('path')
 var bodyparser = require('body-parser');
 
-var db = require('./db-config')
+var db = require('./lib/db-config')
 
 var app = express();
 
@@ -22,8 +22,8 @@ var server = app.listen(app.get('port'), function() {
 
 var io = require('socket.io').listen(server);
 
-require('./sockets.js')(app, io)
-require('./routes/static-routes')(app, db, io)
+require('./lib/sockets.js')(app, io)
+require('./routes/lobby-routes')(app, db, io)
 require('./routes/queue-routes')(app, db, io)
 
 
