@@ -7,7 +7,8 @@ module.exports = function(app, db, io){
   })
 
   app.post('/login', function(req,res){
-    var name = req.body.username;
+    console.log(req.body)
+    var name = req.body.name;
     var password = req.body.password;
 
     auth.login(name, password, function(err, response){
