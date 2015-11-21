@@ -14,6 +14,7 @@ module.exports = function(app, db, io){
     auth.login(name, password, function(err, response){
       if(err) return res.status(err.status).send(err.err)
       res.cookie("authorization", response)
+      //res.redirect("/room/" + name)
       res.json({success: true});
     })
   })
