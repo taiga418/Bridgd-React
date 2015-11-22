@@ -7,7 +7,6 @@ module.exports = function(app, db, io){
   })
 
   app.post('/login', function(req,res){
-    console.log(req.body)
     var name = req.body.name;
     var password = req.body.password;
 
@@ -17,6 +16,13 @@ module.exports = function(app, db, io){
       //res.redirect("/room/" + name)
       res.json({success: true});
     })
+  })
+
+  //use api key???
+  app.post('/lobby/create', function(req, res){
+    var room = req.body
+    console.log('room', room);
+    res.status(200).send('niceeee');
   })
 }
 

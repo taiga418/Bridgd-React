@@ -5,7 +5,7 @@ import ListItem from 'material-ui/lib/lists/list-item';
 const FontIcon = require('material-ui/lib/font-icon');
 
 import QueueStore from '../stores/queue-store.js';
-import {loadVideo, deleteVideo } from '../actions/actions.js';
+import {loadVideo, deleteVideo } from '../actions/queue-actions.js';
 
 var QueueClass = React.createClass({
   getInitialState: function(){

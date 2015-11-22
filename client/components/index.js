@@ -1,7 +1,7 @@
 import React from 'react';
 import injectTapEventPlugin from 'react-tap-event-plugin'
 
-import {socketUpdate, loadVideo} from '../actions/actions.js'
+import {socketUpdate, loadVideo} from '../actions/queue-actions.js'
 
 import QueueStore from '../stores/queue-store.js';
 import PlayerStore from '../stores/player-store.js';
