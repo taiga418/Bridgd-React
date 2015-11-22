@@ -9,7 +9,10 @@ module.exports = {
     LOAD_VIDEO:null,
     DELETE_VIDEO:null,
     ENQUEUE_VIDEO: null,
-    SOCKET_UPDATE: null
+    SOCKET_UPDATE: null,
+    LOGIN_SUCCESS: null,
+    LOGIN_FAIL: null,
+    LOGIN_LOADING: null
   })
 
 };

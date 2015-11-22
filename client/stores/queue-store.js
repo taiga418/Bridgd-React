@@ -50,7 +50,6 @@ QueueStore.dispatchToken = Dispatcher.register(function(action) {
           return vid.id.videoId;
         })
         .indexOf(action.video.id.videoId)
-      console.log('current index', queueState.currentIndex)
       QueueStore.emitChange();
       break;
     case ActionTypes.DELETE_VIDEO:

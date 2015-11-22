@@ -9,7 +9,7 @@ import Snackbar from 'material-ui/lib/snackbar';
 
 import PlayerStore from '../stores/player-store.js';
 import QueueStore from '../stores/queue-store.js';
-import {enqueueVideo} from '../actions/actions.js';
+import {enqueueVideo} from '../actions/queue-actions.js';
 
 var SearchBarClass = React.createClass({
   getInitialState: function(){

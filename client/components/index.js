@@ -1,7 +1,7 @@
 import React from 'react';
 import injectTapEventPlugin from 'react-tap-event-plugin'
 
-import {socketUpdate, loadVideo} from '../actions/actions.js'
+import {socketUpdate, loadVideo} from '../actions/queue-actions.js'
 
 import QueueStore from '../stores/queue-store.js';
 import PlayerStore from '../stores/player-store.js';
@@ -46,7 +46,7 @@ var App = React.createClass({
     //if it's not -1, then add 1. if that extends past the length of the queue, set to 0
     }else{
       index = currentIndex + 1
-      if(index > videos.length){
+      if(index == videos.length){
         index = 0;
       }
     }

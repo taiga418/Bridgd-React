@@ -1,7 +1,7 @@
 import React from 'react';
 import PlayerStore from '../stores/player-store.js';
 import QueueStore from '../stores/queue-store.js';
-import {playVideo, loadVideo} from '../actions/actions.js';
+import {playVideo, loadVideo} from '../actions/queue-actions.js';
 import {YoutubePlayer, globalPlayer} from './youtube-player.js';
 
 var PlayerClass = React.createClass({
