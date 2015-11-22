@@ -9,7 +9,7 @@ exports.login = function(name, password, next){
     if(result == null) return next({status: 401, err: 'invalid room name'})
     if(password == result.password){
       //expires in 30 days
-      var token = jwt.sign({name: name}, secret, {expiresInMinutes: 60 * 24 * 30});
+      var token =  jwt.sign({name: name}, secret + name, {expiresInMinutes: 60 * 24 * 30});
       next(null, token);
     }else{
       next({status:401, err:'wrong password'})
@@ -20,19 +20,15 @@ exports.login = function(name, password, next){
 //middleware function
 exports.authenticate = function(req, res, next){
   var token = req.headers && req.headers['cookie']?  req.headers['cookie'].split('=')[1] : null
-
+    var name = req.url.split('/')[2]
     if (token) {
-      jwt.verify(token, secret, function(err, decoded) {      
+      jwt.verify(token, secret + name, function(err, decoded) {  
         if (err) {
-          req.authErr = err
-        } else {
-          req.authErr = null;
+          return res.redirect('/lobby')
         }
+        next();
       });
     }else{
-      req.authErr = "no token"
-  
-  }
-  next();
-
+      return res.redirect('/lobby')
+    }
 }

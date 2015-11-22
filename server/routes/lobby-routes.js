@@ -21,9 +21,22 @@ module.exports = function(app, db, io){
   //use api key???
   app.post('/lobby/create', function(req, res){
     var room = req.body
-    console.log('room', room);
+    db.collection('rooms').insert({name: 'ahmed', password: "456Password"})
     res.status(200).send('niceeee');
   })
+
+  // app.post('/room/create', roomSearchByName, function(req,res) {
+  //   //need to varify new room
+  //   if (req.room) return res.status(403).send('room exists');
+  //   var newRoom = new Room();
+  //   newRoom.name = req.headers.name;
+  //   newRoom.currentIndex = 0;
+  //   newRoom.save(function(err, data) {
+  //     if (err) return res.status(500).send('there was an error');
+  //     app.emit('createRoom', data._id);
+  //     res.json({name: data.name, id: data._id});
+  //   });
+  // });
 }
 
 

@@ -4,10 +4,8 @@ var auth = require('../auth/auth')
 module.exports = function(app, db, io){
   
   app.get('/room/:name', auth.authenticate, function (req, res) {
-    if(req.authErr){
-      return res.redirect('/lobby')
-    }
     var name = req.params.name;
+   // res.send('yes')
     db.collection('rooms').findOne({name: name}, function(err, result) {
       var first = result.queue.length > 0 ? result.queue[0] : null
       db.collection('rooms').update({name: name}, {$set:{current:first}}, function(err, response){
