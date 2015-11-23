@@ -5,11 +5,11 @@ import assign from 'object-assign';
 
 let CHANGE_EVENT = 'change';
 
-let state = {loading: false, data: null, error: null}
+let state = {loading: false, data: null, error: null, active:'loginForm'}
 let LobbyStore = assign({}, EventEmitter.prototype, {
 
 
-  getLoginState: function(){
+  getLobbyState: function(){
     return state;
   },
 
@@ -33,17 +33,19 @@ LobbyStore.dispatchToken = Dispatcher.register(function(action) {
     case ActionTypes.LOGIN_SUCCESS:
       state.loading = false;
       state.data = action.data;
-      Store.emitChange();
+      LobbyStore.emitChange();
       break;
     case ActionTypes.LOGIN_FAIL:
       state.loading = false;
       state.error = action.err;
-      Store.emitChange();
+      LobbyStore.emitChange();
+      break;
     case ActionTypes.LOGIN_LOADING:
       state.loading = true;
       state.data = null;
       state.error = null;
-      Store.emitChange();
+      LobbyStore.emitChange();
+      break;
   }
 })
 

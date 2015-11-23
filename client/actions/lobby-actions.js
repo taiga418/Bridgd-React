@@ -4,7 +4,7 @@ import Dispatcher  from '../dispatcher'
 import {ActionTypes} from '../constants/constants'
 
 export function submitLogin(login){
-  //Dispatcher.dispatch({type: ActionTypes.LOGIN_LOADING});
+  Dispatcher.dispatch({type: ActionTypes.LOGIN_LOADING});
   $.ajax({
     method: 'POST',
     url: '/login',
@@ -19,7 +19,7 @@ export function submitLogin(login){
     error: (err) => {
       Dispatcher.dispatch({
         type: ActionTypes.LOGIN_FAIL,
-        err: data
+        err: err
       });
     }
   })

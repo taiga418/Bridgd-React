@@ -10,10 +10,10 @@ export function playVideo(player){
   });
 }
 
-export function loadVideo(video, delay){
+export function loadVideo(name, video, delay){
   $.ajax({
     method: 'POST',
-    url: '/update/',
+    url: '/update/' + name,
     data: video,
     success: function(data){
       Dispatcher.dispatch({
@@ -32,10 +32,10 @@ export function loadVideo(video, delay){
   })
 }
 
-export function deleteVideo(video){
+export function deleteVideo(name, video){
   $.ajax({
     method: 'POST',
-    url: '/delete/'+ video.id.videoId, 
+    url: '/delete/'+ name + '/' + video.id.videoId, 
     success: function(data){
       console.log('actions', data)
       Dispatcher.dispatch({
@@ -52,10 +52,10 @@ export function deleteVideo(video){
   })
 }
 
-export function enqueueVideo(video){
+export function enqueueVideo(name, video){
   $.ajax({
     method: 'POST',
-    url: '/enqueue', 
+    url: '/enqueue/'+ name, 
     data: video,
     success: function(data){
       Dispatcher.dispatch({
@@ -76,5 +76,18 @@ export function socketUpdate(queue){
   Dispatcher.dispatch({
     type: ActionTypes.SOCKET_UPDATE,
     queue: queue 
+  })
+}
+
+export function signOut(){
+  $.ajax({
+    method: 'POST',
+    url: '/signout/'+ name,
+    success: function(data){
+      window.location = "/lobby"
+    },
+    error: function(err){
+      console.log('err')
+    }
   })
 }

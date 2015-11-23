@@ -1,5 +1,4 @@
 import React from 'react';
-import $ from 'jquery';
 
 import TextField from 'material-ui/lib/text-field';
 import List from 'material-ui/lib/lists/list';
@@ -7,46 +6,15 @@ import ListDivider from 'material-ui/lib/lists/list-divider';
 import ListItem from 'material-ui/lib/lists/list-item';
 import Snackbar from 'material-ui/lib/snackbar';
 
-import PlayerStore from '../stores/player-store.js';
-import QueueStore from '../stores/queue-store.js';
-import {enqueueVideo} from '../actions/queue-actions.js';
 
 var SearchBarClass = React.createClass({
-  getInitialState: function(){
-    return {
-      results : null
-    }
-  },
 
-  //put logic into store or index.js
-  search: function(e){
+  showResults: function(onQueueVideo, results, e){
     var self = this;
-    var query = e.target.value;
-    if(query.length > 2){
-       $.ajax({
-        url: 'https://www.googleapis.com/youtube/v3/search',
-        data: {
-          key: 'AIzaSyA-2P-UjlhcwiMC4P6z0z9f-SU7s4FMIJQ',
-          type: 'video',
-          maxResults: '8',
-          part: 'id,snippet',
-          fields: 'items/id,items/snippet/title,items/snippet/description,items/snippet/thumbnails/default,items/snippet/channelTitle',
-          q: query
-        }
-      })
-      .done( function (data) {
-        self.setState({results: data.items})
-      })
-    }
-   
-  },
-
-  showResults: function(e){
-    var self = this;
-    if(this.state.results){
+    if(results.length > 0){
       return(
         <div>
-          {this.state.results.map(function(item){
+          {results.map(function(item){
             return(
               <ListItem
                 key={item.id.videoId}
@@ -54,30 +22,15 @@ var SearchBarClass = React.createClass({
                 primaryText={item.snippet.title}
                 secondaryText={item.snippet.channelTitle}
                 secondaryTextLines={2} 
-                onClick={this.queueVideo.bind(null, item)}/>
+                onClick={()=> {onQueueVideo(item, ()=>{this.refs.dupe.show()})}}/>
             )
           }.bind(this))}
         </div>
       )
-    }else if(this.state.results && this.state.results.length == 0){
+    }else{
       return(
         <div>No results</div>
       )
-    }
-  },
-
-  //put logic into store or index.js
-  queueVideo: function(vid){
-    var videos = QueueStore.getQueueState().videos;
-    var dupe = videos.filter(obj => {
-      return obj.id.videoId == vid.id.videoId
-    });
-   
-    if(dupe.length ==  0){
-      console.log('Added')
-      enqueueVideo(vid);
-    }else{
-     this.refs.dupe.show();
     }
   },
 
@@ -85,20 +38,14 @@ var SearchBarClass = React.createClass({
     this.refs.dupe.dismiss();
   },
 
-  clearResult: function(){
-    this.setState({results: null})
-  },
-
   render: function(){
-    const {results} = this.state;
+    const {onQueueVideo, onSearch, onHideResults, results, showResults} = this.props;
     return(
       <div className="results">
-        <TextField hintText="Search for Videos" className="search-field" onChange={this.search}/>
-        {results && <i className="material-icons" onClick={this.clearResult}>keyboard_arrow_up</i>}
+        <TextField hintText="Search for Videos" className="search-field" onChange={onSearch}/>
+        {results && <i className="material-icons" onClick={onHideResults}>keyboard_arrow_up</i>}
         <div className="results-container">
-          <List>
-            {this.showResults()}
-          </List>
+          {(showResults && results) && <List>{this.showResults(onQueueVideo, results)}</List>}
         </div>
         <Snackbar
           ref="dupe"

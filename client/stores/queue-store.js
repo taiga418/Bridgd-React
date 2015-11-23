@@ -5,8 +5,10 @@ var assign = require('object-assign');
 var CHANGE_EVENT = 'change';
 
 var queueState = {videos: [], current: null, currentIndex: 0};
+
 queueState.videos = window.room.queue || [];
 queueState.current = window.room.queue.length > 0 ? window.room.queue[0] : null;
+queueState.name = window.room.name;
 
 var QueueStore = assign({}, EventEmitter.prototype, {
 

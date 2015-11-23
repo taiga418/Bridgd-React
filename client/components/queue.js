@@ -26,36 +26,35 @@ var QueueClass = React.createClass({
     QueueStore.removeChangeListener(this._onChange);
   },
 
-  loadVideo: function(vid){
+  loadVideo: function(name, vid){
     if(this.state.videoQueue.current.id.videoId != vid.id.videoId){
-      loadVideo(vid)
+      loadVideo(name, vid)
     }
   },
 
-  deleteVideo: function(vid){
-    deleteVideo(vid)
+  deleteVideo: function(name, vid){
+    deleteVideo(name, vid)
   },
 
   getClass: function(vid){
-    let ret = 'item';
     if(this.state.videoQueue && this.state.videoQueue.current.id.videoId == vid.id.videoId){
-      ret+=' highlight-current'
+      return ' highlight-current'
     }
-    return ret;
+    return null
   },
 
 
   getQueue: function(){
-    var self = this;
+    let self = this;
+    let name = this.state.videoQueue.name
     return(
       this.state.videoQueue.videos.map((vid, i) => {
       return(
         <ListItem 
           key={vid.id.videoId}
-          className={self.getClass(vid)}
-          primaryText={vid.snippet.title}
-          leftIcon={<i className="material-icons hvr-fade"  onClick={self.loadVideo.bind(null, vid)}>play_arrows</i>}
-          rightIcon={<i className="material-icons hvr-fade" onClick={self.deleteVideo.bind(null, vid)}>delete</i>}/>
+          primaryText={<div className={self.getClass(vid)}>{vid.snippet.title}</div>}
+          leftIcon={<i className="material-icons hvr-fade"  onClick={self.loadVideo.bind(null, name, vid)}>play_arrows</i>}
+          rightIcon={<i className="material-icons hvr-fade" onClick={self.deleteVideo.bind(null, name, vid)}>delete</i>}/>
       )
       })
     )

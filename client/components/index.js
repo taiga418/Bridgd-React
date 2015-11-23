@@ -1,7 +1,8 @@
 import React from 'react';
 import injectTapEventPlugin from 'react-tap-event-plugin'
+import $ from 'jquery';
 
-import {socketUpdate, loadVideo} from '../actions/queue-actions.js'
+import {socketUpdate, loadVideo, signOut, enqueueVideo} from '../actions/queue-actions.js'
 
 import QueueStore from '../stores/queue-store.js';
 import PlayerStore from '../stores/player-store.js';
@@ -16,24 +17,29 @@ injectTapEventPlugin();
 //Main Landing Page of the App, houses all components. View Controller 
 var App = React.createClass({
 
+  getInitialState: function(){
+    return {
+      results: null,
+      showResults: true
+    }
+  },
+
   componentDidMount: function(){
     this.socket = io();
     this.socket.emit('joined');
 
     this.socket.on('queueUpdate', function(queue){
-      console.log('update')
       socketUpdate(queue);
     })
 
     this.socket.on('loadVideo', function(vid){
-      console.log('update')
       loadVideo(vid)
     })
   },
 
   loadNext: function(){
     let state = QueueStore.getQueueState();
-    let {videos, current, currentIndex} = state;
+    let {videos, current, currentIndex, name} = state;
     let index;
     //check index of current video, 
     let currentVidIndex = videos
@@ -50,17 +56,63 @@ var App = React.createClass({
         index = 0;
       }
     }
-    loadVideo(videos[index]);
+    loadVideo(name, videos[index]);
   },
 
+  signOut: function(){
+    console.log('here');
+    signOut()
+  },
+
+  queueVideo: function(vid, callback){
+    console.log('here', vid)
+    let queueState = QueueStore.getQueueState()
+    let videos = queueState.videos;
+    let name = queueState.name;
+    let dupe = videos.filter(obj => {
+      return obj.id.videoId == vid.id.videoId
+    });
+    if(dupe.length ==  0){
+      enqueueVideo(name,vid);
+    }else{
+     callback();
+    }
+  },
+
+  search: function(e){
+    let query = e.target.value;
+    if(query.length > 2){
+       $.ajax({
+        url: 'https://www.googleapis.com/youtube/v3/search',
+        data: {
+          key: 'AIzaSyA-2P-UjlhcwiMC4P6z0z9f-SU7s4FMIJQ',
+          type: 'video',
+          maxResults: '8',
+          part: 'id,snippet',
+          fields: 'items/id,items/snippet/title,items/snippet/description,items/snippet/thumbnails/default,items/snippet/channelTitle',
+          q: query
+        }
+      })
+      .done( function (data) {
+        this.setState({results: data.items, showResults: true})
+      }.bind(this))
+    }
+  },
+
+  hideResults: function(){
+    this.setState({showResults: false});
+  },
+
+
   render: function(){
-    let{loadNext} = this;
+    let{loadNext, signOut, hideResults, queueVideo, search, state} = this;
+    let{results,showResults} = state;
     return(
       <div className="container">
-        <NavBar className="nav" onSkip={this.loadNext}/>
+        <NavBar className="nav" onSkip={loadNext} onSignOut={signOut}/>
         <div className="left-content">
           <Player next={loadNext}/>
-          <SearchBar />
+          <SearchBar onQueueVideo={queueVideo} onSearch={search} onHideResults={hideResults} {...{results, showResults}}/>
         </div>
         <div className="right-content">
           <Queue/>
