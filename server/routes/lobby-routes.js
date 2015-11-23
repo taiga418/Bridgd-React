@@ -18,6 +18,11 @@ module.exports = function(app, db, io){
     })
   })
 
+  app.post('/signout', function(req,res){
+    res.clearCookie('authorization')
+    res.redirect('/lobby')
+  })
+
   //use api key???
   app.post('/lobby/create', function(req, res){
     var room = req.body
