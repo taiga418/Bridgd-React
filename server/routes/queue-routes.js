@@ -18,28 +18,15 @@ module.exports = function(app, db, io){
     })
   })
 
-  app.get('/queue', function(req, res){
-    db.collection('rooms').findOne({name:'taiga'}, function(err, result) {
-      res.send(result);
-    })
-  })
-
-  //mobile hits to update player with new video
-  app.post('/load', function(req, res){
+  app.post('/enqueue/:name', auth.authenticate, function(req, res){
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     
-    var video = req.body
-    app.emit('load video', video)
-  })
+    var name = req.params.name;
 
-  app.post('/enqueue', function(req, res){
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-   
     var video = req.body
     var newQ;
-    db.collection('rooms').findOne({name:'taiga'}, function(err, room) {
+    db.collection('rooms').findOne({name: name}, function(err, room) {
       if(err) return res.status(500).send('Error finding queue')
       newQ = room.queue;
       var dupes =_.filter(newQ, function(obj) {
@@ -48,7 +35,7 @@ module.exports = function(app, db, io){
       if(dupes.length > 0) return res.status(500).send('Dupe')
 
       newQ.push(video);
-      db.collection('rooms').update({name:'taiga'}, {$set:{queue:newQ}}, function(err, response){
+      db.collection('rooms').update({name: name}, {$set:{queue:newQ}}, function(err, response){
         if(err) return res.status(500).send('Error saving to queue')
         app.emit('queue update', newQ)
         res.status(200).send({queue: newQ});
@@ -56,16 +43,17 @@ module.exports = function(app, db, io){
     })
   })
 
-  app.post('/delete/:id', function(req, res){
+  app.post('/delete/:name/:id', auth.authenticate, function(req, res){
+    var name = req.params.name;
     var video = req.params.id
     var newQ;
-    db.collection('rooms').findOne({name:'taiga'}, function(err, room) {
+    db.collection('rooms').findOne({name:name}, function(err, room) {
       if(err) return res.status(500).send('Error finding queue')
       newQ = _.reject(room.queue, function(obj) {
         return obj.id.videoId == video
       });
      
-      db.collection('rooms').update({name:'taiga'}, {$set:{queue:newQ}}, function(err, response){
+      db.collection('rooms').update({name:name}, {$set:{queue:newQ}}, function(err, response){
         if(err) {
           console.log(err)
           return res.status(500).send('Error saving to queue')
@@ -78,9 +66,11 @@ module.exports = function(app, db, io){
   })
 
   //tell the mobile app that the player is playing a new video
-  app.post('/update', function(req, res){
+  app.post('/update/:name', auth.authenticate, function(req, res){
+    var name = req.params.name;
+
     var video = req.body
-    db.collection('rooms').update({name:'taiga'}, {$set:{current:video}}, function(err, response){
+    db.collection('rooms').update({name:name}, {$set:{current:video}}, function(err, response){
         if(err) {
           console.log(err)
           return res.status(500).send('Error saving to queue')
@@ -90,4 +80,22 @@ module.exports = function(app, db, io){
         res.status(200).send({video: video})
     })
   })
+
+  //mobile only
+  app.get('/queue', function(req, res){
+    db.collection('rooms').findOne({name:'taiga'}, function(err, result) {
+      res.send(result);
+    })
+  })
+
+   //mobile hits to update player with new video
+  app.post('/load', function(req, res){
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    
+    var video = req.body
+    app.emit('load video', video)
+  })
+
+  
 }
