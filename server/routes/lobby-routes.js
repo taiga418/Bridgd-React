@@ -26,8 +26,10 @@ module.exports = function(app, db, io){
   //use api key???
   app.post('/lobby/create', function(req, res){
     var room = req.body
-    db.collection('rooms').insert({name: 'ahmed', password: "456Password"})
-    res.status(200).send('niceeee');
+    db.collection('rooms').insert(room, function(err, resp){
+      if(err) return res.status(500).send("Error creating room")
+      res.status(200).send(room);
+    })
   })
 
   // app.post('/room/create', roomSearchByName, function(req,res) {
