@@ -24,3 +24,25 @@ export function submitLogin(login){
     }
   })
 }
+
+export function createRoom(room){
+  Dispatcher.dispatch({type: ActionTypes.LOGIN_LOADING});
+  $.ajax({
+    method: 'POST',
+    url: '/lobby/create',
+    data: room,
+    success: (data) => {
+      window.location = "/room/" + room.name
+      Dispatcher.dispatch({
+        type: ActionTypes.LOGIN_SUCCESS,
+        data: data
+      });
+    },
+    error: (err) => {
+      Dispatcher.dispatch({
+        type: ActionTypes.LOGIN_FAIL,
+        err: err
+      });
+    }
+  })
+}

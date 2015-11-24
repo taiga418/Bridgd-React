@@ -60,12 +60,10 @@ var App = React.createClass({
   },
 
   signOut: function(){
-    console.log('here');
     signOut()
   },
 
   queueVideo: function(vid, callback){
-    console.log('here', vid)
     let queueState = QueueStore.getQueueState()
     let videos = queueState.videos;
     let name = queueState.name;

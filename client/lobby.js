@@ -5,7 +5,7 @@ import RaisedButton from 'material-ui/lib/raised-button';
 
 import LobbyStore from './stores/lobby-store'
 
-import {submitLogin} from './actions/lobby-actions'
+import {submitLogin, createRoom} from './actions/lobby-actions'
 
 class Lobby extends React.Component{
 
@@ -37,8 +37,16 @@ class Lobby extends React.Component{
     submitLogin(this.state.loginForm)
   }
 
+  handlSubmitCreate(){
+    let room = this.state.createForm;
+    if(room.newPassword == room.passwordConfirmation){
+      let data = {name: room.newName, password: room.newPassword}
+      createRoom(data)
+    }
+  }
+
   render (){
-    let{state, handleInputChange, handleSubmitLogin} = this;
+    let{state, handleInputChange, handleSubmitLogin, handlSubmitCreate} = this;
 
     let{loading, error, active} = state.lobbyState;
 
@@ -59,10 +67,10 @@ class Lobby extends React.Component{
     if(active == 'createForm'){
       return(
         <div>
-          <TextField hintText="Room name" className="search-field" value={newName} onChange={this.handleInputChange.bind(this, 'loginForm', 'name')}/>
-          <TextField hintText="Password" className="search-field" value={newPassword} onChange={this.handleInputChange.bind(this, 'loginForm', 'password')}/>
-          <TextField hintText="Password Confirmation" className="search-field" value={password} onChange={this.handleInputChange.bind(this, 'loginForm', 'password')}/>
-          <RaisedButton label="Go!"></RaisedButton>
+          <TextField hintText="Room name" className="search-field" value={newName} onChange={handleInputChange.bind(this, 'createForm', 'newName')}/>
+          <TextField hintText="Password" className="search-field" value={newPassword} onChange={handleInputChange.bind(this, 'createForm', 'newPassword')}/>
+          <TextField hintText="Password Confirmation" className="search-field" value={passwordConfirmation} onChange={handleInputChange.bind(this, 'createForm', 'passwordConfirmation')}/>
+          <RaisedButton label="Go!" onClick={handlSubmitCreate.bind(this)}></RaisedButton>
         </div>
       )
     }
