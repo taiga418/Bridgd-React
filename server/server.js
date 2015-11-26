@@ -1,6 +1,7 @@
 var express = require('express');
 var path = require('path')
 var bodyparser = require('body-parser');
+var cookieParser = require('cookie-parser');
 
 var db = require('./lib/db-config')
 
@@ -14,6 +15,8 @@ app.use(bodyparser.urlencoded({
     extended: true
 }));
 app.use(bodyparser.json());
+app.use(cookieParser());
+
 app.set('port', process.env.PORT || 3000);
 
 var server = app.listen(app.get('port'), function() {

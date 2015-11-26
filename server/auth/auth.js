@@ -20,16 +20,16 @@ exports.login = function(name, password, next){
 
 //middleware function
 exports.authenticate = function(req, res, next){
-  var token = req.headers && req.headers['cookie']?  req.headers['cookie'].split('=')[1] : null
-    var name = req.params.name;
-    if (token) {
-      jwt.verify(token, secret + name, function(err, decoded) { 
-        if (err) {
-          return res.redirect('/lobby')
-        }
-        next();
-      });
-    }else{
-      return res.redirect('/lobby')
-    }
+  var token = req.cookies.authorization;
+  var name = req.params.name;
+  if (token) {
+    jwt.verify(token, secret + name, function(err, decoded) { 
+      if (err) {
+        return res.redirect('/lobby')
+      }
+      next();
+    });
+  }else{
+    return res.redirect('/lobby')
+  }
 }
