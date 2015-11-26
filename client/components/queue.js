@@ -27,9 +27,7 @@ var QueueClass = React.createClass({
   },
 
   loadVideo: function(name, vid){
-    if(this.state.videoQueue.current.id.videoId != vid.id.videoId){
-      loadVideo(name, vid)
-    }
+    loadVideo(name, vid)
   },
 
   deleteVideo: function(name, vid){
@@ -37,7 +35,7 @@ var QueueClass = React.createClass({
   },
 
   getClass: function(vid){
-    if(this.state.videoQueue && this.state.videoQueue.current.id.videoId == vid.id.videoId){
+    if(this.state.videoQueue && this.state.videoQueue.current && this.state.videoQueue.current.id.videoId == vid.id.videoId){
       return ' highlight-current'
     }
     return null

@@ -6,7 +6,7 @@ var CHANGE_EVENT = 'change';
 
 var queueState = {videos: [], current: null, currentIndex: 0};
 
-queueState.videos = window.room.queue || [];
+queueState.videos = window.room.queue;
 queueState.current = window.room.queue.length > 0 ? window.room.queue[0] : null;
 queueState.name = window.room.name;
 
@@ -42,6 +42,9 @@ QueueStore.dispatchToken = Dispatcher.register(function(action) {
         console.log(action.err)
       }else{
         queueState.videos = action.queue
+        if(queueState.videos.length == 1){
+          queueState.current = action.current
+        }
       }
       QueueStore.emitChange();
       break;

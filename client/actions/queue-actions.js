@@ -60,7 +60,8 @@ export function enqueueVideo(name, video){
     success: function(data){
       Dispatcher.dispatch({
         type: ActionTypes.ENQUEUE_VIDEO,
-        queue: data.queue 
+        queue: data.queue,
+        current: data.current
       })
     },
     error: function(err){

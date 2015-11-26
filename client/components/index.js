@@ -41,7 +41,14 @@ var App = React.createClass({
     let state = QueueStore.getQueueState();
     let {videos, current, currentIndex, name} = state;
     let index;
-    //check index of current video, 
+    //if current is the default video
+    if(current == null){
+      return loadVideo(name, videos[0])
+    } 
+    if(videos.length == 0){
+      return;
+    }
+    //check index of current video,
     let currentVidIndex = videos
       .map((vid) => {
         return vid.id.videoId;
