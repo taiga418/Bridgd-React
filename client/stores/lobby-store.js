@@ -5,7 +5,7 @@ import assign from 'object-assign';
 
 let CHANGE_EVENT = 'change';
 
-let state = {loading: false, data: null, error: null, active:'loginForm'}
+let state = {loading: false, data: null, error: null}
 let LobbyStore = assign({}, EventEmitter.prototype, {
 
 
