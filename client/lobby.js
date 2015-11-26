@@ -1,7 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import TextField from 'material-ui/lib/text-field';
-import RaisedButton from 'material-ui/lib/raised-button';
 
 import LobbyStore from './stores/lobby-store'
 
@@ -39,7 +37,7 @@ class Lobby extends React.Component{
     submitLogin(this.state.loginForm)
   }
 
-  handlSubmitCreate(){
+  handlSubmitCreate(e){
     e.preventDefault()
     let room = this.state.createForm;
     if(room.newPassword == room.passwordConfirmation){
@@ -71,8 +69,8 @@ class Lobby extends React.Component{
           </div>
           <div className="module form-module">
             <div className="toggle" onClick={toggleForm.bind(this, 'createForm')}>
-              <i className="material-icons">plus-box</i>
-              <div className="tooltip">Click Me</div>
+              <i className="material-icons">add_box</i>
+              <div className="tooltip">New</div>
             </div>
             <div className="form">
               <h2>Login to a room</h2>
@@ -94,8 +92,8 @@ class Lobby extends React.Component{
           </div>
           <div className="module form-module">
            <div className="toggle" onClick={toggleForm.bind(this, 'loginForm')}>
-              <i className="material-icons">plus-box</i>
-              <div className="tooltip">Click Me</div>
+              <i className="material-icons">account_box</i>
+              <div className="tooltip">Login</div>
             </div>
             <div className="form">
               <h2>Create a Room</h2>
@@ -110,40 +108,6 @@ class Lobby extends React.Component{
         </div>
       )
     }
-    // <div className="form">
-    //         <h2>Create an account</h2>
-    //         <form>
-    //           <input type="text" placeholder="Username"/>
-    //           <input type="password" placeholder="Password"/>
-    //           <input type="email" placeholder="Email Address"/>
-    //           <input type="tel" placeholder="Phone Number"/>
-    //           <button>Register</button>
-    //         </form>
-    //       </div>
-    //     </div>
-    //   </div>
-    // if(active == 'loginForm'){
-    //   return(
-    //     <div>
-    //       {(loading) && <div>Loading</div>}
-    //       {(error) && <div>Incorrect lobby creds</div>}
-    //       <TextField hintText="Room name" className="search-field" value={name} onChange={handleInputChange.bind(this, 'loginForm', 'name')}/>
-    //       <TextField hintText="Password" className="search-field" value={password} onChange={handleInputChange.bind(this, 'loginForm', 'password')}/>
-    //       <RaisedButton label="Go!" onClick={handleSubmitLogin.bind(this)}></RaisedButton>
-    //     </div>
-    //   )
-    // }
-    // if(active == 'createForm'){
-    //   return(
-    //     <div>
-    //       <TextField hintText="Room name" className="search-field" value={newName} onChange={handleInputChange.bind(this, 'createForm', 'newName')}/>
-    //       <TextField hintText="Password" className="search-field" value={newPassword} onChange={handleInputChange.bind(this, 'createForm', 'newPassword')}/>
-    //       <TextField hintText="Password Confirmation" className="search-field" value={passwordConfirmation} onChange={handleInputChange.bind(this, 'createForm', 'passwordConfirmation')}/>
-    //       <RaisedButton label="Go!" onClick={handlSubmitCreate.bind(this)}></RaisedButton>
-    //     </div>
-    //   )
-    // }
-   
   }
 
 }

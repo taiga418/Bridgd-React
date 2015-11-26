@@ -26,9 +26,16 @@ module.exports = function(app, db, io){
   //use api key???
   app.post('/lobby/create', function(req, res){
     var room = req.body
+    room.queue = [];
     db.collection('rooms').insert(room, function(err, resp){
+      console.log('rrom', resp)
+
       if(err) return res.status(500).send("Error creating room")
-      res.status(200).send(room);
+       auth.login(room.name, room.password, function(err, response){
+        if(err) return res.status(err.status).send(err.err)
+        res.cookie("authorization", response)
+        res.status(200).send(room)
+      })
     })
   })
 
