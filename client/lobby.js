@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import LinearProgress from 'material-ui/lib/linear-progress';
 
 import LobbyStore from './stores/lobby-store'
 
@@ -61,6 +62,16 @@ class Lobby extends React.Component{
 
     handleSubmitLogin = handleSubmitLogin.bind(this);
     handlSubmitCreate = handlSubmitCreate.bind(this);
+
+    if(loading){
+      return(
+        <div className="loading">
+          Please Wait
+          <LinearProgress mode="indeterminate"  /> 
+        </div>
+      )
+    }
+
     if(active == 'loginForm'){
       return(
         <div>
@@ -77,7 +88,8 @@ class Lobby extends React.Component{
               <form>
                 <input type="text" placeholder="Room Name" value={name} onChange={handleInputChange.bind(this, 'loginForm', 'name')}/>
                 <input type="password" placeholder="Password" value={password} onChange={handleInputChange.bind(this, 'loginForm', 'password')}/>
-                <button  onClick={(e) => {handleSubmitLogin(e)}}>Login</button>
+                <button  disabled={loading} onClick={(e) => {handleSubmitLogin(e)}}>Login</button>
+                {error && <div className="error-text">Invalid Credentials</div>}
               </form>
             </div>
           </div>
@@ -91,7 +103,7 @@ class Lobby extends React.Component{
             <h1>Bridgd</h1>
           </div>
           <div className="module form-module">
-           <div className="toggle" onClick={toggleForm.bind(this, 'loginForm')}>
+            <div className="toggle" onClick={toggleForm.bind(this, 'loginForm')}>
               <i className="material-icons">account_box</i>
               <div className="tooltip">Login</div>
             </div>
@@ -102,6 +114,7 @@ class Lobby extends React.Component{
                 <input type="password" placeholder="Password" value={newPassword} onChange={handleInputChange.bind(this, 'createForm', 'newPassword')}/>
                 <input type="password" placeholder="Password Confirmation" value={passwordConfirmation} onChange={handleInputChange.bind(this, 'createForm', 'passwordConfirmation')}/>
                 <button onClick={(e) => handlSubmitCreate(e)}>Register</button>
+                {error && <div className="error-text">Server Error, please try again</div>}
               </form>
             </div>
           </div>
