@@ -25,9 +25,21 @@ var server = app.listen(app.get('port'), function() {
 
 var io = require('socket.io').listen(server);
 
+// app.use('', function(req, res, next){
+//   var url = req.originalUrl;
+//   if(url != '/lobby' || /\/room\/*$/g.exec(url) == false){
+//     return res.redirect('/lobby')
+//   }
+//   next();
+// })
+
 require('./lib/sockets.js')(app, io)
 require('./routes/lobby-routes')(app, db, io)
 require('./routes/queue-routes')(app, db, io)
+
+app.use(function(req, res) {
+    res.redirect('/lobby')
+});
 
 
 module.exports = app;
