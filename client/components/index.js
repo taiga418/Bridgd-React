@@ -26,7 +26,7 @@ var App = React.createClass({
 
   componentDidMount: function(){
     this.socket = io();
-    this.socket.emit('joined');
+    this.socket.emit('joined', window.room._id);
 
     this.socket.on('queueUpdate', function(queue){
       socketUpdate(queue);

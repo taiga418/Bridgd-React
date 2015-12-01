@@ -29,8 +29,8 @@ module.exports = function(grunt) {
     watch: {
       scripts: {
         files: 'client/**/*.js',
-        //tasks: ['browserify:buildApp'],
-        tasks: ['browserify:buildLobby'],
+        tasks: ['browserify:buildApp'],
+        //tasks: ['browserify:buildLobby'],
       },
     },
   })

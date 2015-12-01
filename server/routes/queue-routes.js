@@ -2,18 +2,18 @@ var _ = require('underscore')
 var auth = require('../auth/auth')
 
 module.exports = function(app, db, io){
-  
+ 
   app.get('/room/:name', auth.authenticate, function (req, res) {
     var name = req.params.name;
-    db.collection('rooms').findOne({name: name}, function(err, result) {
-      var first = result.queue.length > 0 ? result.queue[0] : null
+    db.collection('rooms').findOne({name: name}, function(err, room) {
+      var first = room.queue.length > 0 ? room.queue[0] : null
       db.collection('rooms').update({name: name}, {$set:{current:first}}, function(err, response){
         if(err) {
           console.log(err)
           return res.status(500).send('Error saving to queue')
         }
-        app.emit('new video', first)
-        res.render('index.html', {queue:result});
+        app.emit('new video', {video: first, id: room._id})
+        res.render('index.html', {queue:room});
       })
     })
   })
@@ -36,17 +36,15 @@ module.exports = function(app, db, io){
 
       newQ.push(video);
       if(newQ.length == 1){
-      db.collection('rooms').update({name: name}, {$set:{queue:newQ, current: newQ[0]}}, function(err, response){
+        db.collection('rooms').update({name: name}, {$set:{queue:newQ, current: newQ[0]}}, function(err, response){
           if(err) return res.status(500).send('Error saving to queue')
-          app.emit('queue update', newQ)
-          console.log('new', newQ)
+          app.emit('queue update', {queue: newQ, id: room._id})
           res.status(200).send({queue: newQ});
         })
       }else{
         db.collection('rooms').update({name: name}, {$set:{queue:newQ}}, function(err, response){
           if(err) return res.status(500).send('Error saving to queue')
-          app.emit('queue update', newQ)
-          console.log('new', newQ)
+          app.emit('queue update', {queue: newQ, id: room._id})
           res.status(200).send({queue: newQ});
         })
       }
@@ -69,8 +67,7 @@ module.exports = function(app, db, io){
           console.log(err)
           return res.status(500).send('Error saving to queue')
         }
-        console.log(response)
-        app.emit('queue update', newQ)
+        app.emit('queue update', {queue: newQ, id: room._id})
         res.status(200).send({queue: newQ});
       })
     })
@@ -86,8 +83,7 @@ module.exports = function(app, db, io){
           console.log(err)
           return res.status(500).send('Error saving to queue')
         }
-        console.log(response)
-        app.emit('new video', video)
+        app.emit('new video',  {video: video, id: response._id})
         res.status(200).send({video: video})
     })
   })
@@ -107,6 +103,8 @@ module.exports = function(app, db, io){
     var video = req.body
     app.emit('load video', video)
   })
+
+
 
   
 }
