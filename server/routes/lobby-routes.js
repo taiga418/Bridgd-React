@@ -7,14 +7,13 @@ module.exports = function(app, db, io){
   })
 
   app.post('/login', function(req,res){
-    var name = req.body.name;
+    var name = req.body.name.toLowerCase();
     var password = req.body.password;
-
     auth.login(name, password, function(err, response){
       if(err) return res.status(err.status).send(err.err)
       res.cookie("authorization", response)
       //res.redirect("/room/" + name)
-      res.json({success: true});
+      res.json({name: name});
     })
   })
 
@@ -28,8 +27,6 @@ module.exports = function(app, db, io){
     var room = req.body
     room.queue = [];
     db.collection('rooms').insert(room, function(err, resp){
-      console.log('rrom', resp)
-
       if(err) return res.status(500).send("Error creating room")
        auth.login(room.name, room.password, function(err, response){
         if(err) return res.status(err.status).send(err.err)
@@ -38,19 +35,6 @@ module.exports = function(app, db, io){
       })
     })
   })
-
-  // app.post('/room/create', roomSearchByName, function(req,res) {
-  //   //need to varify new room
-  //   if (req.room) return res.status(403).send('room exists');
-  //   var newRoom = new Room();
-  //   newRoom.name = req.headers.name;
-  //   newRoom.currentIndex = 0;
-  //   newRoom.save(function(err, data) {
-  //     if (err) return res.status(500).send('there was an error');
-  //     app.emit('createRoom', data._id);
-  //     res.json({name: data.name, id: data._id});
-  //   });
-  // });
 }
 
 

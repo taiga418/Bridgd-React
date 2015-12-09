@@ -3,13 +3,11 @@ var secret = 'appSecret';
 var db = require('../lib/db-config')
 
 exports.login = function(name, password, next){
+  name = name.toLowerCase()
   db.collection('rooms').findOne({name: name}, function(err, result) {
     if(err) return next({status: 500, err: err})
     if(result == null) return next({status: 401, err: 'invalid room name'})
     if(password == result.password){
-      //expires in 30 days
-    console.log('name', name)
-
       var token =  jwt.sign({name: name}, secret + name, {expiresInMinutes: 60 * 24 * 30});
       next(null, token);
     }else{
@@ -21,7 +19,7 @@ exports.login = function(name, password, next){
 //middleware function
 exports.authenticate = function(req, res, next){
   var token = req.cookies.authorization;
-  var name = req.params.name;
+  var name = req.params.name.toLowerCase();
   if (token) {
     jwt.verify(token, secret + name, function(err, decoded) { 
       if (err) {

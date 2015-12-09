@@ -4,8 +4,9 @@ var auth = require('../auth/auth')
 module.exports = function(app, db, io){
  
   app.get('/room/:name', auth.authenticate, function (req, res) {
-    var name = req.params.name;
+    var name = req.params.name.toLowerCase();
     db.collection('rooms').findOne({name: name}, function(err, room) {
+      if(err) return res.status(404).send('cannot find room')
       var first = room.queue.length > 0 ? room.queue[0] : null
       db.collection('rooms').update({name: name}, {$set:{current:first}}, function(err, response){
         if(err) {

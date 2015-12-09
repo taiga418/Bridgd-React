@@ -3,7 +3,6 @@ module.exports = function(app, io){
 
    io.sockets.on('connection', function (socket) {
 
-    //socket.emit('selfId', socket.id);
     socket.on('joined', function(id){
       console.log('socket id:', socket.id, ' connected', 'to ', id);
       socket.join(id);

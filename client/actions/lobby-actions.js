@@ -10,7 +10,7 @@ export function submitLogin(login){
     url: '/login',
     data: login,
     success: (data) => {
-      window.location = "/room/" + login.name
+      window.location = "/room/" + data.name
       Dispatcher.dispatch({
         type: ActionTypes.LOGIN_SUCCESS,
         data: data
@@ -32,7 +32,7 @@ export function createRoom(room){
     url: '/lobby/create',
     data: room,
     success: (data) => {
-      window.location = "/room/" + room.name
+      window.location = "/room/" + data.name
       Dispatcher.dispatch({
         type: ActionTypes.LOGIN_SUCCESS,
         data: data
