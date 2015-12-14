@@ -2,28 +2,45 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import LinearProgress from 'material-ui/lib/linear-progress';
 
-import LobbyStore from './stores/lobby-store'
+//import LobbyStore from './stores/lobby-store'
 
-import {submitLogin, createRoom} from './actions/lobby-actions'
+//import {submitLogin, createRoom, toggleForm} from './actions/lobby-actions'
+
+////
+import {Provider} from 'react-redux'
+import {createStore, applyMiddleware, combineReducers} from 'redux'
+import thunkMiddleware from 'redux-thunk'
+import LobbyReducer from './reducers/lobby-reducer'
+import {connect} from 'react-redux'
+import * as actionCreators from './actions/lobby-actions'
+
+function mapStateToProps(state) {
+  const {lobby, create, login} = state;
+  return {
+    lobby,
+    create,
+    login
+  }
+}
+
+const createStoreWithMiddleware = applyMiddleware(
+    thunkMiddleware
+  )(createStore)
+
+const LobbyStore = createStoreWithMiddleware(LobbyReducer)
+////
+
+
+
 
 class Lobby extends React.Component{
 
-  constructor(){
-    super()
+  constructor(props){
+    super(props)
     this.state = {
       loginForm: {},
       createForm: {},
-      active:'loginForm',
-      lobbyState: LobbyStore.getLobbyState()
     }
-  }
-
-  componentDidMount(){
-    LobbyStore.addChangeListener(this._onChange.bind(this));
-  }
-
-  _onChange(){
-    this.setState({lobby: LobbyStore.getLobbyState()})
   }
 
   handleInputChange(form, field, e) {
@@ -35,27 +52,30 @@ class Lobby extends React.Component{
 
   handleSubmitLogin(e){
     e.preventDefault()
-    submitLogin(this.state.loginForm)
+    this.props.submitLogin(this.state.loginForm)
   }
 
   handlSubmitCreate(e){
     e.preventDefault()
     let room = this.state.createForm;
-    if(room.newPassword == room.passwordConfirmation){
-      let data = {name: room.newName, password: room.newPassword}
-      createRoom(data)
-    }
+    this.props.submitNew(room)
   }
 
   toggleForm(form){
-    this.setState({active: form});
+    this.props.toggleForm(form);
   }
 
   render (){
+    console.log('props', this.props)
+    const{lobby} = this.props;
+
+    const active = lobby.get('active');
+    const loading = lobby.get('loading');
+    const error = lobby.get('error');
+    
+
     let{state, handleInputChange, handleSubmitLogin, handlSubmitCreate, toggleForm} = this;
 
-    let{loading, error} = state.lobbyState;
-    let{active} = state;
 
     let {name, password} = state.loginForm;
     let {newName, newPassword, passwordConfirmation} = state.createForm;
@@ -72,14 +92,14 @@ class Lobby extends React.Component{
       )
     }
 
-    if(active == 'loginForm'){
+    if(active == 'login'){
       return(
         <div>
           <div className="pen-title">
             <h1>Bridgd</h1>
           </div>
           <div className="module form-module">
-            <div className="toggle" onClick={toggleForm.bind(this, 'createForm')}>
+            <div className="toggle" onClick={()=>toggleForm.call(this, 'new')}>
               <i className="material-icons">add_box</i>
               <div className="tooltip">New</div>
             </div>
@@ -96,14 +116,14 @@ class Lobby extends React.Component{
         </div>
       )
     }
-    if(active == 'createForm'){
+    if(active == 'new'){
       return(
         <div>
           <div className="pen-title">
             <h1>Bridgd</h1>
           </div>
           <div className="module form-module">
-            <div className="toggle" onClick={toggleForm.bind(this, 'loginForm')}>
+            <div className="toggle" onClick={toggleForm.bind(this, 'login')}>
               <i className="material-icons">account_box</i>
               <div className="tooltip">Login</div>
             </div>
@@ -125,6 +145,12 @@ class Lobby extends React.Component{
 
 }
 
-ReactDOM.render(<Lobby/>, document.getElementById("lobby"));
+const Container = connect(mapStateToProps, actionCreators)(Lobby)
+ReactDOM.render(
+  <Provider store={LobbyStore}>
+    <Container/>
+  </Provider>,
+  document.getElementById("lobby"));
+export default Lobby;
 
-module.exports = Lobby;
+
