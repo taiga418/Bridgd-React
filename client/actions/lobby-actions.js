@@ -10,33 +10,15 @@ export const CREATE_PASSWORD_ERROR = "CREATE_PASSWORD_ERROR";
 export function submitLogin(login){
   return(dispatch) => {
     dispatch({type: LOGIN_SUBMIT})
-    return post('/login' , login, (data) => {
-      if(data.success) {
+    return post('/login' , login, (err, data) => {
+      if(data.ok){
         window.location = "/room/" + data.name
         return dispatch({type: LOGIN_SUCCESS, data})
       }
+      console.log('faile from actions')
       return dispatch({type: LOGIN_FAIL, data})
     })
   }
-  // Dispatcher.dispatch({type: ActionTypes.LOGIN_LOADING});
-  // $.ajax({
-  //   method: 'POST',
-  //   url: '/login',
-  //   data: login,
-  //   success: (data) => {
-  //     window.location = "/room/" + data.name
-  //     Dispatcher.dispatch({
-  //       type: ActionTypes.LOGIN_SUCCESS,
-  //       data: data
-  //     });
-  //   },
-  //   error: (err) => {
-  //     Dispatcher.dispatch({
-  //       type: ActionTypes.LOGIN_FAIL,
-  //       err: err
-  //     });
-  //   }
-  // })
 }
 
 export function submitNew(room){

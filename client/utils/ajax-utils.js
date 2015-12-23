@@ -1,7 +1,7 @@
 // api
 import fetch from 'isomorphic-fetch'
 
-export function post (url, body, qs, next) {
+export function post (url, body, next) {
   return fetch(url, {
     credentials: 'same-origin',
     method:'post',
@@ -12,7 +12,11 @@ export function post (url, body, qs, next) {
   })
   .then(res => res.json())
   .then(result => {
-    next(result)
+    console.log('here')
+    if(result.status == 500){
+      return next(result)
+    }
+    next(null, result)
   })
 }
 

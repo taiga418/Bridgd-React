@@ -21,7 +21,7 @@ module.exports = function(grunt) {
                  ["babelify", {loose:'all'}]
             ]
         },
-        src: [ 'client/lobby.js'],
+        src: [ 'client/lobby.js', 'client/actions/lobby-actions.js'],
         dest: 'server/public/lobby.js'
       
       }
@@ -30,7 +30,7 @@ module.exports = function(grunt) {
       scripts: {
         files: 'client/**/*.js',
         //tasks: ['browserify:buildApp'],
-        tasks: ['browserify:buildLobby'],
+        tasks: ['browserify:buildLobby', 'browserify:buildApp'],
       },
     },
   })

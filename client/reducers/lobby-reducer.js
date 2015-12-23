@@ -11,7 +11,11 @@ export function lobby (state=LOBBY_INITIAL_STATE, action){
     case TOGGLE_FORM:
       return state.set('active', action.form)
     case LOGIN_SUCCESS:
+      console.log('LOGIN_SUCCESS')
       return state.set('loading', false).set('room', data);
+    case LOGIN_FAIL:
+      console.log('LOGIN_FAIL')
+      return state.set('loading', false).set('error', true)
   }
   return state;
 }
@@ -20,16 +24,4 @@ export function create(state=INITIAL_STATE, action){
   return state;
 }
 
-
-export function login(state=INITIAL_STATE, action){
-  switch(action.type){
-    case LOGIN_SUBMIT:
-    return state.set('loading', true)
-    case LOGIN_SUCCESS:
-      return state.set('loading', false).set('room', data);
-  }
-  return state;
-}
-
-
-export default combineReducers({lobby, create, login})
+export default combineReducers({lobby, create})

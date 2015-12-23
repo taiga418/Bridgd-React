@@ -15,11 +15,10 @@ import {connect} from 'react-redux'
 import * as actionCreators from './actions/lobby-actions'
 
 function mapStateToProps(state) {
-  const {lobby, create, login} = state;
+  const {lobby, create} = state;
   return {
     lobby,
-    create,
-    login
+    create
   }
 }
 
@@ -28,10 +27,6 @@ const createStoreWithMiddleware = applyMiddleware(
   )(createStore)
 
 const LobbyStore = createStoreWithMiddleware(LobbyReducer)
-////
-
-
-
 
 class Lobby extends React.Component{
 
@@ -66,16 +61,13 @@ class Lobby extends React.Component{
   }
 
   render (){
-    console.log('props', this.props)
     const{lobby} = this.props;
 
     const active = lobby.get('active');
     const loading = lobby.get('loading');
     const error = lobby.get('error');
-    
 
     let{state, handleInputChange, handleSubmitLogin, handlSubmitCreate, toggleForm} = this;
-
 
     let {name, password} = state.loginForm;
     let {newName, newPassword, passwordConfirmation} = state.createForm;

@@ -10,10 +10,9 @@ module.exports = function(app, db, io){
     var name = req.body.name.toLowerCase();
     var password = req.body.password;
     auth.login(name, password, function(err, response){
-      if(err) return res.status(err.status).send(err.err)
+      if(err) return res.status(500).json({ok:false})
       res.cookie("authorization", response)
-      //res.redirect("/room/" + name)
-      res.json({name: name});
+      res.json({ok:true})
     })
   })
 
