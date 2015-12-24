@@ -2,11 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import LinearProgress from 'material-ui/lib/linear-progress';
 
-//import LobbyStore from './stores/lobby-store'
-
-//import {submitLogin, createRoom, toggleForm} from './actions/lobby-actions'
-
-////
 import {Provider} from 'react-redux'
 import {createStore, applyMiddleware, combineReducers} from 'redux'
 import thunkMiddleware from 'redux-thunk'
@@ -15,10 +10,9 @@ import {connect} from 'react-redux'
 import * as actionCreators from './actions/lobby-actions'
 
 function mapStateToProps(state) {
-  const {lobby, create} = state;
+  const {lobby} = state;
   return {
-    lobby,
-    create
+    lobby
   }
 }
 
@@ -75,6 +69,7 @@ class Lobby extends React.Component{
     handleSubmitLogin = handleSubmitLogin.bind(this);
     handlSubmitCreate = handlSubmitCreate.bind(this);
 
+
     if(loading){
       return(
         <div className="loading">
@@ -109,6 +104,12 @@ class Lobby extends React.Component{
       )
     }
     if(active == 'new'){
+      let disabled;
+      if(!newPassword ||!passwordConfirmation){
+        disabled = true
+      }else if(newPassword != passwordConfirmation){
+        disabled = true
+      }
       return(
         <div>
           <div className="pen-title">
@@ -125,8 +126,10 @@ class Lobby extends React.Component{
                 <input type="text" placeholder="Room Name"  value={newName} onChange={handleInputChange.bind(this, 'createForm', 'newName')}/>
                 <input type="password" placeholder="Password" value={newPassword} onChange={handleInputChange.bind(this, 'createForm', 'newPassword')}/>
                 <input type="password" placeholder="Password Confirmation" value={passwordConfirmation} onChange={handleInputChange.bind(this, 'createForm', 'passwordConfirmation')}/>
-                <button onClick={(e) => handlSubmitCreate(e)}>Register</button>
-                {error && <div className="error-text">Server Error, please try again</div>}
+                <button disabled={disabled} onClick={(e) => handlSubmitCreate(e)}>Register</button>
+                {error == 'password' && <div className="error-text">Passwords Must Match</div>}
+                {!error.duplicate && error && <div className="error-text">Server Error, please try again</div>}
+                {error.duplicate && <div className="error-text">Room name unavailable</div>}
               </form>
             </div>
           </div>
