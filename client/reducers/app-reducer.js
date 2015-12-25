@@ -9,6 +9,11 @@ import {
   LOAD_VIDEO_FAIL,
 } from '../actions/player-actions'
 
+import {
+  DELETE_VIDEO_SUBMIT,
+  DELETE_VIDEO_SUCCESS,
+  DELETE_VIDEO_FAIL,
+} from '../actions/queue-actions'
 
 const APP_INITIAL_STATE = Map({results: null, showResults: true})
 
@@ -42,16 +47,27 @@ export function player(state=PLAYER_INITIAL_STATE, action){
     case LOAD_VIDEO_SUBMIT: 
       return state.set('loading', true)
     case LOAD_VIDEO_SUCCESS:
+      console.log('hereherere')
       state.get('playerObject').loadVideoById(action.video.id.videoId)
-      return state
+      return state.set('loading', false)
+    case LOAD_VIDEO_FAIL:
+      return state.set('loading', false)
   }
   return state
 }
 
 export function queue(state=QUEUE_INITIAL_STATE, action){
    switch(action.type){
+    case DELETE_VIDEO_SUBMIT:
+    case LOAD_VIDEO_SUBMIT:
+      return state.set('loading', true)
     case LOAD_VIDEO_SUCCESS:
       return state.set('loading', false).set('current', action.video)
+    case DELETE_VIDEO_SUCCESS:
+      return state.set('loading', false).set('videos', action.queue)
+    case DELETE_VIDEO_FAIL:
+    case LOAD_VIDEO_FAIL:
+      return state.set('loading', false)
    }
   return state
 }

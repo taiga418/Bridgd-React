@@ -13,12 +13,14 @@ class QueueClass extends Component{
   } 
 
   loadVideo(name, vid){
+    if(this.props.loading) return
     this.props.loadVideo(name, vid)
   }
 
-  // deleteVideo:(name, vd){
-  //   deleteVideo(name, vid)
-  // }
+  deleteVideo(name, vid){
+    if(this.props.loading) return
+    this.props.deleteVideo(name, vid)
+  }
 
   getClass(vid){
     if(this.props.videoQueue && this.props.current && this.props.current.id.videoId == vid.id.videoId){
@@ -29,18 +31,19 @@ class QueueClass extends Component{
 
 
   getQueue(){
-    const loadVideo = this.loadVideo.bind(this)
-    const getClass = this.getClass.bind(this)
+    const loadVideo = this.loadVideo.bind(this);
+    const deleteVideo = this.deleteVideo.bind(this);
+    const getClass = this.getClass.bind(this);
+    let name = this.props.name;
 
-    let name = this.props.name
     return(
       this.props.videoQueue.map((vid, i) => {
       return(
         <ListItem 
           key={vid.id.videoId}
           primaryText={<div className={getClass(vid)}>{vid.snippet.title}</div>}
-          leftIcon={<i className="material-icons hvr-fade"  onClick={() => loadVideo(name, vid)}>play_arrows</i>}/>
-          //rightIcon={<i className="material-icons hvr-fade" onClick={self.deleteVideo.bind(null, name, vid)}>delete</i>}/>
+          leftIcon={<i className="material-icons hvr-fade"  onClick={() => loadVideo(name, vid)}>play_arrows</i>}
+          rightIcon={<i className="material-icons hvr-fade" onClick={() => deleteVideo(name, vid)}>delete</i>}/>
       )
       })
     )

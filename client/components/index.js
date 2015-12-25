@@ -14,18 +14,23 @@ import Queue from './queue.js'
 
 //HERE//
 import {connect} from 'react-redux'
-import * as actionCreators from '../actions/player-actions'
+import * as playerActions from '../actions/player-actions'
+import * as queueActions from '../actions/queue-actions'
+import * as appActions from '../actions/app-actions'
+
+const actionCreators = {...playerActions, ...queueActions, ...appActions}
 
 function mapStateToProps(state) {
   const{app, player, queue} = state
   console.log('satate', state, player)
   return {
-    playerObject: player.get('playerObject'),
     playerLoading: player.get('loading'),
+    queueLoading: queue.get('loading'),
+    playerObject: player.get('playerObject'),
     playerState: player.get('playerState'),
     videoQueue: queue.get('videos'),
     name: queue.get('name'),
-    current: queue.get('current')
+    current: queue.get('current'),
   }
 }
 
@@ -43,13 +48,13 @@ class AppPure extends Component{
     this.socket = io();
     this.socket.emit('joined', window.room._id);
 
-    this.socket.on('queueUpdate', function(queue){
-      socketUpdate(queue);
-    })
+    // this.socket.on('queueUpdate', function(queue){
+    //   socketUpdate(queue);
+    // })
 
-    this.socket.on('loadVideo', function(vid){
-      loadVideo(vid)
-    })
+    // this.socket.on('loadVideo', function(vid){
+    //   loadVideo(vid)
+    // })
   }
 
   loadNext(){
@@ -127,17 +132,19 @@ class AppPure extends Component{
   render(){
     console.log('props', this.props)
     let{loadNext, signOut, hideResults, queueVideo, search, state, props} = this;
-    const{playerObject, playerLoading, playerState, initPlayer, playVideo, videoQueue, name, current, loadVideo} = props
+
+    const{playerObject, playerLoading, playerState, initPlayer, playVideo} = props;
+    const{queueLoading, videoQueue, name, current, loadVideo, deleteVideo} = props;
     // let{results,showResults} = state;
     return(
       <div className="container">
         {/*<NavBar className="nav" onSkip={loadNext} onSignOut={signOut}/>*/}
         <div className="left-content">
-         <Player {...{playerObject,playerLoading,playerState, initPlayer, playVideo}} next={loadNext}/>
+         <Player {...{playerObject,playerLoading,playerState, initPlayer, playVideo}} next={loadNext} loading={playerLoading}/>
          {/* <SearchBar onQueueVideo={queueVideo} onSearch={search} onHideResults={hideResults} {...{results, showResults}}/>*/}
         </div>
         <div className="right-content">
-          <Queue {...{videoQueue, name, current, loadVideo}}/>
+          <Queue {...{videoQueue, name, current, loadVideo, deleteVideo}} loading={queueLoading}/>
         </div>
       </div>
     )

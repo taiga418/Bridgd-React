@@ -66,10 +66,10 @@ module.exports = function(app, db, io){
       db.collection('rooms').update({name:name}, {$set:{queue:newQ}}, function(err, response){
         if(err) {
           console.log(err)
-          return res.status(500).send('Error saving to queue')
+          return res.status(200).json({success:false})
         }
         app.emit('queue update', {queue: newQ, id: room._id})
-        res.status(200).send({queue: newQ});
+        res.status(200).send({success: true, queue: newQ});
       })
     })
   })

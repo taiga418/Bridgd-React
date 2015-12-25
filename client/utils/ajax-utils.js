@@ -12,11 +12,7 @@ export function post (url, body, next) {
   })
   .then(res => res.json())
   .then(result => {
-    console.log('here')
-    if(result.status == 500){
-      return next(result)
-    }
-    next(null, result)
+    next(result)
   })
 }
 

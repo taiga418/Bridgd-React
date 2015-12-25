@@ -1,47 +1,22 @@
 import {get, post} from '../utils/ajax-utils'
 
-// import Dispatcher from '../dispatcher';
-// import {ActionTypes} from '../constants/constants';
+export const DELETE_VIDEO_SUBMIT = "DELETE_VIDEO_SUBMIT"
+export const DELETE_VIDEO_SUCCESS = "DELETE_VIDEO_SUCCESS"
+export const DELETE_VIDEO_FAIL = "DELETE_VIDEO_FAIL"
 
-// export function playVideo(player){
-//   Dispatcher.dispatch({
-//     type: ActionTypes.PLAY_VIDEO,
-//     player: player
-//   });
-// }
 
-export function loadVideo(name, video, delay){
+export function deleteVideo(name, video){
   return (dispatch) => {
-    dispatch({type: LOAD_VIDEO_SUBMIT})
-    post('/update/' + name, video, (err, data) => {
+    dispatch({type: DELETE_VIDEO_SUBMIT})
+    post('/delete/'+ name + '/' + video.id.videoId, {}, (data) => {
       if(data.success){
-        const {video} = data
-        return dispatch({type: LOAD_VIDEO_SUCCESS, video})
+        return dispatch({type: DELETE_VIDEO_SUCCESS, queue: data.queue})
       }
-      return dispatch({type: LOAD_VIDEO_FAIL})
+      return dispatch({type: DELETE_VIDEO_FAIL})
     })
   }
 }
 
-// export function deleteVideo(name, video){
-//   $.ajax({
-//     method: 'POST',
-//     url: '/delete/'+ name + '/' + video.id.videoId, 
-//     success: function(data){
-//       console.log('actions', data)
-//       Dispatcher.dispatch({
-//         type: ActionTypes.DELETE_VIDEO,
-//         queue: data.queue 
-//       })
-//     },
-//     error: function(err){
-//       Dispatcher.dispatch({
-//         type: ActionTypes.DELETE_VIDEO,
-//         err: err
-//       })
-//     }
-//   })
-// }
 
 // export function enqueueVideo(name, video){
 //   $.ajax({
@@ -64,22 +39,4 @@ export function loadVideo(name, video, delay){
 //   })
 // }
 
-// export function socketUpdate(queue){
-//   Dispatcher.dispatch({
-//     type: ActionTypes.SOCKET_UPDATE,
-//     queue: queue 
-//   })
-// }
 
-// export function signOut(){
-//   $.ajax({
-//     method: 'POST',
-//     url: '/signout/'+ name,
-//     success: function(data){
-//       window.location = "/lobby"
-//     },
-//     error: function(err){
-//       console.log('err')
-//     }
-//   })
-// }
