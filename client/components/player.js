@@ -1,61 +1,50 @@
-import React from 'react';
-import PlayerStore from '../stores/player-store.js';
+import React, {Component} from 'react';
+//import PlayerStore from '../stores/player-store.js';
 import QueueStore from '../stores/queue-store.js';
 import {playVideo, loadVideo} from '../actions/queue-actions.js';
 import {YoutubePlayer, globalPlayer} from './youtube-player.js';
 
-var PlayerClass = React.createClass({
+class PlayerClass extends Component{
 
-  getInitialState: function(){
-    return{
-      playerInfo: PlayerStore.getPlayerState(),
-      player: null
-    }
-  },
+  constructor(props){
+    super(props)
+  }
 
-  componentDidMount: function(){
-    PlayerStore.addChangeListener(this._onChange);
-  },
+  onPlayerReady(event) {
+    this.props.initPlayer(event.target)
+    this.props.playerObject.playVideo()
+  }
 
-
-  onPlayerReady: function(event) {
-    this.setState({player: event.target});
-    playVideo(event.target);
-  },
-
-  onPlayerStateChange: function(event) {
+  onPlayerStateChange(event) {
     if(event.data == YT.PlayerState.ENDED){
       this.props.next();
     }
-  },
+  }
 
-  stopVideo: function() {
-    //Actions.stopVideo(player)
-  },
+  render(){
+    const onPlayerReady = this.onPlayerReady.bind(this);
+    const onPlayerStateChange = this.onPlayerStateChange.bind(this);
 
-  componentWillUnmount: function() {
-    PlayerStore.removeChangeListener(this._onChange);
-  },
+    const {videoId, width, height} = this.props.playerState
 
-  _onChange: function(){
-    this.setState({playerState: PlayerStore.getPlayerState()})
-  },
-
-  render: function(){
-    const { videoId, width, height } = this.state.playerInfo
     return(
       <div>
         <div className="player-wrapper">
           <YoutubePlayer width={560} height={349} 
           className="player"
           videoID={videoId} 
-          onPlayerReady={this.onPlayerReady} 
-          onPlayerStateChange={this.onPlayerStateChange}/>
+          onPlayerReady={onPlayerReady} 
+          onPlayerStateChange={onPlayerStateChange}/>
         </div>
       </div>
     ) 
+
+    
+   // }else{
+    //   return false
+    // }
   }
 
-})
+}
 
-module.exports = PlayerClass;
+export default PlayerClass

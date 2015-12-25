@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import injectTapEventPlugin from 'react-tap-event-plugin'
 import $ from 'jquery';
 
@@ -12,19 +12,31 @@ import Player from './player.js'
 import SearchBar from './search-bar.js'
 import Queue from './queue.js'
 
+//HERE//
+import {connect} from 'react-redux'
+import * as actionCreators from '../actions/app-actions'
+
+function mapStateToProps(state) {
+  const{app, player, queue} = state
+  console.log('satate', state, player)
+  return {
+    playerObject: player.get('playerObject'),
+    playerLoading: player.get('loading'),
+    playerState: player.get('playerState')
+  }
+}
+
+////////
 injectTapEventPlugin();
 
 //Main Landing Page of the App, houses all components. View Controller 
-var App = React.createClass({
+class AppPure extends Component{
 
-  getInitialState: function(){
-    return {
-      results: null,
-      showResults: true
-    }
-  },
+  constructor(props){
+    super(props)
+  }
 
-  componentDidMount: function(){
+  componentDidMount(){
     this.socket = io();
     this.socket.emit('joined', window.room._id);
 
@@ -35,9 +47,9 @@ var App = React.createClass({
     this.socket.on('loadVideo', function(vid){
       loadVideo(vid)
     })
-  },
+  }
 
-  loadNext: function(){
+  loadNext(){
     let state = QueueStore.getQueueState();
     let {videos, current, currentIndex, name} = state;
     let index;
@@ -64,13 +76,13 @@ var App = React.createClass({
       }
     }
     loadVideo(name, videos[index]);
-  },
+  }
 
-  signOut: function(){
+  signOut(){
     signOut()
-  },
+  }
 
-  queueVideo: function(vid, callback){
+  queueVideo(vid, callback){
     let queueState = QueueStore.getQueueState()
     let videos = queueState.videos;
     let name = queueState.name;
@@ -82,9 +94,9 @@ var App = React.createClass({
     }else{
      callback();
     }
-  },
+  }
 
-  search: function(e){
+  search(e){
     let query = e.target.value;
     if(query.length > 2){
        $.ajax({
@@ -102,30 +114,32 @@ var App = React.createClass({
         this.setState({results: data.items, showResults: true})
       }.bind(this))
     }
-  },
+  }
 
-  hideResults: function(){
+  hideResults(){
     this.setState({showResults: false});
-  },
+  }
 
 
-  render: function(){
-    let{loadNext, signOut, hideResults, queueVideo, search, state} = this;
-    let{results,showResults} = state;
+  render(){
+    console.log('props', this.props)
+    let{loadNext, signOut, hideResults, queueVideo, search, state, props} = this;
+    const{playerObject, playerLoading, playerState, initPlayer, playVideo} = props
+    // let{results,showResults} = state;
     return(
       <div className="container">
-        <NavBar className="nav" onSkip={loadNext} onSignOut={signOut}/>
+        {/*<NavBar className="nav" onSkip={loadNext} onSignOut={signOut}/>*/}
         <div className="left-content">
-          <Player next={loadNext}/>
-          <SearchBar onQueueVideo={queueVideo} onSearch={search} onHideResults={hideResults} {...{results, showResults}}/>
+         <Player {...{playerObject,playerLoading,playerState, initPlayer, playVideo}} next={loadNext}/>
+         {/* <SearchBar onQueueVideo={queueVideo} onSearch={search} onHideResults={hideResults} {...{results, showResults}}/>*/}
         </div>
         <div className="right-content">
-          <Queue/>
+         {/* <Queue/> */}
         </div>
       </div>
     )
   }
 
-})
+}
+export default connect(mapStateToProps, actionCreators)(AppPure)
 
-module.exports = App;

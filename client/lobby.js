@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import LinearProgress from 'material-ui/lib/linear-progress';
 
@@ -22,7 +22,7 @@ const createStoreWithMiddleware = applyMiddleware(
 
 const LobbyStore = createStoreWithMiddleware(LobbyReducer)
 
-class Lobby extends React.Component{
+class Lobby extends Component{
 
   constructor(props){
     super(props)
