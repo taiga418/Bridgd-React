@@ -1,5 +1,6 @@
 import {get, post} from '../utils/ajax-utils'
 
+//player constants
 export const PLAYER_INIT = "PLAYER_INIT"
 export const PLAY_VIDEO = "PLAY_VIDEO"
 export const LOAD_VIDEO_SUBMIT = "LOAD_VIDEO_SUBMIT"
@@ -111,3 +112,5 @@ export function loadVideo(name, video, delay){
 //     }
 //   })
 // }
+
+

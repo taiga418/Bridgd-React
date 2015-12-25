@@ -1,8 +1,5 @@
 import React, {Component} from 'react';
-//import PlayerStore from '../stores/player-store.js';
-import QueueStore from '../stores/queue-store.js';
-import {playVideo, loadVideo} from '../actions/queue-actions.js';
-import {YoutubePlayer, globalPlayer} from './youtube-player.js';
+import {YoutubePlayer} from './youtube-player.js';
 
 class PlayerClass extends Component{
 
@@ -38,11 +35,6 @@ class PlayerClass extends Component{
         </div>
       </div>
     ) 
-
-    
-   // }else{
-    //   return false
-    // }
   }
 
 }

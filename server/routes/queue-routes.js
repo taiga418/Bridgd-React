@@ -85,7 +85,7 @@ module.exports = function(app, db, io){
           return res.status(500).send('Error saving to queue')
         }
         app.emit('new video',  {video: video, id: response._id})
-        res.status(200).send({video: video})
+        res.status(200).send({success:true, video: video})
     })
   })
 

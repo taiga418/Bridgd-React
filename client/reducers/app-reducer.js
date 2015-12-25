@@ -7,7 +7,7 @@ import {
   LOAD_VIDEO_SUBMIT,
   LOAD_VIDEO_SUCCESS,
   LOAD_VIDEO_FAIL,
-} from '../actions/app-actions'
+} from '../actions/player-actions'
 
 
 const APP_INITIAL_STATE = Map({results: null, showResults: true})
@@ -20,9 +20,13 @@ const playerState = {
   done: false
 }
 
-
 const PLAYER_INITIAL_STATE = Map({playerState})
-const QUEUE_INITIAL_STATE = Map({results: null, showResults: true})
+
+const videos = window.room.queue;
+const current = window.room.queue.length > 0 ? window.room.queue[0] : null;
+const name = window.room.name;
+
+const QUEUE_INITIAL_STATE = Map({videos, current, name, currentIndex: 0})
 
 export function app(state=APP_INITIAL_STATE, action){
    switch(action.type){
@@ -37,15 +41,17 @@ export function player(state=PLAYER_INITIAL_STATE, action){
       return state.set('playerObject', action.player)
     case LOAD_VIDEO_SUBMIT: 
       return state.set('loading', true)
-    case LOAD_VIDEO_SUCCESS: 
-      return state.set('loading', false)
+    case LOAD_VIDEO_SUCCESS:
+      state.get('playerObject').loadVideoById(action.video.id.videoId)
+      return state
   }
   return state
 }
 
 export function queue(state=QUEUE_INITIAL_STATE, action){
    switch(action.type){
-
+    case LOAD_VIDEO_SUCCESS:
+      return state.set('loading', false).set('current', action.video)
    }
   return state
 }

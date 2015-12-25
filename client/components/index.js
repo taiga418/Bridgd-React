@@ -14,7 +14,7 @@ import Queue from './queue.js'
 
 //HERE//
 import {connect} from 'react-redux'
-import * as actionCreators from '../actions/app-actions'
+import * as actionCreators from '../actions/player-actions'
 
 function mapStateToProps(state) {
   const{app, player, queue} = state
@@ -22,7 +22,10 @@ function mapStateToProps(state) {
   return {
     playerObject: player.get('playerObject'),
     playerLoading: player.get('loading'),
-    playerState: player.get('playerState')
+    playerState: player.get('playerState'),
+    videoQueue: queue.get('videos'),
+    name: queue.get('name'),
+    current: queue.get('current')
   }
 }
 
@@ -124,7 +127,7 @@ class AppPure extends Component{
   render(){
     console.log('props', this.props)
     let{loadNext, signOut, hideResults, queueVideo, search, state, props} = this;
-    const{playerObject, playerLoading, playerState, initPlayer, playVideo} = props
+    const{playerObject, playerLoading, playerState, initPlayer, playVideo, videoQueue, name, current, loadVideo} = props
     // let{results,showResults} = state;
     return(
       <div className="container">
@@ -134,7 +137,7 @@ class AppPure extends Component{
          {/* <SearchBar onQueueVideo={queueVideo} onSearch={search} onHideResults={hideResults} {...{results, showResults}}/>*/}
         </div>
         <div className="right-content">
-         {/* <Queue/> */}
+          <Queue {...{videoQueue, name, current, loadVideo}}/>
         </div>
       </div>
     )
