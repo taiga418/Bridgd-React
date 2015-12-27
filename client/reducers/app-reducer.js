@@ -15,7 +15,12 @@ import {
   DELETE_VIDEO_FAIL,
 } from '../actions/queue-actions'
 
-const APP_INITIAL_STATE = Map({results: null, showResults: true})
+import {
+  SEARCH_SUBMIT,
+  SEARCH_SUCCESS,
+  SEARCH_FAIL
+} from '../actions/app-actions'
+
 
 const first =  (window.room.queue[0] && window.room.queue )? window.room.queue[0].id.videoId : 'e9R2uLN1uOE'
 const playerState = {
@@ -25,13 +30,14 @@ const playerState = {
   done: false
 }
 
-const PLAYER_INITIAL_STATE = Map({playerState})
-
 const videos = window.room.queue;
 const current = window.room.queue.length > 0 ? window.room.queue[0] : null;
 const name = window.room.name;
 
+const APP_INITIAL_STATE = Map({results: null, showResults: true})
+const PLAYER_INITIAL_STATE = Map({playerState})
 const QUEUE_INITIAL_STATE = Map({videos, current, name, currentIndex: 0})
+const SEARCH_INITIAL_STATE = Map({results: null, loading: false})
 
 export function app(state=APP_INITIAL_STATE, action){
    switch(action.type){
@@ -72,5 +78,15 @@ export function queue(state=QUEUE_INITIAL_STATE, action){
   return state
 }
 
+export function search(state=SEARCH_INITIAL_STATE, action){
+  switch(action.type){
+    case SEARCH_SUBMIT:
+      return state.set('loading', true)
+    case SEARCH_SUCCESS:
+      return state.set('loading', false).set('results', action.results)
+  }
+  return state
+}
 
- export default combineReducers({app, player, queue})
+
+ export default combineReducers({app, player, queue, search})

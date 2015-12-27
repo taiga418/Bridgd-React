@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 
 import TextField from 'material-ui/lib/text-field';
 import List from 'material-ui/lib/lists/list';
@@ -7,9 +7,9 @@ import ListItem from 'material-ui/lib/lists/list-item';
 import Snackbar from 'material-ui/lib/snackbar';
 
 
-var SearchBarClass = React.createClass({
+class SearchBarClass extends Component{
 
-  showResults: function(onQueueVideo, results, e){
+  showResults(onQueueVideo, results){
     var self = this;
     if(results.length > 0){
       return(
@@ -32,20 +32,29 @@ var SearchBarClass = React.createClass({
         <div>No results</div>
       )
     }
-  },
+  }
 
-  closeSnackBar: function(){
+  closeSnackBar(){
     this.refs.dupe.dismiss();
-  },
+  }
 
-  render: function(){
-    const {onQueueVideo, onSearch, onHideResults, results, showResults} = this.props;
+  onSearch(e){
+    let query = e.target.value;
+    if(query.length > 2){
+      this.props.searchAPI(query)
+    }
+
+  }
+
+  render(){
+    const {onQueueVideo, results, onHideResults} = this.props;
+    const onSearch = this.onSearch.bind(this)
     return(
       <div className="results">
-        <TextField hintText="Search for Videos" className="search-field" onChange={onSearch}/>
+        <TextField hintText="Search for Videos" className="search-field" onChange={(e) => onSearch(e)}/>
         {results && <i className="material-icons" onClick={onHideResults}>keyboard_arrow_up</i>}
         <div className="results-container">
-          {(showResults && results) && <List>{this.showResults(onQueueVideo, results)}</List>}
+          {results && <List>{this.showResults(onQueueVideo, results)}</List>}
         </div>
         <Snackbar
           ref="dupe"
@@ -56,6 +65,6 @@ var SearchBarClass = React.createClass({
       </div>
     )
   } 
-})
+}
 
 module.exports = SearchBarClass; 

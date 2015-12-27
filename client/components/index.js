@@ -21,8 +21,8 @@ import * as appActions from '../actions/app-actions'
 const actionCreators = {...playerActions, ...queueActions, ...appActions}
 
 function mapStateToProps(state) {
-  const{app, player, queue} = state
-  console.log('satate', state, player)
+  const{app, player, queue, search} = state
+  console.log('satate', search)
   return {
     playerLoading: player.get('loading'),
     queueLoading: queue.get('loading'),
@@ -31,6 +31,7 @@ function mapStateToProps(state) {
     videoQueue: queue.get('videos'),
     name: queue.get('name'),
     current: queue.get('current'),
+    results: search.get('results')
   }
 }
 
@@ -104,25 +105,25 @@ class AppPure extends Component{
     }
   }
 
-  search(e){
-    let query = e.target.value;
-    if(query.length > 2){
-       $.ajax({
-        url: 'https://www.googleapis.com/youtube/v3/search',
-        data: {
-          key: 'AIzaSyA-2P-UjlhcwiMC4P6z0z9f-SU7s4FMIJQ',
-          type: 'video',
-          maxResults: '8',
-          part: 'id,snippet',
-          fields: 'items/id,items/snippet/title,items/snippet/description,items/snippet/thumbnails/default,items/snippet/channelTitle',
-          q: query
-        }
-      })
-      .done( function (data) {
-        this.setState({results: data.items, showResults: true})
-      }.bind(this))
-    }
-  }
+  // search(e){
+  //   let query = e.target.value;
+  //   if(query.length > 2){
+  //      $.ajax({
+  //       url: 'https://www.googleapis.com/youtube/v3/search',
+  //       data: {
+  //         key: 'AIzaSyA-2P-UjlhcwiMC4P6z0z9f-SU7s4FMIJQ',
+  //         type: 'video',
+  //         maxResults: '8',
+  //         part: 'id,snippet',
+  //         fields: 'items/id,items/snippet/title,items/snippet/description,items/snippet/thumbnails/default,items/snippet/channelTitle',
+  //         q: query
+  //       }
+  //     })
+  //     .done( function (data) {
+  //       this.setState({results: data.items, showResults: true})
+  //     }.bind(this))
+  //   }
+  // }
 
   hideResults(){
     this.setState({showResults: false});
@@ -131,10 +132,12 @@ class AppPure extends Component{
 
   render(){
     console.log('props', this.props)
-    let{loadNext, signOut, hideResults, queueVideo, search, state, props} = this;
+    let{loadNext, signOut, hideResults, queueVideo, state, props} = this;
 
     const{playerObject, playerLoading, playerState, initPlayer, playVideo} = props;
     const{queueLoading, videoQueue, name, current, loadVideo, deleteVideo} = props;
+    const{searchAPI, results} = props;
+
     // let{results,showResults} = state;
     return(
       <div className="container">
@@ -142,6 +145,7 @@ class AppPure extends Component{
         <div className="left-content">
          <Player {...{playerObject,playerLoading,playerState, initPlayer, playVideo}} next={loadNext} loading={playerLoading}/>
          {/* <SearchBar onQueueVideo={queueVideo} onSearch={search} onHideResults={hideResults} {...{results, showResults}}/>*/}
+          <SearchBar {...{searchAPI, results}}/>
         </div>
         <div className="right-content">
           <Queue {...{videoQueue, name, current, loadVideo, deleteVideo}} loading={queueLoading}/>
