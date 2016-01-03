@@ -7,7 +7,6 @@ export const LOAD_VIDEO_SUBMIT = "LOAD_VIDEO_SUBMIT"
 export const LOAD_VIDEO_SUCCESS = "LOAD_VIDEO_SUCCESS"
 export const LOAD_VIDEO_FAIL = "LOAD_VIDEO_FAIL"
 
-
 export function initPlayer(player){
   return (dispatch) => {
     dispatch({type: PLAYER_INIT, player})

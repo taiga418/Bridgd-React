@@ -22,7 +22,6 @@ const actionCreators = {...playerActions, ...queueActions, ...appActions}
 
 function mapStateToProps(state) {
   const{app, player, queue, search} = state
-  console.log('satate', search)
   return {
     playerLoading: player.get('loading'),
     queueLoading: queue.get('loading'),
@@ -31,6 +30,7 @@ function mapStateToProps(state) {
     videoQueue: queue.get('videos'),
     name: queue.get('name'),
     current: queue.get('current'),
+    currentIndex: queue.get('currentIndex'),
     results: search.get('results')
   }
 }
@@ -58,34 +58,34 @@ class AppPure extends Component{
     // })
   }
 
-  loadNext(){
-    let state = QueueStore.getQueueState();
-    let {videos, current, currentIndex, name} = state;
-    let index;
-    //if current is the default video
-    if(current == null){
-      return loadVideo(name, videos[0])
-    } 
-    if(videos.length == 0){
-      return;
-    }
-    //check index of current video,
-    let currentVidIndex = videos
-      .map((vid) => {
-        return vid.id.videoId;
-      }).indexOf(current.id.videoId)
-    //if it's -1, then set current video to the video at current index
-    if(currentVidIndex == -1){
-      index = currentIndex
-    //if it's not -1, then add 1. if that extends past the length of the queue, set to 0
-    }else{
-      index = currentIndex + 1
-      if(index == videos.length){
-        index = 0;
-      }
-    }
-    loadVideo(name, videos[index]);
-  }
+  // loadNext(){
+  //   let state = QueueStore.getQueueState();
+  //   let {videos, current, currentIndex, name} = state;
+  //   let index;
+  //   //if current is the default video
+  //   if(current == null){
+  //     return loadVideo(name, videos[0])
+  //   } 
+  //   if(videos.length == 0){
+  //     return;
+  //   }
+  //   //check index of current video,
+  //   let currentVidIndex = videos
+  //     .map((vid) => {
+  //       return vid.id.videoId;
+  //     }).indexOf(current.id.videoId)
+  //   //if it's -1, then set current video to the video at current index
+  //   if(currentVidIndex == -1){
+  //     index = currentIndex
+  //   //if it's not -1, then add 1. if that extends past the length of the queue, set to 0
+  //   }else{
+  //     index = currentIndex + 1
+  //     if(index == videos.length){
+  //       index = 0;
+  //     }
+  //   }
+  //   loadVideo(name, videos[index]);
+  // }
 
   signOut(){
     signOut()
@@ -105,26 +105,6 @@ class AppPure extends Component{
     }
   }
 
-  // search(e){
-  //   let query = e.target.value;
-  //   if(query.length > 2){
-  //      $.ajax({
-  //       url: 'https://www.googleapis.com/youtube/v3/search',
-  //       data: {
-  //         key: 'AIzaSyA-2P-UjlhcwiMC4P6z0z9f-SU7s4FMIJQ',
-  //         type: 'video',
-  //         maxResults: '8',
-  //         part: 'id,snippet',
-  //         fields: 'items/id,items/snippet/title,items/snippet/description,items/snippet/thumbnails/default,items/snippet/channelTitle',
-  //         q: query
-  //       }
-  //     })
-  //     .done( function (data) {
-  //       this.setState({results: data.items, showResults: true})
-  //     }.bind(this))
-  //   }
-  // }
-
   hideResults(){
     this.setState({showResults: false});
   }
@@ -135,7 +115,7 @@ class AppPure extends Component{
     let{loadNext, signOut, hideResults, queueVideo, state, props} = this;
 
     const{playerObject, playerLoading, playerState, initPlayer, playVideo} = props;
-    const{queueLoading, videoQueue, name, current, loadVideo, deleteVideo} = props;
+    const{queueLoading, videoQueue, name, current, currentIndex, loadVideo, deleteVideo} = props;
     const{searchAPI, results} = props;
 
     // let{results,showResults} = state;
@@ -143,7 +123,7 @@ class AppPure extends Component{
       <div className="container">
         {/*<NavBar className="nav" onSkip={loadNext} onSignOut={signOut}/>*/}
         <div className="left-content">
-         <Player {...{playerObject,playerLoading,playerState, initPlayer, playVideo}} next={loadNext} loading={playerLoading}/>
+         <Player {...{playerObject,playerLoading,playerState, initPlayer, playVideo, loadVideo, current, currentIndex, videoQueue, name}} loading={playerLoading}/>
          {/* <SearchBar onQueueVideo={queueVideo} onSearch={search} onHideResults={hideResults} {...{results, showResults}}/>*/}
           <SearchBar {...{searchAPI, results}}/>
         </div>

@@ -18,7 +18,10 @@ import {
 import {
   SEARCH_SUBMIT,
   SEARCH_SUCCESS,
-  SEARCH_FAIL
+  SEARCH_FAIL,
+  ENQUEUE_VIDEO_SUBMIT,
+  ENQUEUE_VIDEO_SUCCESS,
+  ENQUEUE_VIDEO_FAIL
 } from '../actions/app-actions'
 
 
@@ -66,14 +69,26 @@ export function queue(state=QUEUE_INITIAL_STATE, action){
    switch(action.type){
     case DELETE_VIDEO_SUBMIT:
     case LOAD_VIDEO_SUBMIT:
+    case ENQUEUE_VIDEO_SUBMIT:
       return state.set('loading', true)
     case LOAD_VIDEO_SUCCESS:
-      return state.set('loading', false).set('current', action.video)
+     let currentIndex = state.get('videos')
+      .map((vid) => {
+        return vid.id.videoId;
+      })
+      .indexOf(action.video.id.videoId)
+      return state.set('loading', false).set('current', action.video).set('currentIndex', currentIndex)
     case DELETE_VIDEO_SUCCESS:
       return state.set('loading', false).set('videos', action.queue)
     case DELETE_VIDEO_FAIL:
     case LOAD_VIDEO_FAIL:
       return state.set('loading', false)
+    case ENQUEUE_VIDEO_SUCCESS:
+      const queue = state.get('videos')
+      if(action.queue.length == 1){
+        state.set('current', action.queue[0])
+      }
+      return state.set('loading', false).set('videos', action.queue)
    }
   return state
 }
@@ -81,9 +96,12 @@ export function queue(state=QUEUE_INITIAL_STATE, action){
 export function search(state=SEARCH_INITIAL_STATE, action){
   switch(action.type){
     case SEARCH_SUBMIT:
+    case ENQUEUE_VIDEO_SUBMIT:
       return state.set('loading', true)
     case SEARCH_SUCCESS:
       return state.set('loading', false).set('results', action.results)
+    case ENQUEUE_VIDEO_SUCCESS: 
+      return state.set('loading', false)
   }
   return state
 }
