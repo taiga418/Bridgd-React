@@ -49,6 +49,7 @@ class SearchBarClass extends Component{
   render(){
     const {enqueueVideo, results, onHideResults} = this.props;
     const onSearch = this.onSearch.bind(this)
+    const closeSnackBar = this.closeSnackBar.bind(this)
     return(
       <div className="results">
         <TextField hintText="Search for Videos" className="search-field" onChange={(e) => onSearch(e)}/>
@@ -60,7 +61,7 @@ class SearchBarClass extends Component{
           ref="dupe"
           message="Video is already in the queue!"
           action="close"
-          onActionTouchTap={this.closeSnackBar}
+          onActionTouchTap={closeSnackBar}
           autoHideDuration={3000} />
       </div>
     )

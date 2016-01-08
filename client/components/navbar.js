@@ -10,18 +10,18 @@ import MenuItem from 'material-ui/lib/menus/menu-item';
 var NavBar = React.createClass({
 
   render: function(){
-    const {onSkip, onSignOut} = this.props;
+    const {loadNext, signOut} = this.props;
     return(
       <AppBar
         title="Bridgd"
         style={{backgroundColor: '#2098d1'}}
-        iconElementRight={<FlatButton className="tabs" label="Skip" onClick={onSkip}/>}
+        iconElementRight={<FlatButton className="tabs" label="Skip" onClick={loadNext}/>}
         iconElementLeft={
           <IconMenu iconButtonElement={
             <IconButton><i className="material-icons">menu</i></IconButton>
           }
           openDirection="bottom-right">
-            <MenuItem primaryText="Sign out" onClick={onSignOut}/>
+            <MenuItem primaryText="Sign out" onClick={signOut}/>
           </IconMenu>
         } /> 
         

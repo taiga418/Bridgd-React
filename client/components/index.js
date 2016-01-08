@@ -70,6 +70,35 @@ class AppPure extends Component{
     }
   }
 
+  loadNext(){
+    let {loadVideo, current, currentIndex, videoQueue, name} = this.props;
+    let index;
+
+    //if current is the default video
+    if(current == null){
+      return loadVideo(name, videos[0])
+    } 
+    if(videoQueue.length == 0){
+      return;
+    }
+    //check index of current video,
+    let currentVidIndex = videoQueue
+      .map((vid) => {
+        return vid.id.videoId;
+      }).indexOf(current.id.videoId)
+    //if it's -1, then set current video to the video at current index
+    if(currentVidIndex == -1){
+      index = currentIndex
+    //if it's not -1, then add 1. if that extends past the length of the queue, set to 0
+    }else{
+      index = currentIndex + 1
+      if(index == videoQueue.length){
+        index = 0;
+      }
+    }
+    loadVideo(name, videoQueue[index]);
+  }
+
   render(){
     console.log('props', this.props)
     const{props} = this;
@@ -80,12 +109,12 @@ class AppPure extends Component{
     const{signOut} = props;
 
     const enqueueVideo = this.queueVideo.bind(this)
-    // let{results,showResults} = state;
+    const loadNext = this.loadNext.bind(this)
     return(
       <div className="container">
-        <NavBar className="nav" onSignOut={signOut}/>
+        <NavBar className="nav" {...{signOut, loadNext}}/>
         <div className="left-content">
-         <Player {...{playerObject,playerLoading,playerState, initPlayer, playVideo, loadVideo, current, currentIndex, videoQueue, name}} loading={playerLoading}/>
+         <Player {...{playerObject,playerLoading,playerState, initPlayer, playVideo, loadVideo, current, currentIndex, videoQueue, name, loadNext}} loading={playerLoading}/>
          {/* <SearchBar onQueueVideo={queueVideo} onSearch={search} onHideResults={hideResults} {...{results, showResults}}/>*/}
           <SearchBar {...{searchAPI,enqueueVideo, results}}/>
         </div>
