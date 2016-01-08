@@ -36,19 +36,15 @@ module.exports = function(app, db, io){
       if(dupes.length > 0) return res.status(500).send('Dupe')
 
       newQ.push(video);
+      var query = {$set:{queue:newQ}}
       if(newQ.length == 1){
-        db.collection('rooms').update({name: name}, {$set:{queue:newQ, current: newQ[0]}}, function(err, response){
-          if(err) return res.status(500).send('Error saving to queue')
-          app.emit('queue update', {queue: newQ, id: room._id})
-          res.status(200).send({queue: newQ});
-        })
-      }else{
-        db.collection('rooms').update({name: name}, {$set:{queue:newQ}}, function(err, response){
-          if(err) return res.status(500).send('Error saving to queue')
-          app.emit('queue update', {queue: newQ, id: room._id})
-          res.status(200).send({queue: newQ});
-        })
+        query['$set'].current = newQ[0]
       }
+      db.collection('rooms').update({name: name}, query, function(err, response){
+        if(err) return res.status(200).json({ok: false})
+        app.emit('queue update', {queue: newQ, id: room._id})
+        res.status(200).json({ok: true, queue: newQ});
+      })
      
     })
   })

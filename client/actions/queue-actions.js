@@ -26,10 +26,10 @@ export function enqueueVideo(name, video){
   return (dispatch) => {
     dispatch({type: ENQUEUE_VIDEO_SUBMIT})
     post('/enqueue/'+ name, video , (data) => {
-      //if(data.success){
+      if(data.success){
         return dispatch({type: ENQUEUE_VIDEO_SUCCESS, queue: data.queue})
-      //}
-      //return dispatch({type: ENQUEUE_VIDEO_FAIL})
+      }
+      return dispatch({type: ENQUEUE_VIDEO_FAIL})
     })
   }
 

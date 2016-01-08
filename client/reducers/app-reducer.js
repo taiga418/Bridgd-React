@@ -21,7 +21,8 @@ import {
   SEARCH_FAIL,
   ENQUEUE_VIDEO_SUBMIT,
   ENQUEUE_VIDEO_SUCCESS,
-  ENQUEUE_VIDEO_FAIL
+  ENQUEUE_VIDEO_FAIL,
+  SOCKET_UPDATE
 } from '../actions/app-actions'
 
 
@@ -82,8 +83,10 @@ export function queue(state=QUEUE_INITIAL_STATE, action){
       return state.set('loading', false).set('videos', action.queue)
     case DELETE_VIDEO_FAIL:
     case LOAD_VIDEO_FAIL:
+    case ENQUEUE_VIDEO_FAIL:
       return state.set('loading', false)
     case ENQUEUE_VIDEO_SUCCESS:
+    case SOCKET_UPDATE:
       const queue = state.get('videos')
       if(action.queue.length == 1){
         state.set('current', action.queue[0])

@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import injectTapEventPlugin from 'react-tap-event-plugin'
-import $ from 'jquery';
 
 import {socketUpdate, loadVideo, signOut, enqueueVideo} from '../actions/queue-actions.js'
 
@@ -43,58 +42,24 @@ class AppPure extends Component{
 
   constructor(props){
     super(props)
+    this.socket = io();
   }
 
   componentDidMount(){
-    this.socket = io();
     this.socket.emit('joined', window.room._id);
 
-    // this.socket.on('queueUpdate', function(queue){
-    //   socketUpdate(queue);
-    // })
+    this.socket.on('queueUpdate', function(queue){
+      this.props.socketUpdate(queue);
+    }.bind(this))
 
-    // this.socket.on('loadVideo', function(vid){
-    //   loadVideo(vid)
-    // })
+    this.socket.on('loadVideo', function(vid){
+      this.props.loadVideo(vid)
+    }.bind(this))
   }
-
-  // loadNext(){
-  //   let state = QueueStore.getQueueState();
-  //   let {videos, current, currentIndex, name} = state;
-  //   let index;
-  //   //if current is the default video
-  //   if(current == null){
-  //     return loadVideo(name, videos[0])
-  //   } 
-  //   if(videos.length == 0){
-  //     return;
-  //   }
-  //   //check index of current video,
-  //   let currentVidIndex = videos
-  //     .map((vid) => {
-  //       return vid.id.videoId;
-  //     }).indexOf(current.id.videoId)
-  //   //if it's -1, then set current video to the video at current index
-  //   if(currentVidIndex == -1){
-  //     index = currentIndex
-  //   //if it's not -1, then add 1. if that extends past the length of the queue, set to 0
-  //   }else{
-  //     index = currentIndex + 1
-  //     if(index == videos.length){
-  //       index = 0;
-  //     }
-  //   }
-  //   loadVideo(name, videos[index]);
-  // }
-
-  signOut(){
-    signOut()
-  }
-
+ 
   queueVideo(vid, callback){
-    let queueState = QueueStore.getQueueState()
-    let videos = queueState.videos;
-    let name = queueState.name;
+    const{videoQueue, name, enqueueVideo} = this.props
+    let videos = videoQueue
     let dupe = videos.filter(obj => {
       return obj.id.videoId == vid.id.videoId
     });
@@ -105,27 +70,24 @@ class AppPure extends Component{
     }
   }
 
-  hideResults(){
-    this.setState({showResults: false});
-  }
-
-
   render(){
     console.log('props', this.props)
-    let{loadNext, signOut, hideResults, queueVideo, state, props} = this;
+    const{props} = this;
 
     const{playerObject, playerLoading, playerState, initPlayer, playVideo} = props;
     const{queueLoading, videoQueue, name, current, currentIndex, loadVideo, deleteVideo} = props;
     const{searchAPI, results} = props;
+    const{signOut} = props;
 
+    const enqueueVideo = this.queueVideo.bind(this)
     // let{results,showResults} = state;
     return(
       <div className="container">
-        {/*<NavBar className="nav" onSkip={loadNext} onSignOut={signOut}/>*/}
+        <NavBar className="nav" onSignOut={signOut}/>
         <div className="left-content">
          <Player {...{playerObject,playerLoading,playerState, initPlayer, playVideo, loadVideo, current, currentIndex, videoQueue, name}} loading={playerLoading}/>
          {/* <SearchBar onQueueVideo={queueVideo} onSearch={search} onHideResults={hideResults} {...{results, showResults}}/>*/}
-          <SearchBar {...{searchAPI, results}}/>
+          <SearchBar {...{searchAPI,enqueueVideo, results}}/>
         </div>
         <div className="right-content">
           <Queue {...{videoQueue, name, current, loadVideo, deleteVideo}} loading={queueLoading}/>

@@ -47,14 +47,14 @@ class SearchBarClass extends Component{
   }
 
   render(){
-    const {onQueueVideo, results, onHideResults} = this.props;
+    const {enqueueVideo, results, onHideResults} = this.props;
     const onSearch = this.onSearch.bind(this)
     return(
       <div className="results">
         <TextField hintText="Search for Videos" className="search-field" onChange={(e) => onSearch(e)}/>
         {results && <i className="material-icons" onClick={onHideResults}>keyboard_arrow_up</i>}
         <div className="results-container">
-          {results && <List>{this.showResults(onQueueVideo, results)}</List>}
+          {results && <List>{this.showResults(enqueueVideo, results)}</List>}
         </div>
         <Snackbar
           ref="dupe"
