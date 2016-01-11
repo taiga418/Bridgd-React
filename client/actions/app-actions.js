@@ -6,6 +6,7 @@ export const SEARCH_SUCCESS = "SEARCH_SUCCESS"
 export const SEARCH_FAIL = "SEARCH_FAIL"
 export const LOGOUT_SUCCESS = "LOGOUT_SUCCESS"
 export const SOCKET_UPDATE = "SOCKET_UPDATE"
+export const SHUFFLE = "SHUFFLE"
 
 export function signOut(){
   return (dispatch) => {
@@ -19,6 +20,12 @@ export function signOut(){
 export function socketUpdate(queue){
   return (dispatch) => {
     dispatch({type: SOCKET_UPDATE, queue: queue })
+  }
+}
+
+export function shuffle(value){
+  return (dispatch) => {
+    dispatch({type: SHUFFLE, value})
   }
 }
 

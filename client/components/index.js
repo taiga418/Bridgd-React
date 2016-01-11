@@ -1,10 +1,6 @@
 import React, {Component} from 'react';
 import injectTapEventPlugin from 'react-tap-event-plugin'
 
-import {socketUpdate, loadVideo, signOut, enqueueVideo} from '../actions/queue-actions.js'
-
-import QueueStore from '../stores/queue-store.js';
-import PlayerStore from '../stores/player-store.js';
 
 import NavBar from './navbar.js'
 import Player from './player.js'
@@ -27,6 +23,7 @@ function mapStateToProps(state) {
     playerObject: player.get('playerObject'),
     playerState: player.get('playerState'),
     videoQueue: queue.get('videos'),
+    shuffleQueue: queue.get('shuffleQueue'),
     name: queue.get('name'),
     current: queue.get('current'),
     currentIndex: queue.get('currentIndex'),
@@ -71,9 +68,14 @@ class AppPure extends Component{
   }
 
   loadNext(){
-    let {loadVideo, current, currentIndex, videoQueue, name} = this.props;
+    let {loadVideo, current, currentIndex, videoQueue, name, shuffleQueue} = this.props;
     let index;
 
+
+    //if shuffleMode is on
+    if(shuffleQueue){
+      videoQueue = shuffleQueue
+    }
     //if current is the default video
     if(current == null){
       return loadVideo(name, videos[0])
@@ -100,19 +102,18 @@ class AppPure extends Component{
   }
 
   render(){
-    console.log('props', this.props)
     const{props} = this;
 
     const{playerObject, playerLoading, playerState, initPlayer, playVideo} = props;
     const{queueLoading, videoQueue, name, current, currentIndex, loadVideo, deleteVideo} = props;
     const{searchAPI, results} = props;
-    const{signOut} = props;
+    const{signOut, shuffle, shuffleQueue} = props;
 
     const enqueueVideo = this.queueVideo.bind(this)
     const loadNext = this.loadNext.bind(this)
     return(
       <div className="container">
-        <NavBar className="nav" {...{signOut, loadNext}}/>
+        <NavBar className="nav" {...{signOut, loadNext, shuffle, shuffleQueue}}/>
         <div className="left-content">
          <Player {...{playerObject,playerLoading,playerState, initPlayer, playVideo, loadVideo, current, currentIndex, videoQueue, name, loadNext}} loading={playerLoading}/>
          {/* <SearchBar onQueueVideo={queueVideo} onSearch={search} onHideResults={hideResults} {...{results, showResults}}/>*/}

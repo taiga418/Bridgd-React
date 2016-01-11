@@ -22,7 +22,8 @@ import {
   ENQUEUE_VIDEO_SUBMIT,
   ENQUEUE_VIDEO_SUCCESS,
   ENQUEUE_VIDEO_FAIL,
-  SOCKET_UPDATE
+  SOCKET_UPDATE,
+  SHUFFLE
 } from '../actions/app-actions'
 
 
@@ -32,6 +33,26 @@ const playerState = {
   width: '640',
   videoId: first,
   done: false
+}
+
+function shuffle(array) {
+  if(array.length ==0) return []
+   var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
 }
 
 const videos = window.room.queue;
@@ -57,7 +78,6 @@ export function player(state=PLAYER_INITIAL_STATE, action){
     case LOAD_VIDEO_SUBMIT: 
       return state.set('loading', true)
     case LOAD_VIDEO_SUCCESS:
-      console.log('hereherere')
       state.get('playerObject').loadVideoById(action.video.id.videoId)
       return state.set('loading', false)
     case LOAD_VIDEO_FAIL:
@@ -92,6 +112,16 @@ export function queue(state=QUEUE_INITIAL_STATE, action){
         state.set('current', action.queue[0])
       }
       return state.set('loading', false).set('videos', action.queue)
+    case SHUFFLE:
+      const {value} = action
+      if(value){
+        const queue = state.get('videos');
+        let temp = queue.slice()
+        temp = shuffle(temp)
+        return state.set('shuffleQueue', temp)
+      }else{
+        return state.remove('shuffleQueue')
+      }
    }
   return state
 }

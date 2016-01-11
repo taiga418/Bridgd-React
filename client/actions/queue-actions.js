@@ -32,25 +32,6 @@ export function enqueueVideo(name, video){
       return dispatch({type: ENQUEUE_VIDEO_FAIL})
     })
   }
-
-  // $.ajax({
-  //   method: 'POST',
-  //   url: '/enqueue/'+ name, 
-  //   data: video,
-  //   success: function(data){
-  //     Dispatcher.dispatch({
-  //       type: ActionTypes.ENQUEUE_VIDEO,
-  //       queue: data.queue,
-  //       current: data.current
-  //     })
-  //   },
-  //   error: function(err){
-  //     Dispatcher.dispatch({
-  //       type: ActionTypes.ENQUEUE_VIDEO,
-  //       err: err
-  //     })
-  //   }
-  // })
 }
 
 

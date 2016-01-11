@@ -53,7 +53,6 @@ class SearchBarClass extends Component{
     return(
       <div className="results">
         <TextField hintText="Search for Videos" className="search-field" onChange={(e) => onSearch(e)}/>
-        {results && <i className="material-icons" onClick={onHideResults}>keyboard_arrow_up</i>}
         <div className="results-container">
           {results && <List>{this.showResults(enqueueVideo, results)}</List>}
         </div>

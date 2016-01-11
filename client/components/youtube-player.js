@@ -1,6 +1,4 @@
 import React from 'react';
-import Actions from '../actions/queue-actions.js';
-import QueueStore from '../stores/queue-store.js';
 
 let globalPlayer;
 
