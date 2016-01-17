@@ -71,8 +71,7 @@ class AppPure extends Component{
     let {loadVideo, current, currentIndex, videoQueue, name, shuffleQueue} = this.props;
     let index;
 
-
-    //if shuffleMode is on
+    //if shuffleMode is on, use the shuffled queue.
     if(shuffleQueue){
       videoQueue = shuffleQueue
     }
@@ -113,7 +112,7 @@ class AppPure extends Component{
     const loadNext = this.loadNext.bind(this)
     return(
       <div className="container">
-        <NavBar className="nav" {...{signOut, loadNext, shuffle, shuffleQueue}}/>
+        <NavBar className="nav" {...{name, signOut, loadNext, shuffle, shuffleQueue}}/>
         <div className="left-content">
          <Player {...{playerObject,playerLoading,playerState, initPlayer, playVideo, loadVideo, current, currentIndex, videoQueue, name, loadNext}} loading={playerLoading}/>
          {/* <SearchBar onQueueVideo={queueVideo} onSearch={search} onHideResults={hideResults} {...{results, showResults}}/>*/}

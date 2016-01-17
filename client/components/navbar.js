@@ -1,7 +1,11 @@
 
 import React, {Component} from 'react';
 import FlatButton from 'material-ui/lib/raised-button';
-import AppBar from 'material-ui/lib/app-bar';
+
+import Toolbar from 'material-ui/lib/toolbar/toolbar';
+import ToolbarGroup from 'material-ui/lib/toolbar/toolbar-group';
+import ToolbarSeparator from 'material-ui/lib/toolbar/toolbar-separator';
+import ToolbarTitle from 'material-ui/lib/toolbar/toolbar-title';
 
 import IconMenu from 'material-ui/lib/menus/icon-menu';
 import IconButton from 'material-ui/lib/icon-button';
@@ -10,36 +14,38 @@ import Toggle from 'material-ui/lib/toggle';
 
 class NavBar extends Component{
 
-  onToggle(e,val){
+  onShuffle(val){
     this.props.shuffle(val)
   }
 
   render(){
-    const {loadNext, signOut, shuffleQueue} = this.props;
-    let shuffleMode = !!shuffleQueue
-    const onToggle = this.onToggle.bind(this)
+    const {loadNext, signOut, shuffleQueue, name} = this.props;
+    const shuffleMode = !!shuffleQueue
+    const color =  shuffleMode?  '#74EA81' : "#FFFFFF"
+    const style={"font-family": "Roboto, sans-serif", "color":"#FFFFFF"}
+
     return(
-      <AppBar
-        title="Bridgd"
-        style={{backgroundColor: '#2098d1'}}
-        iconElementRight={
-          <div>
-            <FlatButton className="tabs" label="Skip" onClick={loadNext}/>
-            <Toggle
-              name="shuffleMode"
-              value={shuffleMode}
-              onToggle={(e,val) => onToggle(e,val)}
-              label="Shuffle"/>
-          </div>
-        }
-        iconElementLeft={
-          <IconMenu iconButtonElement={
-            <IconButton><i className="material-icons">menu</i></IconButton>
-          }
-          openDirection="bottom-right">
-            <MenuItem primaryText="Sign out" onClick={signOut}/>
-          </IconMenu>
-        } /> 
+      <Toolbar
+        style={{backgroundColor: '#2098d1'}}>
+        <ToolbarGroup float="left">
+           <IconMenu iconButtonElement={
+              <IconButton><i className="material-icons">menu</i></IconButton>
+            }
+            openDirection="bottom-right">
+              <MenuItem primaryText="Sign out" onClick={signOut}/>
+            </IconMenu>
+        </ToolbarGroup>
+        <ToolbarGroup float="left">
+          <ToolbarTitle  {...{style}} text={name}/>
+        </ToolbarGroup>
+        <ToolbarGroup float="right">
+          <IconButton 
+            style={{color}} tooltip="shuffle" onClick={this.onShuffle.bind(this, !shuffleMode)}><i className="material-icons">shuffle</i></IconButton>
+          <IconButton 
+            style={{color: '#FFFFFF'}} tooltip="skip" onClick={loadNext}><i className="material-icons">skip_next</i></IconButton>
+        </ToolbarGroup>
+         
+       </Toolbar> 
         
       
     )
