@@ -2,7 +2,7 @@ var _ = require('underscore')
 var auth = require('../auth/auth')
 
 module.exports = function(app, db, io){
- 
+
   app.get('/room/:name', auth.authenticate, function (req, res) {
     var name = req.params.name.toLowerCase();
     db.collection('rooms').findOne({name: name}, function(err, room) {
@@ -22,7 +22,7 @@ module.exports = function(app, db, io){
   app.post('/enqueue/:name', auth.authenticate, function(req, res){
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    
+
     var name = req.params.name;
 
     var video = req.body
@@ -41,11 +41,12 @@ module.exports = function(app, db, io){
         query['$set'].current = newQ[0]
       }
       db.collection('rooms').update({name: name}, query, function(err, response){
-        if(err) return res.status(200).json({ok: false})
+        if(err) return res.status(200).json({success: false})
+        res.status(200).json({success: true, queue: newQ});
         app.emit('queue update', {queue: newQ, id: room._id})
-        res.status(200).json({ok: true, queue: newQ});
+        
       })
-     
+
     })
   })
 
@@ -58,7 +59,7 @@ module.exports = function(app, db, io){
       newQ = _.reject(room.queue, function(obj) {
         return obj.id.videoId == video
       });
-     
+
       db.collection('rooms').update({name:name}, {$set:{queue:newQ}}, function(err, response){
         if(err) {
           console.log(err)
@@ -96,12 +97,12 @@ module.exports = function(app, db, io){
   app.post('/load', function(req, res){
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    
+
     var video = req.body
     app.emit('load video', video)
   })
 
 
 
-  
+
 }

@@ -34,7 +34,7 @@ function mapStateToProps(state) {
 ////////
 injectTapEventPlugin();
 
-//Main Landing Page of the App, houses all components. View Controller 
+//Main Landing Page of the App, houses all components. View Controller
 class AppPure extends Component{
 
   constructor(props){
@@ -53,8 +53,8 @@ class AppPure extends Component{
       this.props.loadVideo(vid)
     }.bind(this))
   }
- 
-  queueVideo(vid, callback){
+
+  queueVideo(vid, next){
     const{videoQueue, name, enqueueVideo} = this.props
     let videos = videoQueue
     let dupe = videos.filter(obj => {
@@ -63,14 +63,14 @@ class AppPure extends Component{
     if(dupe.length ==  0){
       enqueueVideo(name,vid);
     }else{
-     callback();
+     next();
     }
   }
 
   loadNext(){
     let {loadVideo, current, currentIndex, videoQueue, name, shuffleQueue} = this.props;
     let index;
-
+    console.log('load', currentIndex, current, videoQueue.length)
     //if shuffleMode is on, use the shuffled queue.
     if(shuffleQueue){
       videoQueue = shuffleQueue
@@ -78,7 +78,7 @@ class AppPure extends Component{
     //if current is the default video
     if(current == null){
       return loadVideo(name, videos[0])
-    } 
+    }
     if(videoQueue.length == 0){
       return;
     }
@@ -127,4 +127,3 @@ class AppPure extends Component{
 
 }
 export default connect(mapStateToProps, actionCreators)(AppPure)
-

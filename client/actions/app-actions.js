@@ -17,6 +17,7 @@ export function signOut(){
   }
 }
 
+//TODO: socket update effect on shuffled queue
 export function socketUpdate(queue){
   return (dispatch) => {
     dispatch({type: SOCKET_UPDATE, queue: queue })
@@ -29,6 +30,7 @@ export function shuffle(value){
   }
 }
 
+//TODO Dont use jQuery
 export function searchAPI(query){
   return (dispatch) => {
     dispatch({type: SEARCH_SUBMIT})
@@ -48,4 +50,3 @@ export function searchAPI(query){
       })
   }
 }
-

@@ -22,7 +22,6 @@ export function deleteVideo(name, video){
 
 
 export function enqueueVideo(name, video){
-
   return (dispatch) => {
     dispatch({type: ENQUEUE_VIDEO_SUBMIT})
     post('/enqueue/'+ name, video , (data) => {
@@ -33,5 +32,3 @@ export function enqueueVideo(name, video){
     })
   }
 }
-
-

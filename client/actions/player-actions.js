@@ -31,4 +31,3 @@ export function loadVideo(name, video, delay){
     })
   }
 }
-
