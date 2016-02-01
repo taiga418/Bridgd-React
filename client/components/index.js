@@ -70,7 +70,6 @@ class AppPure extends Component{
   loadNext(){
     let {loadVideo, current, currentIndex, videoQueue, name, shuffleQueue} = this.props;
     let index;
-    console.log('load', currentIndex, current, videoQueue.length)
     //if shuffleMode is on, use the shuffled queue.
     if(shuffleQueue){
       videoQueue = shuffleQueue
@@ -82,7 +81,7 @@ class AppPure extends Component{
     if(videoQueue.length == 0){
       return;
     }
-    //check index of current video,
+    //check index of current video, just in case we deleted the current vid
     let currentVidIndex = videoQueue
       .map((vid) => {
         return vid.id.videoId;

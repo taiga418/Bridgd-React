@@ -13,7 +13,7 @@ export function deleteVideo(name, video){
     dispatch({type: DELETE_VIDEO_SUBMIT})
     post('/delete/'+ name + '/' + video.id.videoId, {}, (data) => {
       if(data.success){
-        return dispatch({type: DELETE_VIDEO_SUCCESS, queue: data.queue})
+        return dispatch({type: DELETE_VIDEO_SUCCESS, queue: data.queue, video})
       }
       return dispatch({type: DELETE_VIDEO_FAIL})
     })
@@ -26,7 +26,7 @@ export function enqueueVideo(name, video){
     dispatch({type: ENQUEUE_VIDEO_SUBMIT})
     post('/enqueue/'+ name, video , (data) => {
       if(data.success){
-        return dispatch({type: ENQUEUE_VIDEO_SUCCESS, queue: data.queue})
+        return dispatch({type: ENQUEUE_VIDEO_SUCCESS, queue: data.queue, video})
       }
       return dispatch({type: ENQUEUE_VIDEO_FAIL})
     })

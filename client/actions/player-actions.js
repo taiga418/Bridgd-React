@@ -20,7 +20,14 @@ export function playVideo(player){
 }
 
 export function loadVideo(name, video, delay){
+
+
   return (dispatch) => {
+    return dispatch({type: LOAD_VIDEO_SUCCESS, video})
+    /*
+
+    eventually make server call for update player
+
     dispatch({type: LOAD_VIDEO_SUBMIT})
     post('/update/' + name, video, (data) => {
       if(data.success){
@@ -29,5 +36,8 @@ export function loadVideo(name, video, delay){
       }
       return dispatch({type: LOAD_VIDEO_FAIL})
     })
+    */
+
   }
+
 }

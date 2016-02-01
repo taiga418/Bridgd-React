@@ -103,10 +103,10 @@ function loadVideo (state, queue, shuffleQueue, video){
     .set('shuffleQueue', shuffleQueue);
 }
 
-function enqueueVideo(state, queue, shuffleQueue, newQueue, currentIndex){
+function enqueueVideo(state, queue, shuffleQueue, newQueue, currentIndex , newVid){
   if(shuffleQueue){
     //find new addition to the queue
-    const newVid = newQueue[newQueue.length - 1];
+    // const newVid = newQueue[newQueue.length - 1];
     //add the new video
     shuffleQueue.push(newVid)
     //shuffle the unplayed videos
@@ -124,19 +124,35 @@ function enqueueVideo(state, queue, shuffleQueue, newQueue, currentIndex){
   return state.set('loading', false).set('videos', newQueue)
 }
 
-function shuffleQueue(state, shuffle){
-  if(shuffle){
+function deleteVideo(state, shuffleQueue, newQueue, vid) {
+  if(shuffleQueue){
+    const index = shuffleQueue.indexOf(vid);
+    shuffleQueue.splice(index, 1);
+    state.set('shuffleQueue', shuffleQueue)
+  }
+  return state.set('loading', false).set('videos', newQueue)
+}
+
+function shuffleVideos(state, queue, shuffleQueue, current, isShuffle){
+  let currentIndex;
+  if(isShuffle){
+    //change current index to the index of the current vid in the shuffle queue
+    currentIndex = queue.indexOf(current);
     let temp = queue.slice()
     temp = shuffle(temp)
-    return state.set('shuffleQueue', temp)
+    return state.set('shuffleQueue', temp).set('currentIndex', currentIndex)
   }else{
-    return state.remove('shuffleQueue')
+    currentIndex = queue.indexOf(current);
+    return state.remove('shuffleQueue').set('currentIndex', currentIndex);
   }
 }
+
+
 export function queue(state=QUEUE_INITIAL_STATE, action){
   let queue = state.get('videos');
   let shuffleQueue = state.get('shuffleQueue');
   let currentIndex = state.get('currentIndex');
+  let current = state.get('current');
 
    switch(action.type){
     case DELETE_VIDEO_SUBMIT:
@@ -146,7 +162,7 @@ export function queue(state=QUEUE_INITIAL_STATE, action){
     case LOAD_VIDEO_SUCCESS:
       return loadVideo(state, queue, shuffleQueue, action.video)
     case DELETE_VIDEO_SUCCESS:
-      return state.set('loading', false).set('videos', action.queue)
+      return deleteVideo(state, shuffleQueue, action.queue,  action.video)
     case DELETE_VIDEO_FAIL:
     case LOAD_VIDEO_FAIL:
     case ENQUEUE_VIDEO_FAIL:
@@ -157,9 +173,9 @@ export function queue(state=QUEUE_INITIAL_STATE, action){
       }
       return state.set('loading', false).set('videos', action.queue)
     case ENQUEUE_VIDEO_SUCCESS:
-      return enqueueVideo(state, queue, shuffleQueue, action.queue, currentIndex)
+      return enqueueVideo(state, queue, shuffleQueue, action.queue, currentIndex, action.video)
     case SHUFFLE:
-      return shuffleQueue(state, action.value)
+      return shuffleVideos(state, queue, shuffleQueue, current, action.value)
    }
   return state
 }
