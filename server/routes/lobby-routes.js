@@ -1,7 +1,7 @@
 var auth = require('../auth/auth')
 
 module.exports = function(app, db, io){
-  
+
   app.get('/lobby', function(req, res){
     res.render('lobby.html')
   })
@@ -18,7 +18,7 @@ module.exports = function(app, db, io){
 
   app.post('/signout', function(req,res){
     res.clearCookie('authorization')
-    res.redirect('/lobby')
+    res.json({success:true})
   })
 
   //use api key???
@@ -39,8 +39,6 @@ module.exports = function(app, db, io){
         })
       })
     })
-    
+
   })
 }
-
-

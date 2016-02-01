@@ -10,7 +10,7 @@ export const SHUFFLE = "SHUFFLE"
 
 export function signOut(){
   return (dispatch) => {
-    post('/signout/', null, (data) => {
+    post('/signout', null , (data) => {
       window.location = "/lobby"
       dispatch({type: LOGOUT_SUCCESS})
     })

@@ -2,13 +2,14 @@
 import fetch from 'isomorphic-fetch'
 
 export function post (url, body, next) {
+  console.log('here', body)
   return fetch(url, {
     credentials: 'same-origin',
     method:'post',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(body)
+    body: body ?  JSON.stringify(body) : null
   })
   .then(res => res.json())
   .then(result => {
@@ -42,5 +43,5 @@ export function get (url, next) {
   .then(res => res.json())
   .then(result => {
     next(result)
-  }) 
- } 
+  })
+ }

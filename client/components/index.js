@@ -114,7 +114,6 @@ class AppPure extends Component{
         <NavBar className="nav" {...{name, signOut, loadNext, shuffle, shuffleQueue}}/>
         <div className="left-content">
          <Player {...{playerObject,playerLoading,playerState, initPlayer, playVideo, loadVideo, current, currentIndex, videoQueue, name, loadNext}} loading={playerLoading}/>
-         {/* <SearchBar onQueueVideo={queueVideo} onSearch={search} onHideResults={hideResults} {...{results, showResults}}/>*/}
           <SearchBar {...{searchAPI,enqueueVideo, results}}/>
         </div>
         <div className="right-content">
