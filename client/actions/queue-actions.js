@@ -11,11 +11,9 @@ export const ENQUEUE_VIDEO_FAIL = "ENQUEUE_VIDEO_FAIL"
 export function deleteVideo(name, video){
   return (dispatch) => {
     dispatch({type: DELETE_VIDEO_SUBMIT})
-    post('/delete/'+ name + '/' + video.id.videoId, {}, (data) => {
-      if(data.success){
-        return dispatch({type: DELETE_VIDEO_SUCCESS, queue: data.queue, video})
-      }
-      return dispatch({type: DELETE_VIDEO_FAIL})
+    post('/delete/'+ name + '/' + video.id.videoId, {}, (err, data) => {
+      if(err) return dispatch({type: DELETE_VIDEO_FAIL, message: err.message})
+      return dispatch({type: DELETE_VIDEO_SUCCESS, queue: data.queue, video})
     })
   }
 }
@@ -24,11 +22,9 @@ export function deleteVideo(name, video){
 export function enqueueVideo(name, video){
   return (dispatch) => {
     dispatch({type: ENQUEUE_VIDEO_SUBMIT})
-    post('/enqueue/'+ name, video , (data) => {
-      if(data.success){
-        return dispatch({type: ENQUEUE_VIDEO_SUCCESS, queue: data.queue, video})
-      }
-      return dispatch({type: ENQUEUE_VIDEO_FAIL})
+    post('/enqueue/'+ name, video , (err, data) => {
+      if(err) return dispatch({type: ENQUEUE_VIDEO_FAIL,  err: err.message});
+      return dispatch({type: ENQUEUE_VIDEO_SUCCESS, queue: data.queue, video})
     })
   }
 }

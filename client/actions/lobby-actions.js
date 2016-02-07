@@ -14,7 +14,6 @@ export function submitLogin(login){
   return(dispatch) => {
     dispatch({type: LOGIN_SUBMIT})
     return post('/login' , login, (err, data) => {
-      console.log('payload', err,  data)
       if(err) return dispatch({type: LOGIN_FAIL, err: err.message})
       window.location = "/room/" + data.name
       return dispatch({type: LOGIN_SUCCESS, data})
