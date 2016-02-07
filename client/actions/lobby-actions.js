@@ -14,11 +14,11 @@ export function submitLogin(login){
   return(dispatch) => {
     dispatch({type: LOGIN_SUBMIT})
     return post('/login' , login, (err, data) => {
-      if(data.success){
-        window.location = "/room/" + data.name
-        return dispatch({type: LOGIN_SUCCESS, data})
-      }
-      return dispatch({type: LOGIN_FAIL, data})
+      console.log('payload', err,  data)
+      if(err) return dispatch({type: LOGIN_FAIL, err: err.message})
+      window.location = "/room/" + data.name
+      return dispatch({type: LOGIN_SUCCESS, data})
+
     })
   }
 }
@@ -32,7 +32,6 @@ export function submitNew(room){
         window.location = "/room/" + data.name
         return dispatch({type: CREATE_SUCCESS, data})
       }
-      console.log('data', data)
       return dispatch({type: CREATE_FAIL, data})
     })
   }
@@ -43,7 +42,3 @@ export function toggleForm(form){
     return dispatch({type:TOGGLE_FORM, form})
   }
 }
-
-
-
-

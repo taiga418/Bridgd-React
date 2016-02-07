@@ -1,12 +1,12 @@
 import {combineReducers} from 'redux'
 import {Map, List} from 'immutable';
 import {
-  LOGIN_SUBMIT, 
-  LOGIN_SUCCESS, 
-  LOGIN_FAIL, 
+  LOGIN_SUBMIT,
+  LOGIN_SUCCESS,
+  LOGIN_FAIL,
 
   CREATE_SUBMIT,
-  CREATE_SUCCESS, 
+  CREATE_SUCCESS,
   CREATE_FAIL,
 
   TOGGLE_FORM} from '../actions/lobby-actions'
@@ -22,11 +22,11 @@ export function lobby (state=LOBBY_INITIAL_STATE, action){
     case TOGGLE_FORM:
       return state.set('active', action.form).set('error', false)
     case LOGIN_SUCCESS:
-    case CREATE_SUBMIT: 
-      return state.set('loading', false).set('room', data);
+    case CREATE_SUCCESS:
+      return state.set('loading', false).set('room', action.data).set('error', false);
     case LOGIN_FAIL:
     case CREATE_FAIL:
-      return state.set('loading', false).set('error', action.data.error || true)
+      return state.set('loading', false).set('error', true)
   }
   return state;
 }

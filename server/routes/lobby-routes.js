@@ -10,9 +10,11 @@ module.exports = function(app, db, io){
     var name = req.body.name.toLowerCase();
     var password = req.body.password;
     auth.login(name, password, function(err, response){
-      if(err) return res.status(500).json({ok:false})
+      if(err) return res.status(401).json({message: 'Invalid credentials'})
       res.cookie("authorization", response)
-      res.json({success:true, name:name})
+      //res.json({success:true, name:name})
+      res.json({name:name})
+
     })
   })
 
@@ -26,14 +28,18 @@ module.exports = function(app, db, io){
     var room = req.body
     room.queue = [];
     db.collection('rooms').findOne({name: room.name}, function(err, result) {
-      if(err) return res.json({succes: false})
+      // if(err) return res.json({succes: false})
+      if(err) return res.status(500).json({err:'creation error'})
       if(result){
-        return res.json({succes: false, error: {duplicate: true}})
+        return res.status(403).json({duplicate: true})
+        // return res.json({succes: false, error: {duplicate: true}})
       }
       db.collection('rooms').insert(room, function(err, resp){
-        if(err) return res.json({succes: false})
+        if(err) return res.status(500).json({err:'creation error'});
+        //if(err) return res.json({succes: false})
          auth.login(room.name, room.password, function(err, response){
-          if(err) return res.json({succes: false})
+          if(err) return res.status(401)({err:'login error'})
+          //if(err) return res.json({success: false})
           res.cookie("authorization", response)
           res.status(200).json({success: true, data: room})
         })

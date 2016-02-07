@@ -1,8 +1,8 @@
 // api
 import fetch from 'isomorphic-fetch'
 
+//TODO: resolve promise with reject if there's a server error
 export function post (url, body, next) {
-  console.log('here', body)
   return fetch(url, {
     credentials: 'same-origin',
     method:'post',
@@ -11,9 +11,19 @@ export function post (url, body, next) {
     },
     body: body ?  JSON.stringify(body) : null
   })
-  .then(res => res.json())
   .then(result => {
-    next(result)
+    if(result.status > 200){
+       return result.json()
+        .then(err => {
+          return next(err, null)
+        })
+    }
+    return result.json()
+      .then(body => {
+        return next(null, body)
+      })
+  }).catch(err => {
+    return next(err)
   })
 }
 
@@ -26,9 +36,19 @@ export function put (url, body, next) {
     },
     body: JSON.stringify(body)
   })
-  .then(res => res.json())
   .then(result => {
-    next(result)
+    if(result.status > 200){
+       return result.json()
+        .then(err => {
+          return next(err, null)
+        })
+    }
+    return result.json()
+      .then(body => {
+        return next(null, body)
+      })
+  }).catch(err => {
+    return next(err)
   })
 }
 
@@ -40,8 +60,18 @@ export function get (url, next) {
       'Content-Type': 'application/json'
     }
   })
-  .then(res => res.json())
   .then(result => {
-    next(result)
+    if(result.status > 200){
+       return result.json()
+        .then(err => {
+          return next(err, null)
+        })
+    }
+    return result.json()
+      .then(body => {
+        return next(null, body)
+      })
+  }).catch(err => {
+    return next(err)
   })
  }

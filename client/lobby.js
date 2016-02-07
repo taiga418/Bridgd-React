@@ -74,7 +74,7 @@ class Lobby extends Component{
       return(
         <div className="loading">
           Please Wait
-          <LinearProgress mode="indeterminate"  /> 
+          <LinearProgress mode="indeterminate"  />
         </div>
       )
     }
@@ -147,5 +147,3 @@ ReactDOM.render(
   </Provider>,
   document.getElementById("lobby"));
 export default Lobby;
-
-
