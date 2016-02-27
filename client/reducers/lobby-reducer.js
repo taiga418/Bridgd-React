@@ -23,10 +23,10 @@ export function lobby (state=LOBBY_INITIAL_STATE, action){
       return state.set('active', action.form).set('error', false)
     case LOGIN_SUCCESS:
     case CREATE_SUCCESS:
-      return state.set('loading', false).set('room', action.data).set('error', false);
+      return state.set('loading', false).set('room', action.data.name).set('error', false);
     case LOGIN_FAIL:
     case CREATE_FAIL:
-      return state.set('loading', false).set('error', true)
+      return state.set('loading', false).set('error', action.err)
   }
   return state;
 }

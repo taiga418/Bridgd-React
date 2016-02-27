@@ -23,25 +23,21 @@ module.exports = function(app, db, io){
     res.json({success:true})
   })
 
-  //use api key???
+  //TODO: use api key???
   app.post('/lobby/create', function(req, res){
     var room = req.body
     room.queue = [];
     db.collection('rooms').findOne({name: room.name}, function(err, result) {
-      // if(err) return res.json({succes: false})
       if(err) return res.status(500).json({err:'creation error'})
       if(result){
         return res.status(403).json({duplicate: true})
-        // return res.json({succes: false, error: {duplicate: true}})
       }
       db.collection('rooms').insert(room, function(err, resp){
         if(err) return res.status(500).json({err:'creation error'});
-        //if(err) return res.json({succes: false})
          auth.login(room.name, room.password, function(err, response){
           if(err) return res.status(401)({err:'login error'})
-          //if(err) return res.json({success: false})
           res.cookie("authorization", response)
-          res.status(200).json({success: true, data: room})
+          res.status(200).json(room)
         })
       })
     })

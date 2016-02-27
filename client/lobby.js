@@ -12,7 +12,9 @@ import * as actionCreators from './actions/lobby-actions'
 function mapStateToProps(state) {
   const {lobby} = state;
   return {
-    lobby
+    active: lobby.get('active'),
+    loading: lobby.get('loading'),
+    error: lobby.get('error'),
   }
 }
 
@@ -55,12 +57,7 @@ class Lobby extends Component{
   }
 
   render (){
-    const{lobby} = this.props;
-
-    const active = lobby.get('active');
-    const loading = lobby.get('loading');
-    const error = lobby.get('error');
-
+    const{ active, loading, error} = this.props;
     let{state, handleInputChange, handleSubmitLogin, handlSubmitCreate, toggleForm} = this;
 
     let {name, password} = state.loginForm;
@@ -69,6 +66,13 @@ class Lobby extends Component{
     handleSubmitLogin = handleSubmitLogin.bind(this);
     handlSubmitCreate = handlSubmitCreate.bind(this);
 
+    //TODO: Redux forms? or form solution wired to redux
+    let disabled, passwordCheck;
+    if(!newName || !newPassword || !passwordConfirmation){
+      disabled = true
+    }else if(newPassword != passwordConfirmation){
+      passwordCheck = true
+    }
 
     if(loading){
       return(
@@ -104,12 +108,7 @@ class Lobby extends Component{
       )
     }
     if(active == 'new'){
-      let disabled;
-      if(!newPassword ||!passwordConfirmation){
-        disabled = true
-      }else if(newPassword != passwordConfirmation){
-        disabled = true
-      }
+
       return(
         <div>
           <div className="pen-title">
@@ -126,8 +125,8 @@ class Lobby extends Component{
                 <input type="text" placeholder="Room Name"  value={newName} onChange={handleInputChange.bind(this, 'createForm', 'newName')}/>
                 <input type="password" placeholder="Password" value={newPassword} onChange={handleInputChange.bind(this, 'createForm', 'newPassword')}/>
                 <input type="password" placeholder="Password Confirmation" value={passwordConfirmation} onChange={handleInputChange.bind(this, 'createForm', 'passwordConfirmation')}/>
-                <button disabled={disabled} onClick={(e) => handlSubmitCreate(e)}>Register</button>
-                {error == 'password' && <div className="error-text">Passwords Must Match</div>}
+                <button disabled={disabled || passwordCheck} onClick={(e) => handlSubmitCreate(e)}>Register</button>
+                {passwordCheck && <div className="error-text">Passwords Must Match</div>}
                 {!error.duplicate && error && <div className="error-text">Server Error, please try again</div>}
                 {error.duplicate && <div className="error-text">Room name unavailable</div>}
               </form>
