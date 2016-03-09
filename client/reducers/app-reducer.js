@@ -128,7 +128,7 @@ function deleteVideo(state, shuffleQueue, newQueue, vid) {
   if(shuffleQueue){
     const index = shuffleQueue.indexOf(vid);
     shuffleQueue.splice(index, 1);
-    state.set('shuffleQueue', shuffleQueue)
+    state.set('shuffleQueue', shuffleQueue)//.set('currentIndex', )
   }
   return state.set('loading', false).set('videos', newQueue)
 }

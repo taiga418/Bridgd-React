@@ -35,7 +35,7 @@ module.exports = function(app, db, io){
       var dupes =_.filter(newQ, function(obj) {
         return obj.id.videoId == video.id.videoId
       });
-      if(dupes.length > 0) return res.status(500).json({message: 'Dupe'})
+      if(dupes.length > 0) return res.status(500).json({err: 'Dupe'})
 
       newQ.push(video);
       var query = {$set:{queue:newQ}}
@@ -43,7 +43,7 @@ module.exports = function(app, db, io){
         query['$set'].current = newQ[0]
       }
       db.collection('rooms').update({name: name}, query, function(err, response){
-        if(err) return res.status(500).json({message: "Error updating queue"})
+        if(err) return res.status(500).json({err: "Error updating queue"})
         res.status(200).json({queue: newQ});
         app.emit('queue update', {queue: newQ, id: room._id})
 
@@ -65,10 +65,10 @@ module.exports = function(app, db, io){
       db.collection('rooms').update({name:name}, {$set:{queue:newQ}}, function(err, response){
         if(err) {
           console.log(err)
-          return res.status(200).json({success:false})
+          return res.status(500).json({err:'Error enquing video'})
         }
         app.emit('queue update', {queue: newQ, id: room._id})
-        res.status(200).send({success: true, queue: newQ});
+        res.status(200).send({queue: newQ});
       })
     })
   })
@@ -84,7 +84,7 @@ module.exports = function(app, db, io){
           return res.status(500).send('Error saving to queue')
         }
         app.emit('new video',  {video: video, id: response._id})
-        res.status(200).send({success:true, video: video})
+        res.status(200).send({video: video})
     })
   })
 

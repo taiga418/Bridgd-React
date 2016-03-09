@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import injectTapEventPlugin from 'react-tap-event-plugin'
+import {connect} from 'react-redux'
 
 
 import NavBar from './navbar.js'
@@ -7,8 +8,6 @@ import Player from './player.js'
 import SearchBar from './search-bar.js'
 import Queue from './queue.js'
 
-//HERE//
-import {connect} from 'react-redux'
 import * as playerActions from '../actions/player-actions'
 import * as queueActions from '../actions/queue-actions'
 import * as appActions from '../actions/app-actions'
@@ -31,7 +30,6 @@ function mapStateToProps(state) {
   }
 }
 
-////////
 injectTapEventPlugin();
 
 //Main Landing Page of the App, houses all components. View Controller
