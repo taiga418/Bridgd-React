@@ -13,24 +13,12 @@ module.exports = function(grunt) {
         src: [ 'client/app.js'],
         dest: 'server/public/app.js'
 
-      },
-      buildLobby: {
-        options: {
-            transform: [
-                [require('grunt-react').browserify, {global: true}],
-                 ["babelify", {loose:'all'}]
-            ]
-        },
-        src: [ 'client/lobby.js', 'client/actions/lobby-actions.js'],
-        dest: 'server/public/lobby.js'
-
       }
     },
     watch: {
       scripts: {
         files: 'client/**/*.js',
         tasks: ['browserify:buildApp'],
-        //tasks: ['browserify:buildLobby'],
       },
     },
   })

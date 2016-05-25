@@ -22,9 +22,10 @@ import {
   SHUFFLE
 } from '../actions/app-actions'
 
-const videos = window.room.queue;
-const current = window.room.queue.length > 0 ? window.room.queue[0] : null;
-const name = window.room.name;
+const videos = window.room ? window.room.queue : [];
+const current = (window.room && window.room.queue.length > 0)
+  ? window.room.queue[0] : null;
+const name = window.roo ? window.room.name : null;
 
 const QUEUE_INITIAL_STATE = Map({videos, current, name, currentIndex: 0, shuffleQueue: null})
 

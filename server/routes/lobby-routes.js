@@ -3,7 +3,7 @@ var auth = require('../auth/auth')
 module.exports = function(app, db, io){
 
   app.get('/lobby', function(req, res){
-    res.render('lobby.html')
+    res.render('index.html', {queue:{ queue: [] }})
   })
 
   app.post('/login', function(req,res){
@@ -12,7 +12,6 @@ module.exports = function(app, db, io){
     auth.login(name, password, function(err, response){
       if(err) return res.status(401).json({message: 'Invalid credentials'})
       res.cookie("authorization", response)
-      //res.json({success:true, name:name})
       res.json({name:name})
 
     })

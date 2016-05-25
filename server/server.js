@@ -2,6 +2,7 @@ var express = require('express');
 var path = require('path')
 var bodyparser = require('body-parser');
 var cookieParser = require('cookie-parser');
+var auth = require('./auth/auth')
 
 var db = require('./lib/db-config')
 
@@ -29,10 +30,8 @@ require('./lib/sockets.js')(app, io)
 require('./routes/lobby-routes')(app, db, io)
 require('./routes/queue-routes')(app, db, io)
 
-app.use(function(req, res) {
-    res.redirect('/lobby')
+app.get('*', auth.authenticate, function(req, res){
+  res.sendFile(path.join(__dirname, 'public'));
 });
 
-
 module.exports = app;
-

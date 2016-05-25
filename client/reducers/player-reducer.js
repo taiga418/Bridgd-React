@@ -18,7 +18,8 @@ import {
 } from '../actions/queue-actions'
 
 //server rendering the initial state
-const first =  (window.room.queue[0] && window.room.queue )? window.room.queue[0].id.videoId : 'e9R2uLN1uOE'
+const first =  (window.room && window.room.queue[0] && window.room.queue )
+  ? window.room.queue[0].id.videoId : 'e9R2uLN1uOE'
 const playerState = {
   height: '390',
   width: '640',

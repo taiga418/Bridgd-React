@@ -1,35 +1,23 @@
-import React, {Component} from 'react';
+import React from 'react';
+
 import ReactDOM from 'react-dom';
-import {Provider} from 'react-redux';
-import {createStore, applyMiddleware} from 'redux';
+import { Provider } from 'react-redux';
+import { combineReducers, createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
+import { reducer as form } from 'redux-form';
+
 import AppReducer from './reducers/app-reducer'
-
-import Landing from './components/index.js';
-
-
-
+import Router from './containers/router';
 
 const createStoreWithMiddleware = applyMiddleware(
     thunkMiddleware
   )(createStore)
 
-const AppStore = createStoreWithMiddleware(AppReducer)
-
-export default class App extends Component{
-
-  render (){
-    return(
-      <div>
-        <Landing />
-      </div>
-    )
-  }
-
-}
+const reducers = combineReducers({...AppReducer, form})
+const AppStore = createStoreWithMiddleware(reducers)
 
 ReactDOM.render(
   <Provider store={AppStore}>
-    <App/>
+    {Router}
   </Provider>
   ,  document.getElementById("app"));

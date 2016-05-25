@@ -31,4 +31,4 @@ export function lobby (state=LOBBY_INITIAL_STATE, action){
   return state;
 }
 
-export default combineReducers({lobby})
+export default lobby

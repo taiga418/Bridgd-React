@@ -9,7 +9,7 @@ import ToolbarTitle from 'material-ui/lib/toolbar/toolbar-title';
 
 import IconMenu from 'material-ui/lib/menus/icon-menu';
 import IconButton from 'material-ui/lib/icon-button';
-import MenuItem from 'material-ui/lib/menus/menu-item'; 
+import MenuItem from 'material-ui/lib/menus/menu-item';
 import Toggle from 'material-ui/lib/toggle';
 
 class NavBar extends Component{
@@ -39,21 +39,18 @@ class NavBar extends Component{
           <ToolbarTitle  {...{style}} text={name}/>
         </ToolbarGroup>
         <ToolbarGroup float="right">
-          <IconButton 
+          <IconButton
             style={{color}} tooltip="shuffle" onClick={this.onShuffle.bind(this, !shuffleMode)}><i className="material-icons">shuffle</i></IconButton>
-          <IconButton 
+          <IconButton
             style={{color: '#FFFFFF'}} tooltip="skip" onClick={loadNext}><i className="material-icons">skip_next</i></IconButton>
         </ToolbarGroup>
-         
-       </Toolbar> 
-        
-      
+
+       </Toolbar>
+
+
     )
   }
 
 }
 
 export default NavBar
-
-
-

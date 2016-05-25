@@ -3,10 +3,10 @@ import injectTapEventPlugin from 'react-tap-event-plugin'
 import {connect} from 'react-redux'
 
 
-import NavBar from './navbar.js'
-import Player from './player.js'
-import SearchBar from './search-bar.js'
-import Queue from './queue.js'
+import NavBar from '../components/navbar.js'
+import Player from '../components/player.js'
+import SearchBar from '../components/search-bar.js'
+import Queue from '../components/queue.js'
 
 import * as playerActions from '../actions/player-actions'
 import * as queueActions from '../actions/queue-actions'

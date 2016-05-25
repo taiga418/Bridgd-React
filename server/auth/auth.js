@@ -19,15 +19,16 @@ exports.login = function(name, password, next){
 //middleware function
 exports.authenticate = function(req, res, next){
   var token = req.cookies.authorization;
-  var name = req.params.name.toLowerCase();
+  var name = req.params.name ? req.params.name.toLowerCase() : '';
   if (token) {
-    jwt.verify(token, secret + name, function(err, decoded) { 
+    jwt.verify(token, secret + name, function(err, decoded) {
       if (err) {
         return res.redirect('/lobby')
       }
       next();
     });
   }else{
+    console.log('here')
     return res.redirect('/lobby')
   }
 }
